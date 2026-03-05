@@ -20,10 +20,10 @@
         body { background-color: var(--fundo-escuro); color: white; overflow: hidden; height: 100vh; width: 100vw; }
         
         /* Background Animado */
-        #canvas-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
+        #canvas-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
 
         /* Estrutura de Telas */
-        .screen { display: none; height: 100vh; width: 100vw; flex-direction: column; align-items: center; justify-content: center; }
+        .screen { display: none; height: 100vh; width: 100vw; flex-direction: column; align-items: center; justify-content: center; position: relative; z-index: 1; }
         .screen.active { display: flex; }
 
         /* --- Estilo Login --- */
@@ -47,13 +47,11 @@
         /* --- Estilo Dashboard --- */
         .dash-container { width: 100%; max-width: 360px; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
         
-        /* Seletores de Cards (Linha Reta) */
         .card-selector { display: flex; gap: 12px; margin-bottom: 15px; width: 100%; justify-content: center; z-index: 10; }
         .mini-card { width: 52px; height: 52px; background: var(--glass); border: 1px solid var(--glass-border); border-radius: 14px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         .mini-card.active { border-color: var(--rosa-bebe); background: rgba(244, 167, 187, 0.15); transform: translateY(-3px); box-shadow: 0 5px 15px var(--glow); }
         .mini-card svg { stroke: var(--rosa-bebe); width: 22px; stroke-width: 1.5; }
 
-        /* Janela de Conteúdo */
         .main-window { width: 100%; background: var(--glass); backdrop-filter: blur(25px); border: 1px solid var(--glass-border); border-radius: 28px; padding: 22px; height: 410px; display: none; box-shadow: 0 15px 35px rgba(0,0,0,0.4); }
         .main-window.active { display: flex; flex-direction: column; animation: windowIn 0.5s ease-out; }
 
@@ -61,23 +59,19 @@
 
         h2 { font-size: 0.95rem; color: var(--rosa-bebe); font-weight: 400; margin-bottom: 18px; text-align: center; letter-spacing: 1px; }
 
-        /* Itens de Configuração */
         .row { display: flex; justify-content: space-between; align-items: center; margin: 14px 0; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.03); }
         .row:last-child { border: none; }
         .row-info { flex: 1; padding-right: 10px; }
         .row-info span { font-size: 0.85rem; font-weight: 400; display: block; color: #eee; }
         .desc { font-size: 0.68rem; color: #777; margin-top: 2px; }
 
-        /* Botão Rosa Padrão */
         .btn-rosa { background: var(--rosa-bebe); color: #000; border: none; padding: 14px; border-radius: 12px; width: 100%; font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: 0.3s; margin-top: auto; }
         .btn-rosa:active { transform: scale(0.97); filter: brightness(0.9); }
         
-        /* Grade de Precisão */
         .precision-grid { display: flex; gap: 8px; margin-top: 10px; }
         .prec-btn { flex: 1; padding: 10px; border-radius: 10px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.03); color: white; font-size: 0.75rem; cursor: pointer; transition: 0.3s; }
         .prec-btn.active { background: var(--rosa-bebe); color: #000; font-weight: bold; border-color: var(--rosa-bebe); box-shadow: 0 0 10px var(--glow); }
 
-        /* Switch Customizado */
         .switch { width: 36px; height: 18px; position: relative; display: inline-block; flex-shrink: 0; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: #1a1a1a; border-radius: 18px; transition: 0.4s; border: 1px solid var(--glass-border); }
@@ -85,7 +79,6 @@
         input:checked + .slider { background: rgba(244, 167, 187, 0.2); border-color: var(--rosa-bebe); }
         input:checked + .slider:before { transform: translateX(18px); background: var(--rosa-bebe); box-shadow: 0 0 8px var(--rosa-bebe); }
 
-        /* Terminal de Injeção */
         #inject-log { 
             height: 120px; background: rgba(0,0,0,0.3); border-radius: 12px; padding: 12px; 
             font-family: 'Courier New', monospace; font-size: 0.7rem; color: var(--rosa-bebe); 
@@ -110,7 +103,7 @@
         <button class="btn-rosa" onclick="efetuarLogin()">Entrar</button>
     </div>
 
-    <div class="footer-install">
+    <div class="footer-install" id="install-footer">
         <p style="font-size: 0.65rem; color: #555; margin-bottom: 12px; letter-spacing: 1px;">PAINEL DE OTIMIZAÇÃO MOBILE</p>
         <button class="btn-download">Baixar agora</button>
     </div>
@@ -118,7 +111,6 @@
 
 <section id="screen-dash" class="screen">
     <div class="dash-container">
-        
         <div class="card-selector">
             <div class="mini-card active" onclick="switchCard('win-mira', this)">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"></circle><path d="M22 12h-4M6 12H2M12 6V2M12 22v-4"></path></svg>
@@ -136,21 +128,12 @@
 
         <div id="win-mira" class="main-window active">
             <h2>Auxiliar Mira</h2>
-            <div class="row">
-                <div class="row-info"><span>Diminuir Recoil</span><span class="desc">Reduz o recuo das armas.</span></div>
-                <label class="switch"><input type="checkbox" id="m-recoil"><span class="slider"></span></label>
-            </div>
-            <div class="row">
-                <div class="row-info"><span>Aprimorar Toque</span><span class="desc">Melhora a resposta do toque.</span></div>
-                <label class="switch"><input type="checkbox" id="m-touch"><span class="slider"></span></label>
-            </div>
-            <div class="row">
-                <div class="row-info"><span>Estabilizar Mira</span><span class="desc">Tira os ruídos e tremores.</span></div>
-                <label class="switch"><input type="checkbox" id="m-stab"><span class="slider"></span></label>
-            </div>
+            <div class="row"><div class="row-info"><span>Diminuir Recoil</span><span class="desc">Reduz o recuo.</span></div><label class="switch"><input type="checkbox" id="m-recoil"><span class="slider"></span></label></div>
+            <div class="row"><div class="row-info"><span>Aprimorar Toque</span><span class="desc">Melhora a resposta.</span></div><label class="switch"><input type="checkbox" id="m-touch"><span class="slider"></span></label></div>
+            <div class="row"><div class="row-info"><span>Estabilizar Mira</span><span class="desc">Tira os tremores.</span></div><label class="switch"><input type="checkbox" id="m-stab"><span class="slider"></span></label></div>
             <div style="margin-top: 12px;">
                 <span style="font-size: 0.75rem; color: #999;">Precisão da Mira</span>
-                <div class="precision-grid" id="m-prec-group">
+                <div class="precision-grid">
                     <button class="prec-btn" onclick="setPrec(this, 'low')">Baixa</button>
                     <button class="prec-btn active" onclick="setPrec(this, 'mid')">Média</button>
                     <button class="prec-btn" onclick="setPrec(this, 'high')">Alta</button>
@@ -160,88 +143,57 @@
 
         <div id="win-opt" class="main-window">
             <h2>Otimização</h2>
-            <div class="row">
-                <div class="row-info"><span>Otimizar Dispositivo</span><span class="desc">Limpeza e estabilidade.</span></div>
-                <label class="switch"><input type="checkbox" id="o-dev"><span class="slider"></span></label>
-            </div>
-            <div class="row">
-                <div class="row-info"><span>Melhor Desempenho</span><span class="desc">Melhora o desempenho geral.</span></div>
-                <label class="switch"><input type="checkbox" id="o-perf"><span class="slider"></span></label>
-            </div>
-            <div class="row">
-                <div class="row-info"><span>Aumentar FPS</span><span class="desc">Melhora o FPS do celular.</span></div>
-                <label class="switch"><input type="checkbox" id="o-fps"><span class="slider"></span></label>
-            </div>
-            <div class="row">
-                <div class="row-info"><span>Melhorar Conexão</span><span class="desc">Melhora a internet no jogo.</span></div>
-                <label class="switch"><input type="checkbox" id="o-net"><span class="slider"></span></label>
-            </div>
+            <div class="row"><div class="row-info"><span>Otimizar Dispositivo</span></div><label class="switch"><input type="checkbox" id="o-dev"><span class="slider"></span></label></div>
+            <div class="row"><div class="row-info"><span>Melhor Desempenho</span></div><label class="switch"><input type="checkbox" id="o-perf"><span class="slider"></span></label></div>
+            <div class="row"><div class="row-info"><span>Aumentar FPS</span></div><label class="switch"><input type="checkbox" id="o-fps"><span class="slider"></span></label></div>
         </div>
 
         <div id="win-inject" class="main-window" style="text-align: center;">
             <h2>Injetar Módulos</h2>
             <div id="inject-log">Aguardando comando...</div>
             <button class="btn-rosa" id="btn-run" onclick="executarInjecao()">Injetar Agora</button>
-            
             <div class="game-launch-group" id="launch-group">
-    <button class="btn-rosa" onclick="abrirJogo('com.dts.freefireth')">Abrir Free Fire</button>
-    
-    <button class="btn-rosa" style="background:none; border:1px solid var(--rosa-bebe); color:var(--rosa-bebe);" 
-            onclick="abrirJogo('com.dts.freefiremax')">Abrir Free Fire Max</button>
-</div>
+                <button class="btn-rosa" onclick="abrirJogo('com.dts.freefireth')">Abrir Free Fire</button>
+                <button class="btn-rosa" style="background:none; border:1px solid var(--rosa-bebe); color:var(--rosa-bebe);" onclick="abrirJogo('com.dts.freefiremax')">Abrir Free Fire Max</button>
+            </div>
         </div>
 
         <div id="win-info" class="main-window" style="text-align: center;">
             <h2>Informações</h2>
             <div style="margin-top: 40px; font-size: 0.85rem; line-height: 2;">
-                <p style="font-weight: 600;">BUILD PREMIUM V7</p>
-                <p style="color: #666; font-size: 0.7rem; margin-bottom: 20px;">Versão estável 2026</p>
-                <p>TikTok: <span style="color: var(--rosa-bebe);">@jeniizx7</span></p>
-                <p>Contato: <span style="color: var(--rosa-bebe);">@gothxjen</span></p>
-                <div style="margin-top: 30px; opacity: 0.3;">
-                    <p style="font-size: 0.6rem;">Status: <span style="color: #00ff00;">Protegido</span></p>
-                </div>
+                <p>BUILD PREMIUM V7</p>
+                <p>TikTok: @jeniizx7</p>
+                <p>Contato: @gothxjen</p>
             </div>
         </div>
     </div>
 </section>
+
 <script>
-    // 1. Configurações Globais e Variáveis de Instalação
     let selectedPrecision = 'mid';
-    let deferredPrompt; 
+    let deferredPrompt;
+    const btnInstall = document.querySelector('.btn-download');
+    const installFooter = document.getElementById('install-footer');
 
-    // 2. Registro do Service Worker (Obrigatório para PWA)
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+        installFooter.style.display = 'none';
+    }
+
     if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js')
-                .then(reg => console.log('SW ativo:', reg.scope))
-                .catch(err => console.error('Erro no SW:', err));
-        });
+        navigator.serviceWorker.register('./sw.js').catch(err => console.log(err));
     }
 
-    // 3. Funções de Interface
     function efetuarLogin() {
-    const passInput = document.getElementById('login-pass');
-    const pass = passInput.value.trim(); // O .trim() remove espaços acidentais que travam o login
-    
-    // Log para você ver o que está acontecendo no console (F12 no PC)
-    console.log("Tentativa de login detectada.");
-    console.log("Senha digitada:", pass);
-
-    if(pass === '1234') {
-        console.log("Senha correta! Trocando de tela...");
-        
-        // Remove a classe active da tela de login e adiciona na dashboard
-        document.getElementById('screen-login').classList.remove('active');
-        document.getElementById('screen-dash').classList.add('active');
-        
-        console.log("Classes alteradas com sucesso.");
-    } else {
-        console.log("Senha incorreta.");
-        alert('PIN incorreto. Tente "1234"');
+        const pass = document.getElementById('login-pass').value.trim();
+        if(pass === '1234') {
+            document.getElementById('screen-login').classList.remove('active');
+            document.getElementById('screen-dash').classList.add('active');
+            initCanvas();
+        } else {
+            alert('PIN incorreto.');
+        }
     }
-}
-    
+
     function switchCard(id, el) {
         document.querySelectorAll('.main-window').forEach(w => w.classList.remove('active'));
         document.querySelectorAll('.mini-card').forEach(c => c.classList.remove('active'));
@@ -255,67 +207,62 @@
         selectedPrecision = val;
     }
 
-    // 4. Lógica de Instalação (CORRIGIDA)
-    const btnInstall = document.querySelector('.btn-download');
-
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
-        console.log('PWA pronto para instalar');
+        installFooter.style.display = 'block';
     });
 
-    const btnInstall = document.querySelector('.btn-download');
     btnInstall.addEventListener('click', async () => {
         if (deferredPrompt) {
             deferredPrompt.prompt();
             const { outcome } = await deferredPrompt.userChoice;
-            console.log(`Usuário escolheu: ${outcome}`);
+            if (outcome === 'accepted') installFooter.style.display = 'none';
             deferredPrompt = null;
-        } else {
-            alert('O sistema já está instalado ou o navegador ainda está processando. Tente novamente em 5 segundos ou use o menu do navegador (3 pontinhos).');
         }
     });
 
-    // 5. Motor de Injeção
     async function executarInjecao() {
         const log = document.getElementById('inject-log');
         const btn = document.getElementById('btn-run');
-        const launch = document.getElementById('launch-group');
         btn.style.display = 'none';
-        log.innerHTML = "";
-        const addLog = (msg) => { log.innerHTML += `> ${msg}<br>`; log.scrollTop = log.scrollHeight; };
-
-        addLog("Iniciando Master Engine V7...");
-        await sleep(800);
-        if (document.getElementById('m-recoil').checked) addLog("Engine: Recoil_Control ativo.");
-        if (document.getElementById('m-touch').checked) addLog("Engine: Touch_Latency 1ms.");
-        if (document.getElementById('m-stab').checked) addLog("Engine: Anti-Jitter calibrado.");
-        addLog(`Engine: Precisão [${selectedPrecision.toUpperCase()}]`);
-        
-        await sleep(1000);
-        addLog("<br><span style='color:#00ff00'>INJEÇÃO CONCLUÍDA!</span>");
-        launch.style.display = 'flex';
+        log.innerHTML = "Iniciando Engine...";
+        await new Promise(r => setTimeout(r, 1000));
+        log.innerHTML += "<br>Concluído!";
+        document.getElementById('launch-group').style.display = 'flex';
     }
 
-    function sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
-    
-    function abrirJogo(pacote) {
-        const intentUrl = `intent://scan/#Intent;scheme=android-app;package=${pacote};end`;
-        setTimeout(() => { window.location.href = intentUrl; }, 500);
+    function abrirJogo(p) {
+        window.location.href = `intent://scan/#Intent;scheme=android-app;package=${p};end`;
     }
 
-    // 6. Motor Gráfico (Background)
     const canvas = document.getElementById('canvas-bg');
     const ctx = canvas.getContext('2d');
     function initCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-    let stars = Array(80).fill().map(() => ({ x: Math.random() * window.innerWidth, y: Math.random() * window.innerHeight, size: Math.random() * 1.2, speed: Math.random() * 0.3 + 0.1 }));
+    
+    let stars = Array(80).fill().map(() => ({ 
+        x: Math.random() * window.innerWidth, 
+        y: Math.random() * window.innerHeight, 
+        size: Math.random() * 1.5, 
+        speed: Math.random() * 0.4 + 0.1 
+    }));
+
     function drawStars() {
-        ctx.fillStyle = '#0A0A0A'; ctx.fillRect(0, 0, canvas.width, canvas.height);
-        stars.forEach(s => { ctx.fillStyle = 'rgba(244, 167, 187, 0.5)'; ctx.beginPath(); ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2); ctx.fill(); s.y -= s.speed; if (s.y < 0) { s.y = canvas.height; s.x = Math.random() * canvas.width; } });
+        ctx.fillStyle = '#0A0A0A';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        stars.forEach(s => {
+            ctx.fillStyle = 'rgba(244, 167, 187, 0.6)';
+            ctx.beginPath();
+            ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+            ctx.fill();
+            s.y -= s.speed;
+            if (s.y < 0) s.y = canvas.height;
+        });
         requestAnimationFrame(drawStars);
     }
     window.addEventListener('resize', initCanvas);
     initCanvas(); drawStars();
 </script>
 </body>
-</html>
+    </html>
+    
