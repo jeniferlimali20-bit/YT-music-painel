@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>YT musc</title>
+    <link rel="manifest" href="manifest.json">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -354,6 +355,43 @@ function abrirJogo(pacote) {
     window.addEventListener('resize', initCanvas);
     initCanvas();
     drawStars();
+    // --- LÓGICA DE INSTALAÇÃO ---
+let deferredPrompt;
+const btnInstall = document.querySelector('.btn-download');
+
+// Registra o Service Worker
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js');
+}
+
+// Captura o evento de instalação
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    // Mostra o botão de instalação (caso estivesse oculto)
+    btnInstall.style.display = 'inline-block';
+});
+
+btnInstall.addEventListener('click', async () => {
+    if (deferredPrompt) {
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        if (outcome === 'accepted') {
+            console.log('Usuário aceitou a instalação');
+        }
+        deferredPrompt = null;
+    } else {
+        alert('O app já está instalado ou seu navegador não suporta a instalação direta.');
+    }
+});
+
+// Esconde o botão se o app já estiver instalado
+window.addEventListener('appinstalled', () => {
+    btnInstall.style.display = 'none';
+    deferredPrompt = null;
+    console.log('PWA instalado com sucesso!');
+});
+    
 </script>
 </body>
 </html>
