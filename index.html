@@ -252,6 +252,7 @@
         console.log('PWA pronto para instalar');
     });
 
+    const btnInstall = document.querySelector('.btn-download');
     btnInstall.addEventListener('click', async () => {
         if (deferredPrompt) {
             deferredPrompt.prompt();
