@@ -1,6 +1,6 @@
 {
-  "name": "YT Music Painel Premium",
-  "short_name": "Painel Premium",
+  "name": "YT musc Panel",
+  "short_name": "YT musc",
   "start_url": "index.html",
   "display": "standalone",
   "background_color": "#0a0a0a",
