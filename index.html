@@ -355,41 +355,22 @@ function abrirJogo(pacote) {
     window.addEventListener('resize', initCanvas);
     initCanvas();
     drawStars();
-    // --- LÓGICA DE INSTALAÇÃO ---
-let deferredPrompt;
-const btnInstall = document.querySelector('.btn-download');
-
-// Registra o Service Worker
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js');
-}
-
-// Captura o evento de instalação
+    // Substitua sua lógica de instalação por esta:
 window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
-    // Mostra o botão de instalação (caso estivesse oculto)
-    btnInstall.style.display = 'inline-block';
+    console.log('PWA pronto para instalar');
 });
 
 btnInstall.addEventListener('click', async () => {
     if (deferredPrompt) {
         deferredPrompt.prompt();
         const { outcome } = await deferredPrompt.userChoice;
-        if (outcome === 'accepted') {
-            console.log('Usuário aceitou a instalação');
-        }
         deferredPrompt = null;
     } else {
-        alert('O app já está instalado ou seu navegador não suporta a instalação direta.');
+        // Se cair aqui, vamos tentar forçar o navegador a mostrar o menu de instalação
+        alert('Aguarde um instante ou clique nos 3 pontinhos do navegador e escolha "Instalar Aplicativo".');
     }
-});
-
-// Esconde o botão se o app já estiver instalado
-window.addEventListener('appinstalled', () => {
-    btnInstall.style.display = 'none';
-    deferredPrompt = null;
-    console.log('PWA instalado com sucesso!');
 });
     
 </script>
