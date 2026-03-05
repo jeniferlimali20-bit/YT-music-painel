@@ -206,10 +206,20 @@
     </div>
 </section>
 <script>
-    // Configurações Globais do Motor
+    // 1. Configurações Globais e Variáveis de Instalação
     let selectedPrecision = 'mid';
+    let deferredPrompt; 
 
-    // Funções de Interface
+    // 2. Registro do Service Worker (Obrigatório para PWA)
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./sw.js')
+                .then(reg => console.log('SW ativo:', reg.scope))
+                .catch(err => console.error('Erro no SW:', err));
+        });
+    }
+
+    // 3. Funções de Interface
     function efetuarLogin() {
         const pass = document.getElementById('login-pass').value;
         if(pass === '1234') {
@@ -233,147 +243,66 @@
         selectedPrecision = val;
     }
 
-    // --- MOTORES TÉCNICOS ---
+    // 4. Lógica de Instalação (CORRIGIDA)
+    const btnInstall = document.querySelector('.btn-download');
 
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        console.log('PWA pronto para instalar');
+    });
+
+    btnInstall.addEventListener('click', async () => {
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            console.log(`Usuário escolheu: ${outcome}`);
+            deferredPrompt = null;
+        } else {
+            alert('O sistema já está instalado ou o navegador ainda está processando. Tente novamente em 5 segundos ou use o menu do navegador (3 pontinhos).');
+        }
+    });
+
+    // 5. Motor de Injeção
     async function executarInjecao() {
         const log = document.getElementById('inject-log');
         const btn = document.getElementById('btn-run');
         const launch = document.getElementById('launch-group');
-        
         btn.style.display = 'none';
         log.innerHTML = "";
+        const addLog = (msg) => { log.innerHTML += `> ${msg}<br>`; log.scrollTop = log.scrollHeight; };
 
-        const addLog = (msg) => {
-            log.innerHTML += `> ${msg}<br>`;
-            log.scrollTop = log.scrollHeight;
-        };
-
-        // Sequência de Ativação do Motor
         addLog("Iniciando Master Engine V7...");
         await sleep(800);
-
-        // 1. Motor de Mira e Recoil
-        if (document.getElementById('m-recoil').checked) {
-            addLog("Engine: Recoil_Control_System ativo.");
-            addLog("Calculando compensação de dispersão...");
-        }
-
-        if (document.getElementById('m-touch').checked) {
-            addLog("Engine: Touch_Latency reduzida para 1ms.");
-            addLog("Otimizando amostragem do digitalizador.");
-        }
-
-        if (document.getElementById('m-stab').checked) {
-            addLog("Engine: Anti-Jitter X/Y calibrado.");
-            addLog("Filtro de ruído de mira: 100%");
-        }
-
-        // 2. Motor de Precisão (Freio de Mira)
-        addLog(`Engine: Precisão definida em [${selectedPrecision.toUpperCase()}]`);
-        if (selectedPrecision === 'high') {
-            addLog("Ativando 'Aim Brake' (Freio de Puxada Y)...");
-            addLog("Limitador de overshoot ativo: Mira trava no alvo.");
-        } else if (selectedPrecision === 'low') {
-            addLog("Suavização de pixel reduzida.");
-        }
-
-        // 3. Motores de Otimização
-        if (document.getElementById('o-dev').checked) {
-            addLog("System: Limpando caches de memória volátil...");
-            addLog("Dispositivo otimizado para Gaming Mode.");
-        }
-
-        if (document.getElementById('o-perf').checked) {
-            addLog("Perf: Governor alterado para [Performance].");
-            addLog("Prioridade de CPU: High.");
-        }
-
-        if (document.getElementById('o-fps').checked) {
-            addLog("FPS: Estabilizando FrameBuffer em 120Hz.");
-            addLog("Sincronização vertical adaptativa.");
-        }
-
-        if (document.getElementById('o-net').checked) {
-            addLog("Net: Otimizando rotas TCP/UDP.");
-            addLog("Ping Stabilizer injetado com sucesso.");
-        }
-
-        await sleep(1000);
-        addLog("<br><span style='color:#00ff00'>INJEÇÃO CONCLUÍDA COM SUCESSO!</span>");
+        if (document.getElementById('m-recoil').checked) addLog("Engine: Recoil_Control ativo.");
+        if (document.getElementById('m-touch').checked) addLog("Engine: Touch_Latency 1ms.");
+        if (document.getElementById('m-stab').checked) addLog("Engine: Anti-Jitter calibrado.");
+        addLog(`Engine: Precisão [${selectedPrecision.toUpperCase()}]`);
         
+        await sleep(1000);
+        addLog("<br><span style='color:#00ff00'>INJEÇÃO CONCLUÍDA!</span>");
         launch.style.display = 'flex';
     }
 
-    function sleep(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
-function abrirJogo(pacote) {
-    // Tenta abrir o jogo pelo protocolo de intent do Android
-    // Se o jogo estiver instalado, ele abre. Se não, ele redireciona para a Play Store.
-    const intentUrl = `intent://scan/#Intent;scheme=android-app;package=${pacote};end`;
+    function sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
     
-    // Pequeno delay para dar efeito de transição
-    setTimeout(() => {
-        window.location.href = intentUrl;
-    }, 500);
-}
-    // --- MOTOR GRÁFICO (BACKGROUND) ---
+    function abrirJogo(pacote) {
+        const intentUrl = `intent://scan/#Intent;scheme=android-app;package=${pacote};end`;
+        setTimeout(() => { window.location.href = intentUrl; }, 500);
+    }
+
+    // 6. Motor Gráfico (Background)
     const canvas = document.getElementById('canvas-bg');
     const ctx = canvas.getContext('2d');
-
-    function initCanvas() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-    }
-
-    let stars = Array(80).fill().map(() => ({
-        x: Math.random() * window.innerWidth,
-        y: Math.random() * window.innerHeight,
-        size: Math.random() * 1.2,
-        speed: Math.random() * 0.3 + 0.1
-    }));
-
+    function initCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+    let stars = Array(80).fill().map(() => ({ x: Math.random() * window.innerWidth, y: Math.random() * window.innerHeight, size: Math.random() * 1.2, speed: Math.random() * 0.3 + 0.1 }));
     function drawStars() {
-        ctx.fillStyle = '#0A0A0A';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        
-        stars.forEach(s => {
-            ctx.fillStyle = 'rgba(244, 167, 187, 0.5)';
-            ctx.beginPath();
-            ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
-            ctx.fill();
-
-            s.y -= s.speed;
-            if (s.y < 0) {
-                s.y = canvas.height;
-                s.x = Math.random() * canvas.width;
-            }
-        });
+        ctx.fillStyle = '#0A0A0A'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+        stars.forEach(s => { ctx.fillStyle = 'rgba(244, 167, 187, 0.5)'; ctx.beginPath(); ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2); ctx.fill(); s.y -= s.speed; if (s.y < 0) { s.y = canvas.height; s.x = Math.random() * canvas.width; } });
         requestAnimationFrame(drawStars);
     }
-
     window.addEventListener('resize', initCanvas);
-    initCanvas();
-    drawStars();
-    
-    // Substitua sua lógica de instalação por esta:
-window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    console.log('PWA pronto para instalar');
-});
-
-btnInstall.addEventListener('click', async () => {
-    if (deferredPrompt) {
-        deferredPrompt.prompt();
-        const { outcome } = await deferredPrompt.userChoice;
-        deferredPrompt = null;
-    } else {
-        // Se cair aqui, vamos tentar forçar o navegador a mostrar o menu de instalação
-        alert('Aguarde um instante ou clique nos 3 pontinhos do navegador e escolha "Instalar Aplicativo".');
-    }
-});
-    
+    initCanvas(); drawStars();
 </script>
 </body>
 </html>
