@@ -333,27 +333,7 @@
     @media (display-mode: standalone), (display-mode: fullscreen) {
         #install-footer { display: none !important; }
     }
-       /* Posicionamento do X para o layout da sua imagem */
-.close-btn {
-    position: absolute;
-    top: 15px;
-    right: 20px;
-    font-size: 26px;
-    font-weight: bold;
-    color: #555; /* Cor discreta inicial */
-    cursor: pointer;
-    line-height: 1;
-    transition: 0.3s;
-    z-index: 100;
-}
-
-/* Brilho rosa neon ao passar o mouse/tocar */
-.close-btn:hover {
-    color: var(--rosa-bebe);
-    text-shadow: 0 0 15px var(--glow);
-    transform: scale(1.1);
-}
-        
+       
     </style>
 </head>
 <body>
@@ -382,11 +362,7 @@
             <div class="mini-card" onclick="switchCard('win-info', this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4M12 8h.01"></path></svg></div>
         </div>
 
-        <div id="win-mira" class="main-window active" style="height: auto; padding: 15px; margin-bottom: 15px; position: relative;">
-    <span class="close-btn" onclick="fazerLogout()">&times;</span>
-    <h2 style="margin: 0;">AUXILIAR MIRA</h2>
-        </div>
-        
+        <div id="win-mira" class="main-window active" 
             <h2>Auxiliar Mira</h2>
             <div class="row"><div class="row-info"><span>Diminuir Recoil</span><span class="desc">Reduz o recuo das armas.</span></div><label class="switch"><input type="checkbox" id="m-recoil"><span class="slider"></span></label></div>
             <div class="row"><div class="row-info"><span>Aprimorar Toque</span><span class="desc">Resposta de toque imediata.</span></div><label class="switch"><input type="checkbox" id="m-touch"><span class="slider"></span></label></div>
@@ -667,20 +643,6 @@ async function executarMotorInjecao() {
             navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW Erro:', err));
         });
     }
-        
-        function fazerLogout() {
-    // Para todos os motores e limpa o log
-    motorAtivo = false;
-    document.getElementById('inject-log').innerHTML = "";
-    
-    // Volta o botão de injetar e esconde o grupo de launch
-    document.getElementById('btn-run').style.display = 'block';
-    document.getElementById('launch-group').style.display = 'none';
-
-    // Troca as telas para voltar ao Login
-    document.getElementById('screen-dash').classList.remove('active');
-    document.getElementById('screen-login').classList.add('active');
-}
         
  </script>
 </body>
