@@ -177,24 +177,40 @@ let suavizacaoAtiva = false;
 let ultimoY = 0;
 let ultimoX = 0;
 
-// O MOTOR QUE FILTRA O MOVIMENTO
+// 1. VARIÁVEIS DE ESTABILIZAÇÃO V8 (ANTI-TREMIDO)
+let suavizacaoAtiva = false;
+let ultimoY = 0;
+let ultimoX = 0;
+let pontosSuaves = []; // Guarda os últimos movimentos para tirar a média
+
+// 2. O MOTOR QUE FILTRA O JITTER (TREMIDO)
 document.addEventListener('touchmove', function(e) {
     if (!suavizacaoAtiva) return;
 
     let toque = e.touches[0];
-    let deltaY = toque.clientY - ultimoY;
-    let deltaX = Math.abs(toque.clientX - ultimoX);
+    
+    // FILTRO ANTI-JITTER: Captura os últimos 3 pontos para criar uma linha reta
+    pontosSuaves.push({ x: toque.clientX, y: toque.clientY });
+    if (pontosSuaves.length > 3) pontosSuaves.shift();
 
-    // Só freia se estiver subindo (deltaY < 0) e se for um movimento vertical (Y > X)
-    if (deltaY < -5 && Math.abs(deltaY) > deltaX) { 
-        // Quanto menor a precisão selecionada, mais ele freia
-        let forcaResistencia = 0.4 * (1 / enginePrecisionMulti); 
-        window.scrollBy(0, deltaY * forcaResistencia);
+    // Calcula a média para eliminar vibrações do touch de 120Hz
+    let mediaY = pontosSuaves.reduce((a, b) => a + b.y, 0) / pontosSuaves.length;
+    let mediaX = pontosSuaves.reduce((a, b) => a + b.x, 0) / pontosSuaves.length;
+
+    let deltaY = mediaY - ultimoY;
+    let deltaX = Math.abs(mediaX - ultimoX);
+
+    // REGRA DO CAPA: Só estabiliza se estiver subindo e não para os lados
+    if (deltaY < -3 && Math.abs(deltaY) > deltaX) { 
+        // Aplica resistência baseada na precisão (Baixa, Média, Alta)
+        let estabilizador = 0.35 * (1 / enginePrecisionMulti); 
+        window.scrollBy(0, deltaY * estabilizador);
     }
 
-    ultimoY = toque.clientY;
-    ultimoX = toque.clientX;
+    ultimoY = mediaY;
+    ultimoX = mediaX;
 }, { passive: false });
+    
     
     function drawStars() {
         ctx.fillStyle = '#0A0A0A'; ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -239,8 +255,7 @@ document.addEventListener('touchmove', function(e) {
 
     // 5. Motor de Injeção V7 (Mantido seus Logs e Scripts originais)
     async function executarMotorInjecao() {
-        // Adicione isso dentro da função executarMotorInjecao
-suavizacaoAtiva = document.getElementById('m-stab').checked;
+    suavizacaoAtiva = document.getElementById('m-stab').checked;
         const log = document.getElementById('inject-log');
         const btn = document.getElementById('btn-run');
         const precisionText = document.querySelector('.prec-btn.active').innerText;
