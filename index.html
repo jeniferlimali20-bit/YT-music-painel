@@ -15,18 +15,14 @@
             --glow: rgba(244, 167, 187, 0.2);
         }
 
-        /* Reset e Base */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background-color: var(--fundo-escuro); color: white; overflow: hidden; height: 100vh; width: 100vw; }
         
-        /* Background Animado */
         #canvas-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
 
-        /* Estrutura de Telas */
         .screen { display: none; height: 100vh; width: 100vw; flex-direction: column; align-items: center; justify-content: center; position: relative; z-index: 1; }
         .screen.active { display: flex; }
 
-        /* --- Estilo Login --- */
         #screen-login { justify-content: space-between; padding: 40px 20px; }
         .login-content { width: 100%; max-width: 300px; text-align: center; background: var(--glass); backdrop-filter: blur(15px); border: 1px solid var(--glass-border); border-radius: 24px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         
@@ -42,13 +38,11 @@
         
         .footer-install { width: 100%; text-align: center; padding-bottom: 30px; }
         .btn-download { background: none; border: 1px solid var(--rosa-bebe); color: var(--rosa-bebe); padding: 10px 30px; border-radius: 10px; font-size: 0.75rem; cursor: pointer; font-weight: 600; text-transform: uppercase; transition: 0.3s; }
-        .btn-download:active { background: var(--rosa-bebe); color: black; }
 
-        /* --- Estilo Dashboard --- */
         .dash-container { width: 100%; max-width: 360px; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
         
         .card-selector { display: flex; gap: 12px; margin-bottom: 15px; width: 100%; justify-content: center; z-index: 10; }
-        .mini-card { width: 52px; height: 52px; background: var(--glass); border: 1px solid var(--glass-border); border-radius: 14px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .mini-card { width: 52px; height: 52px; background: var(--glass); border: 1px solid var(--glass-border); border-radius: 14px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.4s; }
         .mini-card.active { border-color: var(--rosa-bebe); background: rgba(244, 167, 187, 0.15); transform: translateY(-3px); box-shadow: 0 5px 15px var(--glow); }
         .mini-card svg { stroke: var(--rosa-bebe); width: 22px; stroke-width: 1.5; }
 
@@ -60,13 +54,12 @@
         h2 { font-size: 0.95rem; color: var(--rosa-bebe); font-weight: 400; margin-bottom: 18px; text-align: center; letter-spacing: 1px; }
 
         .row { display: flex; justify-content: space-between; align-items: center; margin: 14px 0; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.03); }
-        .row:last-child { border: none; }
         .row-info { flex: 1; padding-right: 10px; }
         .row-info span { font-size: 0.85rem; font-weight: 400; display: block; color: #eee; }
-        .desc { font-size: 0.68rem; color: #777; margin-top: 2px; }
+        /* Descrição diminuída aqui */
+        .desc { font-size: 0.55rem; color: #777; margin-top: 2px; }
 
         .btn-rosa { background: var(--rosa-bebe); color: #000; border: none; padding: 14px; border-radius: 12px; width: 100%; font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: 0.3s; margin-top: auto; }
-        .btn-rosa:active { transform: scale(0.97); filter: brightness(0.9); }
         
         .precision-grid { display: flex; gap: 8px; margin-top: 10px; }
         .prec-btn { flex: 1; padding: 10px; border-radius: 10px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.03); color: white; font-size: 0.75rem; cursor: pointer; transition: 0.3s; }
@@ -79,20 +72,11 @@
         input:checked + .slider { background: rgba(244, 167, 187, 0.2); border-color: var(--rosa-bebe); }
         input:checked + .slider:before { transform: translateX(18px); background: var(--rosa-bebe); box-shadow: 0 0 8px var(--rosa-bebe); }
 
-        #inject-log { 
-            height: 120px; background: rgba(0,0,0,0.3); border-radius: 12px; padding: 12px; 
-            font-family: 'Courier New', monospace; font-size: 0.7rem; color: var(--rosa-bebe); 
-            overflow-y: auto; margin-bottom: 15px; border: 1px solid var(--glass-border);
-            text-align: left; line-height: 1.4;
-        }
-        #inject-log::-webkit-scrollbar { width: 3px; }
-        #inject-log::-webkit-scrollbar-thumb { background: var(--rosa-bebe); border-radius: 10px; }
-
+        #inject-log { height: 120px; background: rgba(0,0,0,0.3); border-radius: 12px; padding: 12px; font-family: 'Courier New', monospace; font-size: 0.7rem; color: var(--rosa-bebe); overflow-y: auto; margin-bottom: 15px; border: 1px solid var(--glass-border); text-align: left; }
         .game-launch-group { display: none; flex-direction: column; gap: 10px; width: 100%; margin-top: auto; }
     </style>
 </head>
 <body>
-
 <canvas id="canvas-bg"></canvas>
 
 <section id="screen-login" class="screen active">
@@ -102,7 +86,6 @@
         <input type="password" id="login-pass" placeholder="xxx-xxx-xxx">
         <button class="btn-rosa" onclick="efetuarLogin()">Entrar</button>
     </div>
-
     <div class="footer-install" id="install-footer">
         <p style="font-size: 0.65rem; color: #555; margin-bottom: 12px; letter-spacing: 1px;">PAINEL DE OTIMIZAÇÃO MOBILE</p>
         <button class="btn-download">Baixar agora</button>
@@ -172,26 +155,13 @@
 <script>
     let selectedPrecision = 'mid';
     let deferredPrompt;
-    const btnInstall = document.querySelector('.btn-download');
-    const installFooter = document.getElementById('install-footer');
 
-    if (window.matchMedia('(display-mode: standalone)').matches) {
-        installFooter.style.display = 'none';
-    }
-
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./sw.js').catch(err => console.log(err));
-    }
-
+    // Login e Navegação
     function efetuarLogin() {
-        const pass = document.getElementById('login-pass').value.trim();
-        if(pass === '1234') {
+        if(document.getElementById('login-pass').value.trim() === '1234') {
             document.getElementById('screen-login').classList.remove('active');
             document.getElementById('screen-dash').classList.add('active');
-            initCanvas();
-        } else {
-            alert('PIN incorreto.');
-        }
+        } else { alert('PIN incorreto.'); }
     }
 
     function switchCard(id, el) {
@@ -207,63 +177,70 @@
         selectedPrecision = val;
     }
 
-    window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-        installFooter.style.display = 'block';
-    });
-
-    btnInstall.addEventListener('click', async () => {
-        if (deferredPrompt) {
-            deferredPrompt.prompt();
-            const { outcome } = await deferredPrompt.userChoice;
-            if (outcome === 'accepted') installFooter.style.display = 'none';
-            deferredPrompt = null;
-        }
-    });
-
-    async function executarInjecao() {
-        const log = document.getElementById('inject-log');
-        const btn = document.getElementById('btn-run');
-        btn.style.display = 'none';
-        log.innerHTML = "Iniciando Engine...";
-        await new Promise(r => setTimeout(r, 1000));
-        log.innerHTML += "<br>Concluído!";
-        document.getElementById('launch-group').style.display = 'flex';
-    }
-
+    // Função Abrir Jogo
     function abrirJogo(pacote) {
-    const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
-    
-    if (isIOS) {
-        window.location.href = "freefire://";
-    } else {
-        // Tentativa 1: Protocolo Direto (Geralmente evita a Play Store)
-        window.location.href = `android-app://${pacote}/#Intent;scheme=http;end`;
-
-        // Tentativa 2: Se a primeira falhar após meio segundo, tenta o Intent padrão
-        setTimeout(() => {
+        const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
+        if (isIOS) {
+            window.location.href = "freefire://";
+        } else {
             window.location.href = `intent://#Intent;package=${pacote};scheme=android-app;end`;
-        }, 500);
+        }
     }
-}
 
+    // Canvas de Estrelas
+    const canvas = document.getElementById('canvas-bg');
+    const ctx = canvas.getContext('2d');
+    let stars = [];
+
+    function initCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        stars = Array(80).fill().map(() => ({ 
+            x: Math.random() * canvas.width, 
+            y: Math.random() * canvas.height, 
+            size: Math.random() * 1.5, 
+            speed: Math.random() * 0.4 + 0.1 
+        }));
+    }
 
     function drawStars() {
         ctx.fillStyle = '#0A0A0A';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         stars.forEach(s => {
             ctx.fillStyle = 'rgba(244, 167, 187, 0.6)';
-            ctx.beginPath();
-            ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
-            ctx.fill();
+            ctx.beginPath(); ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2); ctx.fill();
             s.y -= s.speed;
             if (s.y < 0) s.y = canvas.height;
         });
         requestAnimationFrame(drawStars);
     }
+
     window.addEventListener('resize', initCanvas);
-    initCanvas(); drawStars();
+    initCanvas();
+    drawStars();
+
+    // Injeção
+    async function executarInjecao() {
+        const log = document.getElementById('inject-log');
+        document.getElementById('btn-run').style.display = 'none';
+        log.innerHTML = "Iniciando Engine...";
+        await new Promise(r => setTimeout(r, 1000));
+        log.innerHTML += "<br>Concluído!";
+        document.getElementById('launch-group').style.display = 'flex';
+    }
+
+    // Service Worker e Instalação
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
+    }
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault(); deferredPrompt = e;
+        document.getElementById('install-footer').style.display = 'block';
+    });
+    document.querySelector('.btn-download').addEventListener('click', async () => {
+        if (deferredPrompt) { deferredPrompt.prompt(); deferredPrompt = null; }
+    });
 </script>
 </body>
-</html>
+    </html>
+    
