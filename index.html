@@ -350,7 +350,72 @@
     font-weight: 500;
     letter-spacing: 0.5px;
 }
-        
+        /* Grid de Status (Versão e Ativo) */
+.info-status-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.status-item {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 12px;
+    border-radius: 15px;
+    text-align: center;
+}
+
+.status-label {
+    display: block;
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    color: #777;
+    margin-bottom: 4px;
+}
+
+.status-value {
+    font-size: 0.75rem;
+    font-weight: bold;
+    color: #fff;
+}
+
+/* Lista de Redes Sociais */
+.social-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.social-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: rgba(244, 167, 187, 0.05);
+    border: 1px solid rgba(244, 167, 187, 0.1);
+    padding: 12px 20px;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.social-item:hover {
+    background: rgba(244, 167, 187, 0.15);
+    border-color: var(--rosa-bebe);
+    transform: translateX(5px);
+}
+
+.social-item svg {
+    width: 18px;
+    height: 18px;
+    color: var(--rosa-bebe);
+}
+
+.social-item span {
+    font-size: 0.85rem;
+    color: #ddd;
+}
+    
     </style>
 </head>
 <body>
@@ -428,13 +493,34 @@
     <div class="row"><div class="row-info"><span>Sensibilidade Geral</span></div><span id="val-sens" style="color:var(--rosa-bebe); font-weight:bold;">--</span></div>
     <div class="row"><div class="row-info"><span>DPI Sugerida</span></div><span id="val-dpi" style="color:var(--rosa-bebe); font-weight:bold;">--</span></div>
     <div class="row"><div class="row-info"><span>Botão de Atirar</span></div><span id="val-btn" style="color:var(--rosa-bebe); font-weight:bold;">--</span></div><button class="btn-rosa" style="margin-top: 15px;" onclick="gerarConfiguracao()">Gerar Configuração</button></div>
-        <div id="win-info" class="main-window" style="text-align: center;">
-            <h2>Informações</h2>
-            <div style="margin-top: 40px; font-size: 0.85rem; line-height: 2;">
-                <p>BUILD PREMIUM V7</p>
-                <p>TikTok: @jeniizx7</p>
-                <p>Contato: @gothxjen</p>
-            </div>
+        <div id="win-info" class="main-window">
+    <h2>Informações</h2>
+    
+    <div class="info-status-grid">
+        <div class="status-item">
+            <span class="status-label">Versão</span>
+            <span class="status-value">BUILD PREMIUM V7</span>
+        </div>
+        <div class="status-item">
+            <span class="status-label">Status</span>
+            <span class="status-value" style="color: #4ade80;">Ativo</span>
+        </div>
+    </div>
+
+    <div class="social-list">
+        <div class="social-item" onclick="window.open('https://tiktok.com/@jeniizx7')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"></path></svg>
+            <span>TikTok: @jeniizx7</span>
+        </div>
+        
+        <div class="social-item" onclick="window.open('https://t.me/gothxjen')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m22 2-7 20-4-9-9-4Z"></path><path d="M22 2 11 13"></path></svg>
+            <span>Contato: @gothxjen</span>
+        </div>
+    </div>
+
+    <p style="font-size: 0.6rem; opacity: 0.3; margin-top: 20px; text-transform: uppercase; letter-spacing: 2px;">© 2026 Auxílio Premium Inc.</p>
+</div>
         </div>
     </div>
 </section>
