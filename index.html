@@ -154,7 +154,7 @@
         </div>
     </div>
 </section>
-    <script>
+<script>
     // 1. Efeito Visual de Fundo (Mantido Original)
     const canvas = document.getElementById('canvas-bg');
     const ctx = canvas.getContext('2d');
@@ -324,4 +324,30 @@
         }, 1500);
     }
     
+    // 7. Gerador de Sensibilidade
+    async function gerarConfiguracao() {
+        const width = window.screen.width * window.devicePixelRatio;
+        const height = window.screen.height * window.devicePixelRatio;
+        const ua = navigator.userAgent.toLowerCase();
+        let dispositivo = "Android";
+        if (ua.includes("g53") || ua.includes("moto")) dispositivo = "Moto G53";
+        else if (ua.includes("redmi") || ua.includes("xiaomi")) dispositivo = "Redmi Note";
 
+        document.getElementById('device-detected').innerText = `Hardware: ${dispositivo} (${Math.round(width)}x${Math.round(height)})`;
+        const sensEl = document.getElementById('val-sens');
+        sensEl.innerText = "Analisando...";
+        await new Promise(r => setTimeout(r, 1000));
+
+        sensEl.innerText = width > 1000 ? 98 : 94;
+        document.getElementById('val-dpi').innerText = Math.round(width / 2) + 120;
+        document.getElementById('val-btn').innerText = width > 1000 ? "52%" : "47%";
+    }
+
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW Erro:', err));
+        });
+    }
+ </script>
+</body>
+</html>
