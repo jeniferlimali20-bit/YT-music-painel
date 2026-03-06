@@ -162,8 +162,8 @@
             </div>
         </div>
     </div>
-</section>
-<script>
+</section
+    <script>
     // 1. Efeito Visual de Fundo (Mantido Original)
     const canvas = document.getElementById('canvas-bg');
     const ctx = canvas.getContext('2d');
@@ -172,45 +172,37 @@
         canvas.width = window.innerWidth; canvas.height = window.innerHeight;
         stars = Array(80).fill().map(() => ({ x: Math.random() * canvas.width, y: Math.random() * canvas.height, size: Math.random() * 1.5, speed: Math.random() * 0.4 + 0.1 }));
     }
-    // VARIÁVEIS DE CONTROLE DE EIXO
-let suavizacaoAtiva = false;
-let ultimoY = 0;
-let ultimoX = 0;
 
-// 1. VARIÁVEIS DE ESTABILIZAÇÃO V8 (ANTI-TREMIDO)
-let suavizacaoAtiva = false;
-let ultimoY = 0;
-let ultimoX = 0;
-let pontosSuaves = []; // Guarda os últimos movimentos para tirar a média
+    // --- CORREÇÃO: VARIÁVEIS DECLARADAS APENAS UMA VEZ ---
+    let suavizacaoAtiva = false;
+    let ultimoY = 0;
+    let ultimoX = 0;
+    let pontosSuaves = []; 
+    let enginePrecisionMulti = 1.0;
 
-// 2. O MOTOR QUE FILTRA O JITTER (TREMIDO)
-document.addEventListener('touchmove', function(e) {
-    if (!suavizacaoAtiva) return;
+    // 2. O MOTOR QUE FILTRA O JITTER (TREMIDO)
+    document.addEventListener('touchmove', function(e) {
+        if (!suavizacaoAtiva) return;
 
-    let toque = e.touches[0];
-    
-    // FILTRO ANTI-JITTER: Captura os últimos 3 pontos para criar uma linha reta
-    pontosSuaves.push({ x: toque.clientX, y: toque.clientY });
-    if (pontosSuaves.length > 3) pontosSuaves.shift();
+        let toque = e.touches[0];
+        
+        pontosSuaves.push({ x: toque.clientX, y: toque.clientY });
+        if (pontosSuaves.length > 3) pontosSuaves.shift();
 
-    // Calcula a média para eliminar vibrações do touch de 120Hz
-    let mediaY = pontosSuaves.reduce((a, b) => a + b.y, 0) / pontosSuaves.length;
-    let mediaX = pontosSuaves.reduce((a, b) => a + b.x, 0) / pontosSuaves.length;
+        let mediaY = pontosSuaves.reduce((a, b) => a + b.y, 0) / pontosSuaves.length;
+        let mediaX = pontosSuaves.reduce((a, b) => a + b.x, 0) / pontosSuaves.length;
 
-    let deltaY = mediaY - ultimoY;
-    let deltaX = Math.abs(mediaX - ultimoX);
+        let deltaY = mediaY - ultimoY;
+        let deltaX = Math.abs(mediaX - ultimoX);
 
-    // REGRA DO CAPA: Só estabiliza se estiver subindo e não para os lados
-    if (deltaY < -3 && Math.abs(deltaY) > deltaX) { 
-        // Aplica resistência baseada na precisão (Baixa, Média, Alta)
-        let estabilizador = 0.35 * (1 / enginePrecisionMulti); 
-        window.scrollBy(0, deltaY * estabilizador);
-    }
+        if (deltaY < -3 && Math.abs(deltaY) > deltaX) { 
+            let estabilizador = 0.35 * (1 / enginePrecisionMulti); 
+            window.scrollBy(0, deltaY * estabilizador);
+        }
 
-    ultimoY = mediaY;
-    ultimoX = mediaX;
-}, { passive: false });
-    
+        ultimoY = mediaY;
+        ultimoX = mediaX;
+    }, { passive: false });
     
     function drawStars() {
         ctx.fillStyle = '#0A0A0A'; ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -221,9 +213,6 @@ document.addEventListener('touchmove', function(e) {
         requestAnimationFrame(drawStars);
     }
     initCanvas(); drawStars();
-
-    // 2. Variáveis de Controle do Motor (Adicionado sem mudar o visual)
-    let enginePrecisionMulti = 1.0;
 
     // 3. Navegação e Login (Mantido Original)
     function switchCard(id, el) {
@@ -240,7 +229,7 @@ document.addEventListener('touchmove', function(e) {
         } else { alert('PIN incorreto'); }
     }
 
-    // 4. Ajuste do Motor de Precisão (Baixa, Média, Alta)
+    // 4. Ajuste do Motor de Precisão
     function setPrec(btn) {
         document.querySelectorAll('.prec-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
@@ -253,9 +242,9 @@ document.addEventListener('touchmove', function(e) {
         if (navigator.vibrate) navigator.vibrate(20);
     }
 
-    // 5. Motor de Injeção V7 (Mantido seus Logs e Scripts originais)
+    // 5. Motor de Injeção V7
     async function executarMotorInjecao() {
-    suavizacaoAtiva = document.getElementById('m-stab').checked;
+        suavizacaoAtiva = document.getElementById('m-stab').checked;
         const log = document.getElementById('inject-log');
         const btn = document.getElementById('btn-run');
         const precisionText = document.querySelector('.prec-btn.active').innerText;
@@ -302,7 +291,7 @@ document.addEventListener('touchmove', function(e) {
         document.getElementById('launch-group').style.display = 'flex';
     }
 
-    // 6. Gerenciamento PWA (Mantido Original)
+    // 6. Gerenciamento PWA
     let deferredPrompt;
     const installFooter = document.getElementById('install-footer');
     window.addEventListener('beforeinstallprompt', (e) => {
@@ -320,25 +309,18 @@ document.addEventListener('touchmove', function(e) {
             deferredPrompt = null;
         }
     }
-function abrirJogo(pacote) {
-    // Tenta o método de link direto do Google Play Services
-    const linkDireto = `https://play.google.com/store/apps/details?id=${pacote}`;
-    
-    // Tenta o método Intent (mais agressivo para abrir o app instalado)
-    const intent = `intent://launch?id=${pacote}#Intent;package=${pacote};scheme=android-app;end`;
 
-    // Primeiro tentamos o Intent
-    window.location.replace(intent);
-
-    // Se em 500ms o app não abrir, ele redireciona para um fallback ou avisa
-    setTimeout(() => {
-        if (confirm("Não foi possível abrir o jogo automaticamente. Deseja tentar abrir pela Play Store para dar o 'Play' por lá?")) {
-            window.location.href = linkDireto;
-        }
-    }, 1500);
-}
+    function abrirJogo(pacote) {
+        const intent = `intent://launch?id=${pacote}#Intent;package=${pacote};scheme=android-app;end`;
+        window.location.replace(intent);
+        setTimeout(() => {
+            if (confirm("Não foi possível abrir o jogo automaticamente. Deseja tentar abrir pela Play Store?")) {
+                window.location.href = `https://play.google.com/store/apps/details?id=${pacote}`;
+            }
+        }, 1500);
+    }
     
-    // 7. Gerador de Sensibilidade (Mantido Original com detecção real)
+    // 7. Gerador de Sensibilidade
     async function gerarConfiguracao() {
         const width = window.screen.width * window.devicePixelRatio;
         const height = window.screen.height * window.devicePixelRatio;
