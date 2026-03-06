@@ -237,6 +237,19 @@
 
     // PWA Registro
     if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js'); }
+
+    /* Ajuste específico para quando o site é aberto como App */
+@media (display-mode: standalone) {
+    .dash-container {
+        height: 100vh;
+        padding-top: 40px; /* Dá espaço para a barra de status do telemóvel */
+    }
+    .main-window {
+        height: auto; /* Deixa a janela crescer conforme o conteúdo */
+        min-height: 420px;
+    }
+}
+
 </script>
 </body>
     </html>
