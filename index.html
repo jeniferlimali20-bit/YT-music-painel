@@ -373,13 +373,6 @@
 </section>
     
 <section id="screen-dash" class="screen">
-    <div class="div-de-conter-que-voce-nao-quer"> <div class="main-window active">
-        </div>
-</div> <div class="main-window active" id="screen-options">
-    <span class="close-btn" onclick="fazerLogout()">&times;</span>
-    
-    <h2>AUXILIAR MIRA</h2>
-</div>
     <div class="dash-container">
         <div class="card-selector">
             <div class="mini-card active" onclick="switchCard('win-mira', this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"></circle><path d="M22 12h-4M6 12H2M12 6V2M12 22v-4"></path></svg></div>
@@ -390,6 +383,10 @@
         </div>
 
         <div id="win-mira" class="main-window active">
+            <div class="div-de-conter-que-voce-nao-quer"> <div class="main-window active">
+        </div>
+</div> <div class="main-window active" id="screen-options">
+    <span class="close-btn" onclick="fazerLogout()">&times;</span>
             <h2>Auxiliar Mira</h2>
             <div class="row"><div class="row-info"><span>Diminuir Recoil</span><span class="desc">Reduz o recuo das armas.</span></div><label class="switch"><input type="checkbox" id="m-recoil"><span class="slider"></span></label></div>
             <div class="row"><div class="row-info"><span>Aprimorar Toque</span><span class="desc">Resposta de toque imediata.</span></div><label class="switch"><input type="checkbox" id="m-touch"><span class="slider"></span></label></div>
