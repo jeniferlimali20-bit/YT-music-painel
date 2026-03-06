@@ -307,57 +307,51 @@
                 .catch(err => console.log('Erro SW:', err));
         });
     }
-    function gerarConfiguracao() {
-    const ua = navigator.userAgent.toLowerCase();
-    const platform = navigator.platform.toLowerCase();
-    const width = window.screen.width;
-    const height = window.screen.height;
-    let dispositivo = "Android Padrão";
-
-    // Lógica de Detecção para iPhone (iOS)
-    if (ua.includes("iphone") || ua.includes("ipad") || (platform.includes("mac") && navigator.maxTouchPoints > 1)) {
-        dispositivo = "Apple iPhone";
-    } 
-    // Lógica para Motorola
-    else if (ua.includes("moto") || ua.includes("motorola") || ua.includes("g53")) {
-        dispositivo = "Motorola Moto";
-    } 
-    // Lógica para Xiaomi/Redmi
-    else if (ua.includes("redmi") || ua.includes("xiaomi")) {
-        dispositivo = "Xiaomi Redmi";
-    }
-
-    document.getElementById('device-detected').innerText = `Hardware: ${dispositivo} (${width}x${height})`;
-
-    // Configurações baseadas no hardware detectado
-    let sens, dpi, btn;
-
-    if (dispositivo === "Apple iPhone") {
-        // iPhones têm resposta de toque muito alta, a sensi pode ser menor
-        sens = Math.floor(88 + (Math.random() * 5));
-        dpi = "Padrão iOS"; // iPhone não usa DPI manual como Android
-        btn = width < 380 ? "42%" : "45%";
-    } else if (dispositivo.includes("Motorola")) {
-        sens = Math.floor(94 + (Math.random() * 4));
-        dpi = 580;
-        btn = "48%";
-    } else if (dispositivo.includes("Xiaomi")) {
-        sens = Math.floor(96 + (Math.random() * 3));
-        dpi = 620;
-        btn = "53%";
-    } else {
-        sens = 90;
-        dpi = 600;
-        btn = "50%";
-    }
-
-    document.getElementById('val-sens').innerText = "Calibrando...";
     
-    setTimeout(() => {
-        document.getElementById('val-sens').innerText = sens;
-        document.getElementById('val-dpi').innerText = dpi;
-        document.getElementById('val-btn').innerText = btn;
-    }, 800);
+    async function gerarConfiguracao() {
+    // 1. Captura de dados reais do Hardware
+    const width = window.screen.width * window.devicePixelRatio;
+    const height = window.screen.height * window.devicePixelRatio;
+    const ratio = (height / width).toFixed(2);
+    const ua = navigator.userAgent.toLowerCase();
+    
+    let dispositivo = "Android";
+    if (ua.includes("iphone") || ua.includes("ipad")) dispositivo = "Apple iPhone";
+    else if (ua.includes("moto") || ua.includes("g53")) dispositivo = "Motorola Moto";
+    else if (ua.includes("redmi") || ua.includes("xiaomi")) dispositivo = "Xiaomi Redmi";
+
+    document.getElementById('device-detected').innerText = `Hardware: ${dispositivo} (${Math.round(width)}x${Math.round(height)})`;
+
+    // 2. Lógica Matemática de Sensibilidade
+    // Telas mais largas (resolução maior) precisam de mais velocidade no arraste
+    // Telas mais estreitas (ratio maior) precisam de estabilidade vertical (Y)
+    
+    let baseSens = width > 1080 ? 98 : 94;
+    if (ratio > 2) baseSens -= 2; // Ajuste para telas ultra-longas
+
+    let dpiSugerida = Math.round((width / 2) + 120);
+    // Limita a DPI para valores seguros que o Android suporta bem
+    if (dpiSugerida > 800) dpiSugerida = 720;
+    if (dpiSugerida < 400) dpiSugerida = 500;
+
+    // Tamanho do botão baseado na largura da tela para não errar o clique
+    let botaoTamanho = width > 1000 ? "52%" : "47%";
+
+    // Feedback Visual
+    const sensEl = document.getElementById('val-sens');
+    sensEl.innerText = "Analisando Pixels...";
+    sensEl.style.color = "#fff";
+
+    await new Promise(r => setTimeout(r, 1000));
+
+    // Exibe os resultados
+    sensEl.innerText = baseSens;
+    sensEl.style.color = "var(--rosa-bebe)";
+    document.getElementById('val-dpi').innerText = dpiSugerida;
+    document.getElementById('val-btn').innerText = botaoTamanho;
+
+    // Log de Debug no motor de injeção (opcional)
+    console.log(`[SYSTEM] Sensi calculada para Ratio: ${ratio}`);
 }
 </script>
 </body>
