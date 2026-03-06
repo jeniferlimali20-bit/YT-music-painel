@@ -24,24 +24,14 @@
         .screen.active { display: flex; }
 
         #screen-login { justify-content: space-between; padding: 40px 20px; }
-        .login-content { width: 100%; max-width: 300px; text-align: center; background: var(--glass); backdrop-filter: blur(15px); border: 1px solid var(--glass-border); border-radius: 24px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .login-content { width: 100%; max-width: 300px; text-align: center; background: var(--glass); backdrop-filter: blur(15px); border: 1px solid var(--glass-border); border-radius: 24px; padding: 30px; }
         
         h1 { color: var(--rosa-bebe); font-size: 1.1rem; font-weight: 300; letter-spacing: 2px; margin-bottom: 20px; text-transform: uppercase; }
-        .placeholder-img { height: 60px; background: rgba(255,255,255,0.02); border: 1px dashed rgba(244, 167, 187, 0.3); border-radius: 12px; margin-bottom: 20px; }
+        input { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid var(--glass-border); background: rgba(0,0,0,0.5); color: white; text-align: center; margin-bottom: 15px; outline: none; }
         
-        input { 
-            width: 100%; padding: 14px; border-radius: 12px; border: 1px solid var(--glass-border); 
-            background: rgba(0,0,0,0.5); color: white; text-align: center; margin-bottom: 15px; 
-            outline: none; font-size: 0.9rem; transition: 0.3s;
-        }
-
-        /* Rodapé de Instalação - Ajustado para sumir no App */
         .footer-install { width: 100%; text-align: center; padding-bottom: 30px; display: none; }
-        @media (display-mode: standalone) {
-            .footer-install { display: none !important; }
-        }
-
-        .btn-download { background: none; border: 1px solid var(--rosa-bebe); color: var(--rosa-bebe); padding: 10px 30px; border-radius: 10px; font-size: 0.75rem; cursor: pointer; font-weight: 600; text-transform: uppercase; }
+        @media (display-mode: standalone) { .footer-install { display: none !important; } }
+        .btn-download { background: none; border: 1px solid var(--rosa-bebe); color: var(--rosa-bebe); padding: 10px 30px; border-radius: 10px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; cursor: pointer; }
 
         .dash-container { width: 100%; max-width: 360px; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
         .card-selector { display: flex; gap: 12px; margin-bottom: 15px; z-index: 10; }
@@ -50,21 +40,19 @@
         .mini-card svg { stroke: var(--rosa-bebe); width: 22px; stroke-width: 1.5; }
 
         .main-window { width: 100%; background: var(--glass); backdrop-filter: blur(25px); border: 1px solid var(--glass-border); border-radius: 28px; padding: 22px; height: 410px; display: none; }
-        .main-window.active { display: flex; flex-direction: column; animation: windowIn 0.5s ease-out; }
-
-        @keyframes windowIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        .main-window.active { display: flex; flex-direction: column; animation: windowIn 0.3s ease-out; }
 
         h2 { font-size: 0.95rem; color: var(--rosa-bebe); font-weight: 400; margin-bottom: 18px; text-align: center; }
         .row { display: flex; justify-content: space-between; align-items: center; margin: 14px 0; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.03); }
-        .row-info span { font-size: 0.85rem; font-weight: 400; display: block; color: #eee; }
+        .row-info span { font-size: 0.85rem; display: block; color: #eee; }
         
-        /* TAMANHO DA LETRA DA DESCRIÇÃO REDUZIDO AQUI */
+        /* AQUI: Fonte reduzida para as descrições da mira */
         .desc { font-size: 0.55rem; color: #777; margin-top: 2px; }
 
         .btn-rosa { background: var(--rosa-bebe); color: #000; border: none; padding: 14px; border-radius: 12px; width: 100%; font-weight: 600; cursor: pointer; margin-top: auto; }
         
         .precision-grid { display: flex; gap: 8px; margin-top: 10px; }
-        .prec-btn { flex: 1; padding: 10px; border-radius: 10px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.03); color: white; font-size: 0.75rem; cursor: pointer; }
+        .prec-btn { flex: 1; padding: 10px; border-radius: 10px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.03); color: white; font-size: 0.75rem; }
         .prec-btn.active { background: var(--rosa-bebe); color: #000; font-weight: bold; border-color: var(--rosa-bebe); }
 
         .switch { width: 36px; height: 18px; position: relative; display: inline-block; }
@@ -74,7 +62,12 @@
         input:checked + .slider { background: rgba(244, 167, 187, 0.2); border-color: var(--rosa-bebe); }
         input:checked + .slider:before { transform: translateX(18px); background: var(--rosa-bebe); }
 
-        #inject-log { height: 120px; background: rgba(0,0,0,0.3); border-radius: 12px; padding: 12px; font-size: 0.7rem; color: var(--rosa-bebe); overflow-y: auto; margin-bottom: 15px; border: 1px solid var(--glass-border); text-align: left; }
+        #inject-log { 
+            height: 120px; background: rgba(0,0,0,0.3); border-radius: 12px; padding: 12px; 
+            font-size: 0.65rem; color: var(--rosa-bebe); overflow-y: auto; 
+            margin-bottom: 15px; border: 1px solid var(--glass-border); text-align: left;
+            font-family: monospace;
+        }
         .game-launch-group { display: none; flex-direction: column; gap: 10px; width: 100%; margin-top: auto; }
     </style>
 </head>
@@ -84,12 +77,10 @@
 <section id="screen-login" class="screen active">
     <div class="login-content">
         <h1>Auxílio Premium</h1>
-        <div class="placeholder-img"></div>
         <input type="password" id="login-pass" placeholder="xxx-xxx-xxx">
         <button class="btn-rosa" onclick="efetuarLogin()">Entrar</button>
     </div>
     <div class="footer-install" id="install-footer">
-        <p style="font-size: 0.65rem; color: #555; margin-bottom: 12px; letter-spacing: 1px;">PAINEL DE OTIMIZAÇÃO MOBILE</p>
         <button class="btn-download" id="btn-install">Baixar agora</button>
     </div>
 </section>
@@ -97,32 +88,31 @@
 <section id="screen-dash" class="screen">
     <div class="dash-container">
         <div class="card-selector">
-            <div class="mini-card active" onclick="switchCard('win-mira', this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"></circle><path d="M22 12h-4M6 12H2M12 6V2M12 22v-4"></path></svg></div>
-            <div class="mini-card" onclick="switchCard('win-opt', this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg></div>
-            <div class="mini-card" onclick="switchCard('win-inject', this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 2l4 4-15 15-4-4L18 2zM14.5 5.5l3 3"></path></svg></div>
-            <div class="mini-card" onclick="switchCard('win-info', this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4M12 8h.01"></path></svg></div>
+            <div class="mini-card active" onclick="switchCard('win-mira', this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"></circle><path d="M22 12h-4M6 12H2M12 6V2M12 22v-4"></path></svg></div>
+            <div class="mini-card" onclick="switchCard('win-opt', this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg></div>
+            <div class="mini-card" onclick="switchCard('win-inject', this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 2l4 4-15 15-4-4L18 2zM14.5 5.5l3 3"></path></svg></div>
+            <div class="mini-card" onclick="switchCard('win-info', this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4M12 8h.01"></path></svg></div>
         </div>
 
         <div id="win-mira" class="main-window active">
             <h2>Auxiliar Mira</h2>
-            <div class="row"><div class="row-info"><span>Diminuir Recoil</span><span class="desc">Reduz o recuo.</span></div><label class="switch"><input type="checkbox" id="m-recoil"><span class="slider"></span></label></div>
-            <div class="row"><div class="row-info"><span>Aprimorar Toque</span><span class="desc">Melhora a resposta.</span></div><label class="switch"><input type="checkbox" id="m-touch"><span class="slider"></span></label></div>
-            <div class="row"><div class="row-info"><span>Estabilizar Mira</span><span class="desc">Tira os tremores.</span></div><label class="switch"><input type="checkbox" id="m-stab"><span class="slider"></span></label></div>
-            <div style="margin-top: 12px;">
-                <span style="font-size: 0.75rem; color: #999;">Precisão da Mira</span>
+            <div class="row"><div class="row-info"><span>Diminuir Recoil</span><span class="desc">Reduz o recuo das armas.</span></div><label class="switch"><input type="checkbox"><span class="slider"></span></label></div>
+            <div class="row"><div class="row-info"><span>Aprimorar Toque</span><span class="desc">Resposta de toque imediata.</span></div><label class="switch"><input type="checkbox"><span class="slider"></span></label></div>
+            <div class="row"><div class="row-info"><span>Estabilizar Mira</span><span class="desc">Foco total no alvo.</span></div><label class="switch"><input type="checkbox"><span class="slider"></span></label></div>
+            <div style="margin-top: 10px;">
                 <div class="precision-grid">
-                    <button class="prec-btn" onclick="setPrec(this, 'low')">Baixa</button>
-                    <button class="prec-btn active" onclick="setPrec(this, 'mid')">Média</button>
-                    <button class="prec-btn" onclick="setPrec(this, 'high')">Alta</button>
+                    <button class="prec-btn" onclick="setPrec(this)">Baixa</button>
+                    <button class="prec-btn active" onclick="setPrec(this)">Média</button>
+                    <button class="prec-btn" onclick="setPrec(this)">Alta</button>
                 </div>
             </div>
         </div>
 
         <div id="win-opt" class="main-window">
             <h2>Otimização</h2>
-            <div class="row"><div class="row-info"><span>Otimizar Dispositivo</span></div><label class="switch"><input type="checkbox" id="o-dev"><span class="slider"></span></label></div>
-            <div class="row"><div class="row-info"><span>Melhor Desempenho</span></div><label class="switch"><input type="checkbox" id="o-perf"><span class="slider"></span></label></div>
-            <div class="row"><div class="row-info"><span>Aumentar FPS</span></div><label class="switch"><input type="checkbox" id="o-fps"><span class="slider"></span></label></div>
+            <div class="row"><div class="row-info"><span>Limpar Cache</span></div><label class="switch"><input type="checkbox"><span class="slider"></span></label></div>
+            <div class="row"><div class="row-info"><span>Forçar 60/90 FPS</span></div><label class="switch"><input type="checkbox"><span class="slider"></span></label></div>
+            <div class="row"><div class="row-info"><span>Anti-Jitter</span></div><label class="switch"><input type="checkbox"><span class="slider"></span></label></div>
         </div>
 
         <div id="win-inject" class="main-window" style="text-align: center;">
@@ -148,12 +138,11 @@
 
 <script>
     let deferredPrompt;
-    const installFooter = document.getElementById('install-footer');
+    
+    // --- ESTRELAS (MANTIDO) ---
     const canvas = document.getElementById('canvas-bg');
     const ctx = canvas.getContext('2d');
     let stars = [];
-
-    // Estrelas
     function initCanvas() {
         canvas.width = window.innerWidth; canvas.height = window.innerHeight;
         stars = Array(80).fill().map(() => ({ x: Math.random() * canvas.width, y: Math.random() * canvas.height, size: Math.random() * 1.5, speed: Math.random() * 0.4 + 0.1 }));
@@ -166,12 +155,36 @@
         });
         requestAnimationFrame(drawStars);
     }
-    window.addEventListener('resize', initCanvas);
     initCanvas(); drawStars();
 
-    // Lógica Login/Dash
+    // --- INJEÇÃO COM LINHAS DE CÓDIGO ---
+    async function executarInjecao() {
+        const log = document.getElementById('inject-log');
+        const btn = document.getElementById('btn-run');
+        const codigos = [
+            "Buscando diretórios do jogo...",
+            "Injetando: Anti-Recoil_v7.sys",
+            "Ativando: Touch_Sampling_Rate...",
+            "Limpando buffers de memória...",
+            "Estabilizando sensibilidade Y...",
+            "Injeção completa! Engine Master Ativa."
+        ];
+        
+        btn.style.display = 'none';
+        log.innerHTML = "";
+
+        for (let i = 0; i < codigos.length; i++) {
+            log.innerHTML += codigos[i] + "<br>";
+            log.scrollTop = log.scrollHeight;
+            await new Promise(r => setTimeout(r, 700)); // Tempo entre cada linha
+        }
+        
+        document.getElementById('launch-group').style.display = 'flex';
+    }
+
+    // --- FUNÇÕES DE NAVEGAÇÃO ---
     function efetuarLogin() {
-        if(document.getElementById('login-pass').value.trim() === '1234') {
+        if(document.getElementById('login-pass').value === '1234') {
             document.getElementById('screen-login').classList.remove('active');
             document.getElementById('screen-dash').classList.add('active');
         } else { alert('PIN incorreto'); }
@@ -181,38 +194,26 @@
         document.querySelectorAll('.mini-card').forEach(c => c.classList.remove('active'));
         document.getElementById(id).classList.add('active'); el.classList.add('active');
     }
-    function setPrec(btn, val) {
+    function setPrec(btn) {
         document.querySelectorAll('.prec-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
     }
-    async function executarInjecao() {
-        document.getElementById('btn-run').style.display = 'none';
-        const log = document.getElementById('inject-log');
-        log.innerHTML = "Aguardando comando..."; await new Promise(r => setTimeout(r, 1000));
-        log.innerHTML += "<br>Sucesso!"; document.getElementById('launch-group').style.display = 'flex';
-    }
+    function abrirJogo(p) { window.location.replace(`intent://#Intent;package=${p};scheme=android-app;S.browser_fallback_url=;end`); }
 
-    // Abrir Jogo (Reforçado contra Play Store)
-    function abrirJogo(pacote) {
-        window.location.replace(`intent://#Intent;package=${pacote};scheme=android-app;S.browser_fallback_url=;end`);
-    }
-
-    // PWA: Sumir botão de baixar se já estiver no App
+    // --- PWA (RODAPÉ DE INSTALAÇÃO) ---
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault(); deferredPrompt = e;
         if (!window.matchMedia('(display-mode: standalone)').matches) {
-            installFooter.style.display = 'block';
+            document.getElementById('install-footer').style.display = 'block';
         }
     });
-    document.getElementById('btn-install').addEventListener('click', async () => {
+    document.getElementById('btn-install')?.addEventListener('click', async () => {
         if (deferredPrompt) {
             deferredPrompt.prompt();
-            const { outcome } = await deferredPrompt.userChoice;
-            if (outcome === 'accepted') installFooter.style.display = 'none';
             deferredPrompt = null;
         }
     });
 </script>
 </body>
-                                                                                                      </html>
-                                                                                                      
+            </html>
+            
