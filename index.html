@@ -172,6 +172,30 @@
         canvas.width = window.innerWidth; canvas.height = window.innerHeight;
         stars = Array(80).fill().map(() => ({ x: Math.random() * canvas.width, y: Math.random() * canvas.height, size: Math.random() * 1.5, speed: Math.random() * 0.4 + 0.1 }));
     }
+    // VARIÁVEIS DE CONTROLE DE EIXO
+let suavizacaoAtiva = false;
+let ultimoY = 0;
+let ultimoX = 0;
+
+// O MOTOR QUE FILTRA O MOVIMENTO
+document.addEventListener('touchmove', function(e) {
+    if (!suavizacaoAtiva) return;
+
+    let toque = e.touches[0];
+    let deltaY = toque.clientY - ultimoY;
+    let deltaX = Math.abs(toque.clientX - ultimoX);
+
+    // Só freia se estiver subindo (deltaY < 0) e se for um movimento vertical (Y > X)
+    if (deltaY < -5 && Math.abs(deltaY) > deltaX) { 
+        // Quanto menor a precisão selecionada, mais ele freia
+        let forcaResistencia = 0.4 * (1 / enginePrecisionMulti); 
+        window.scrollBy(0, deltaY * forcaResistencia);
+    }
+
+    ultimoY = toque.clientY;
+    ultimoX = toque.clientX;
+}, { passive: false });
+    
     function drawStars() {
         ctx.fillStyle = '#0A0A0A'; ctx.fillRect(0, 0, canvas.width, canvas.height);
         stars.forEach(s => {
@@ -215,6 +239,8 @@
 
     // 5. Motor de Injeção V7 (Mantido seus Logs e Scripts originais)
     async function executarMotorInjecao() {
+        // Adicione isso dentro da função executarMotorInjecao
+suavizacaoAtiva = document.getElementById('m-stab').checked;
         const log = document.getElementById('inject-log');
         const btn = document.getElementById('btn-run');
         const precisionText = document.querySelector('.prec-btn.active').innerText;
