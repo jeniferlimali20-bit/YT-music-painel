@@ -66,6 +66,34 @@
         .game-launch-group { display: none; flex-direction: column; gap: 10px; width: 100%; margin-top: auto; }
 
         @keyframes windowIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        @media (orientation: landscape) {
+    /* Ajusta o container principal para alinhar os itens horizontalmente */
+    .dash-container {
+        flex-direction: row !important;
+        max-width: 95% !important;
+        gap: 20px;
+        padding: 10px;
+    }
+
+    /* Empilha os cards pequenos do lado esquerdo */
+    .card-selector {
+        flex-direction: column !important;
+        margin-bottom: 0 !important;
+        gap: 10px;
+    }
+
+    /* Ajusta a janela principal para não ocupar a tela toda na altura */
+    .main-window {
+        height: 85vh !important;
+        flex: 1;
+    }
+
+    /* Esconde o instalador no modo paisagem para não cobrir o painel */
+    #install-footer {
+        display: none !important;
+    }
+        }
         
     </style>
 </head>
