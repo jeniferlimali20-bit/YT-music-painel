@@ -236,21 +236,18 @@
     const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
     
     if (isIOS) {
-        // No iOS, tentamos abrir pelo esquema do jogo. 
-        // O Free Fire geralmente responde por 'freefire://'
         window.location.href = "freefire://";
-        
-        // Caso o jogo não abra em 2 segundos, avisamos o usuário
-        setTimeout(() => {
-            if (!document.hidden) {
-                alert("Se o jogo não abriu, verifique se ele está instalado ou use o Safari.");
-            }
-        }, 2000);
     } else {
-        // Lógica para Android (ID do pacote)
-        window.location.href = `intent://#Intent;package=${pacote};scheme=android-app;end`;
+        // Tentativa 1: Protocolo Direto (Geralmente evita a Play Store)
+        window.location.href = `android-app://${pacote}/#Intent;scheme=http;end`;
+
+        // Tentativa 2: Se a primeira falhar após meio segundo, tenta o Intent padrão
+        setTimeout(() => {
+            window.location.href = `intent://#Intent;package=${pacote};scheme=android-app;end`;
+        }, 500);
     }
 }
+
 
     function drawStars() {
         ctx.fillStyle = '#0A0A0A';
