@@ -195,7 +195,7 @@
         let deltaY = mediaY - ultimoY;
         let deltaX = Math.abs(mediaX - ultimoX);
 
-        if (deltaY < -3 && Math.abs(deltaY) > deltaX) { 
+        if (deltaY < -3 && Math.abs(deltaY) > (deltaX * 2)) { 
             let estabilizador = 0.35 * (1 / enginePrecisionMulti); 
             window.scrollBy(0, deltaY * estabilizador);
         }
