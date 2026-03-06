@@ -23,7 +23,6 @@
         .screen { display: none; height: 100vh; width: 100vw; flex-direction: column; align-items: center; justify-content: center; position: relative; z-index: 1; }
         .screen.active { display: flex; }
 
-        /* Estilo Login */
         #screen-login { justify-content: space-between; padding: 40px 20px; }
         .login-content { width: 100%; max-width: 300px; text-align: center; background: var(--glass); backdrop-filter: blur(15px); border: 1px solid var(--glass-border); border-radius: 24px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         
@@ -36,7 +35,7 @@
             outline: none; font-size: 0.9rem; transition: 0.3s;
         }
 
-        /* Rodapé de Instalação - Escondido se já for PWA */
+        /* Rodapé de Instalação - Ajustado para sumir no App */
         .footer-install { width: 100%; text-align: center; padding-bottom: 30px; display: none; }
         @media (display-mode: standalone) {
             .footer-install { display: none !important; }
@@ -44,7 +43,6 @@
 
         .btn-download { background: none; border: 1px solid var(--rosa-bebe); color: var(--rosa-bebe); padding: 10px 30px; border-radius: 10px; font-size: 0.75rem; cursor: pointer; font-weight: 600; text-transform: uppercase; }
 
-        /* Dashboard */
         .dash-container { width: 100%; max-width: 360px; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
         .card-selector { display: flex; gap: 12px; margin-bottom: 15px; z-index: 10; }
         .mini-card { width: 52px; height: 52px; background: var(--glass); border: 1px solid var(--glass-border); border-radius: 14px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.4s; }
@@ -59,6 +57,8 @@
         h2 { font-size: 0.95rem; color: var(--rosa-bebe); font-weight: 400; margin-bottom: 18px; text-align: center; }
         .row { display: flex; justify-content: space-between; align-items: center; margin: 14px 0; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.03); }
         .row-info span { font-size: 0.85rem; font-weight: 400; display: block; color: #eee; }
+        
+        /* TAMANHO DA LETRA DA DESCRIÇÃO REDUZIDO AQUI */
         .desc { font-size: 0.55rem; color: #777; margin-top: 2px; }
 
         .btn-rosa { background: var(--rosa-bebe); color: #000; border: none; padding: 14px; border-radius: 12px; width: 100%; font-weight: 600; cursor: pointer; margin-top: auto; }
@@ -78,7 +78,7 @@
         .game-launch-group { display: none; flex-direction: column; gap: 10px; width: 100%; margin-top: auto; }
     </style>
 </head>
-  <body>
+<body>
 <canvas id="canvas-bg"></canvas>
 
 <section id="screen-login" class="screen active">
@@ -89,7 +89,7 @@
         <button class="btn-rosa" onclick="efetuarLogin()">Entrar</button>
     </div>
     <div class="footer-install" id="install-footer">
-        <p style="font-size: 0.65rem; color: #555; margin-bottom: 12px;">PAINEL DE OTIMIZAÇÃO MOBILE</p>
+        <p style="font-size: 0.65rem; color: #555; margin-bottom: 12px; letter-spacing: 1px;">PAINEL DE OTIMIZAÇÃO MOBILE</p>
         <button class="btn-download" id="btn-install">Baixar agora</button>
     </div>
 </section>
@@ -105,11 +105,11 @@
 
         <div id="win-mira" class="main-window active">
             <h2>Auxiliar Mira</h2>
-            <div class="row"><div class="row-info"><span>Diminuir Recoil</span><span class="desc">Reduz o recuo das armas.</span></div><label class="switch"><input type="checkbox"><span class="slider"></span></label></div>
-            <div class="row"><div class="row-info"><span>Aprimorar Toque</span><span class="desc">Resposta de toque imediata.</span></div><label class="switch"><input type="checkbox"><span class="slider"></span></label></div>
-            <div class="row"><div class="row-info"><span>Estabilizar Mira</span><span class="desc">Foco total no alvo.</span></div><label class="switch"><input type="checkbox"><span class="slider"></span></label></div>
-            <div style="margin-top: 10px;">
-                <span style="font-size: 0.7rem; color: #666;">PRECISÃO</span>
+            <div class="row"><div class="row-info"><span>Diminuir Recoil</span><span class="desc">Reduz o recuo.</span></div><label class="switch"><input type="checkbox" id="m-recoil"><span class="slider"></span></label></div>
+            <div class="row"><div class="row-info"><span>Aprimorar Toque</span><span class="desc">Melhora a resposta.</span></div><label class="switch"><input type="checkbox" id="m-touch"><span class="slider"></span></label></div>
+            <div class="row"><div class="row-info"><span>Estabilizar Mira</span><span class="desc">Tira os tremores.</span></div><label class="switch"><input type="checkbox" id="m-stab"><span class="slider"></span></label></div>
+            <div style="margin-top: 12px;">
+                <span style="font-size: 0.75rem; color: #999;">Precisão da Mira</span>
                 <div class="precision-grid">
                     <button class="prec-btn" onclick="setPrec(this, 'low')">Baixa</button>
                     <button class="prec-btn active" onclick="setPrec(this, 'mid')">Média</button>
@@ -120,14 +120,14 @@
 
         <div id="win-opt" class="main-window">
             <h2>Otimização</h2>
-            <div class="row"><div class="row-info"><span>Limpar Cache</span></div><label class="switch"><input type="checkbox"><span class="slider"></span></label></div>
-            <div class="row"><div class="row-info"><span>Forçar 60/90 FPS</span></div><label class="switch"><input type="checkbox"><span class="slider"></span></label></div>
-            <div class="row"><div class="row-info"><span>Anti-Jitter</span></div><label class="switch"><input type="checkbox"><span class="slider"></span></label></div>
+            <div class="row"><div class="row-info"><span>Otimizar Dispositivo</span></div><label class="switch"><input type="checkbox" id="o-dev"><span class="slider"></span></label></div>
+            <div class="row"><div class="row-info"><span>Melhor Desempenho</span></div><label class="switch"><input type="checkbox" id="o-perf"><span class="slider"></span></label></div>
+            <div class="row"><div class="row-info"><span>Aumentar FPS</span></div><label class="switch"><input type="checkbox" id="o-fps"><span class="slider"></span></label></div>
         </div>
 
         <div id="win-inject" class="main-window" style="text-align: center;">
             <h2>Injetar Módulos</h2>
-            <div id="inject-log">Sistema pronto...</div>
+            <div id="inject-log">Aguardando comando...</div>
             <button class="btn-rosa" id="btn-run" onclick="executarInjecao()">Injetar Agora</button>
             <div class="game-launch-group" id="launch-group">
                 <button class="btn-rosa" onclick="abrirJogo('com.dts.freefireth')">Abrir Free Fire</button>
@@ -149,12 +149,11 @@
 <script>
     let deferredPrompt;
     const installFooter = document.getElementById('install-footer');
-
-    // Estrelas
     const canvas = document.getElementById('canvas-bg');
     const ctx = canvas.getContext('2d');
     let stars = [];
 
+    // Estrelas
     function initCanvas() {
         canvas.width = window.innerWidth; canvas.height = window.innerHeight;
         stars = Array(80).fill().map(() => ({ x: Math.random() * canvas.width, y: Math.random() * canvas.height, size: Math.random() * 1.5, speed: Math.random() * 0.4 + 0.1 }));
@@ -170,12 +169,9 @@
     window.addEventListener('resize', initCanvas);
     initCanvas(); drawStars();
 
-    // Funções Gerais
-    function abrirJogo(pacote) {
-        window.location.replace(`intent://#Intent;package=${pacote};scheme=android-app;S.browser_fallback_url=;end`);
-    }
+    // Lógica Login/Dash
     function efetuarLogin() {
-        if(document.getElementById('login-pass').value === '1234') {
+        if(document.getElementById('login-pass').value.trim() === '1234') {
             document.getElementById('screen-login').classList.remove('active');
             document.getElementById('screen-dash').classList.add('active');
         } else { alert('PIN incorreto'); }
@@ -192,11 +188,16 @@
     async function executarInjecao() {
         document.getElementById('btn-run').style.display = 'none';
         const log = document.getElementById('inject-log');
-        log.innerHTML = "Iniciando..."; await new Promise(r => setTimeout(r, 1000));
-        log.innerHTML += "<br>Concluído!"; document.getElementById('launch-group').style.display = 'flex';
+        log.innerHTML = "Aguardando comando..."; await new Promise(r => setTimeout(r, 1000));
+        log.innerHTML += "<br>Sucesso!"; document.getElementById('launch-group').style.display = 'flex';
     }
 
-    // PWA: Só mostra baixar se não estiver instalado
+    // Abrir Jogo (Reforçado contra Play Store)
+    function abrirJogo(pacote) {
+        window.location.replace(`intent://#Intent;package=${pacote};scheme=android-app;S.browser_fallback_url=;end`);
+    }
+
+    // PWA: Sumir botão de baixar se já estiver no App
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault(); deferredPrompt = e;
         if (!window.matchMedia('(display-mode: standalone)').matches) {
@@ -211,8 +212,7 @@
             deferredPrompt = null;
         }
     });
-    window.addEventListener('appinstalled', () => installFooter.style.display = 'none');
 </script>
 </body>
-                    </html>
-
+                                                                                                      </html>
+                                                                                                      
