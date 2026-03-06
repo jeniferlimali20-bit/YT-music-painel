@@ -67,56 +67,61 @@
 
         @keyframes windowIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- INÍCIO DO BLOCO DE PAISAGEM OTIMIZADO --- */
+        /* --- INÍCIO DO BLOCO DE PAISAGEM FULLSCREEN OTIMIZADO --- */
 @media (orientation: landscape) {
-    /* Ajusta o container principal */
+    /* Ajusta o container principal para usar quase toda a largura */
     .dash-container { 
         flex-direction: row !important; 
-        max-width: 98% !important; 
+        max-width: 99% !important; /* Quase 100% da largura da tela */
         gap: 15px; 
         padding: 5px; 
     }
 
-    /* Empilha e comprime os ícones da lateral esquerda */
+    /* Comprime e alinha os ícones da lateral esquerda */
     .card-selector { 
         flex-direction: column !important; 
         margin-bottom: 0 !important; 
-        gap: 6px; 
-        padding-top: 5px;
+        gap: 8px; 
     }
     
-    /* Ícones ligeiramente menores na lateral */
+    /* Ícones menores na lateral */
     .mini-card {
-        width: 44px !important;
-        height: 44px !important;
+        width: 42px !important;
+        height: 42px !important;
     }
     .mini-card svg { width: 18px !important; }
 
-    /* --- AQUI ESTÁ O AJUSTE PARA O QUADRO CABER --- */
+    /* --- AQUI ESTÁ O AJUSTE PRINCIPAL PARA PREENCHER A TELA --- */
     .main-window { 
         height: 92vh !important; /* Quase toda a altura da tela */
-        flex: 1; 
-        padding: 12px 15px !important; /* Padding interno menor */
-        margin-right: 10px;
+        flex: 1; /* Ocupa todo o espaço restante horizontalmente */
+        width: 100% !important; /* Força a largura total do espaço restante */
+        padding: 10px 20px !important; /* Padding lateral maior para desgrudar das bordas */
+        margin-right: 5px;
         overflow-y: auto; /* Permite rolar se o celular for muito "baixo" */
     }
 
-    /* Comprime os elementos dentro do quadro */
-    .main-window h2 { font-size: 0.8rem !important; margin-bottom: 8px !important; }
+    /* Título maior */
+    .main-window h2 { font-size: 0.9rem !important; margin-bottom: 12px !important; }
     
+    /* Ajuste de linha para afastar a descrição do switch */
     .row { 
-        margin: 6px 0 !important; /* Espaçamento vertical menor entre as opções */
-        padding-bottom: 5px !important; 
+        margin: 8px 0 !important; /* Espaçamento vertical entre as opções */
+        padding-bottom: 6px !important; 
+        justify-content: space-between !important; /* Garante que texto fique na esquerda e switch na direita */
+        display: flex !important;
+        width: 100% !important;
     }
     
-    .row-info span { font-size: 0.75rem !important; } /* Texto principal menor */
-    .desc { font-size: 0.5rem !important; margin-top: 1px !important; } /* Descrição menor */
+    /* LETRAS MAIORES (Sua solicitação) */
+    .row-info span { font-size: 0.85rem !important; } /* Texto principal maior e legível */
+    .desc { font-size: 0.6rem !important; margin-top: 2px !important; max-width: 80%; } /* Descrição maior */
 
     /* Os três botões do fundo (Baixa, Média, Alta) */
-    .precision-grid { gap: 5px !important; margin-top: 8px !important; }
-    .prec-btn { padding: 6px !important; font-size: 0.65rem !important; }
+    .precision-grid { gap: 8px !important; margin-top: 10px !important; width: 100% !important; }
+    .prec-btn { padding: 8px !important; font-size: 0.7rem !important; flex: 1; }
 
-    /* Esconde o rodapé de instalação */
+    /* Esconde o rodapé de instalação no modo paisagem */
     #install-footer { display: none !important; }
 } 
 /* --- FIM DO BLOCO OTIMIZADO --- */
