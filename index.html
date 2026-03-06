@@ -333,8 +333,7 @@
     @media (display-mode: standalone), (display-mode: fullscreen) {
         #install-footer { display: none !important; }
     }
-        
-        /* Estilo do botão de fechar (X) */
+       /* Posicionamento do X para o layout da sua imagem */
 .close-btn {
     position: absolute;
     top: 15px;
@@ -348,7 +347,7 @@
     z-index: 100;
 }
 
-/* Efeito de brilho rosa ao passar o dedo/mouse */
+/* Brilho rosa neon ao passar o mouse/tocar */
 .close-btn:hover {
     color: var(--rosa-bebe);
     text-shadow: 0 0 15px var(--glow);
@@ -374,11 +373,13 @@
 </section>
     
 <section id="screen-dash" class="screen">
-    <div class="main-window active" id="screen-dash">
+    <div class="div-de-conter-que-voce-nao-quer"> <div class="main-window active">
+        </div>
+</div> <div class="main-window active" id="screen-options">
     <span class="close-btn" onclick="fazerLogout()">&times;</span>
     
-    <h2>Auxiliar Mira</h2>
-    </div>
+    <h2>AUXILIAR MIRA</h2>
+</div>
     <div class="dash-container">
         <div class="card-selector">
             <div class="mini-card active" onclick="switchCard('win-mira', this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"></circle><path d="M22 12h-4M6 12H2M12 6V2M12 22v-4"></path></svg></div>
