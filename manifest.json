@@ -1,7 +1,7 @@
 {
   "name": "YT musc",
   "short_name": "YT musc",
-  "start_url": "./index.html",
+  "start_url": "index.html",
   "display": "standalone",
   "background_color": "#0A0A0A",
   "theme_color": "#F4A7BB",
