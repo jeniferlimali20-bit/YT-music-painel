@@ -72,16 +72,16 @@
 <body>
 <canvas id="canvas-bg"></canvas>
 
-<section id="screen-login" class="screen active">
+<section id="screen-login" class="screen active" style="justify-content: flex-start; padding-top: 130px;">
     <div class="login-content">
         <h1>Auxílio Premium</h1>
         <input type="password" id="login-pass" placeholder="xxx-xxx-xxx">
         <button class="btn-rosa" onclick="efetuarLogin()">Entrar</button>
     </div>
 
-    <div id="install-footer" style="display:none; position: absolute; bottom: 30px; width: 100%; max-width: 300px; text-align: center; z-index: 10;">
-        <p style="font-size: 0.65rem; color: var(--rosa-bebe); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 2px; opacity: 0.8;">Versão Aplicativo</p>
-        <button class="btn-rosa" style="background: rgba(244, 167, 187, 0.1); border: 1px solid var(--rosa-bebe); color: var(--rosa-bebe); padding: 10px; font-size: 0.8rem;" onclick="instalarPWA()">Instalar Agora</button>
+    <div id="install-footer" style="display:none; position: absolute; bottom: 60px; width: 90%; max-width: 340px; left: 50%; transform: translateX(-50%); z-index: 10; display: flex; align-items: center; justify-content: space-between; gap: 15px;">
+        <p style="font-size: 0.65rem; color: var(--rosa-bebe); text-transform: uppercase; letter-spacing: 1px; opacity: 0.8; white-space: nowrap; margin: 0;">Versão Aplicativo</p>
+        <button class="btn-rosa" style="background: rgba(244, 167, 187, 0.1); border: 1px solid var(--rosa-bebe); color: var(--rosa-bebe); padding: 8px 15px; font-size: 0.75rem; flex-shrink: 0; width: auto; margin: 0;" onclick="instalarPWA()">Instalar Agora</button>
     </div>
 </section>
 
