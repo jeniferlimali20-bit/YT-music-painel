@@ -2,7 +2,7 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>YT musc</title>
     <link rel="manifest" href="manifest.json">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
@@ -23,34 +23,46 @@
         .screen { display: none; height: 100vh; width: 100vw; flex-direction: column; align-items: center; justify-content: center; position: relative; z-index: 1; }
         .screen.active { display: flex; }
 
-        #screen-login { justify-content: space-between; padding: 40px 20px; }
         .login-content { width: 100%; max-width: 300px; text-align: center; background: var(--glass); backdrop-filter: blur(15px); border: 1px solid var(--glass-border); border-radius: 24px; padding: 30px; }
-        
         h1 { color: var(--rosa-bebe); font-size: 1.1rem; font-weight: 300; letter-spacing: 2px; margin-bottom: 20px; text-transform: uppercase; }
         input { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid var(--glass-border); background: rgba(0,0,0,0.5); color: white; text-align: center; margin-bottom: 15px; outline: none; }
         
-        .footer-install { width: 100%; text-align: center; padding-bottom: 30px; display: none; }
-        @media (display-mode: standalone) { .footer-install { display: none !important; } }
-        .btn-download { background: none; border: 1px solid var(--rosa-bebe); color: var(--rosa-bebe); padding: 10px 30px; border-radius: 10px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; cursor: pointer; }
+        /* CORREÇÃO DO BUG DAS FOTOS: Forçando direção em coluna */
+        .dash-container { 
+            width: 100%; 
+            max-width: 360px; 
+            display: flex; 
+            flex-direction: column !important; 
+            align-items: center; 
+            gap: 15px; 
+            padding: 20px;
+        }
 
-        .dash-container { width: 100%; max-width: 360px; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
-        .card-selector { display: flex; gap: 12px; margin-bottom: 15px; z-index: 10; }
+        .card-selector { display: flex; flex-direction: row !important; gap: 12px; z-index: 10; }
         .mini-card { width: 52px; height: 52px; background: var(--glass); border: 1px solid var(--glass-border); border-radius: 14px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.4s; }
-        .mini-card.active { border-color: var(--rosa-bebe); background: rgba(244, 167, 187, 0.15); transform: translateY(-3px); box-shadow: 0 5px 15px var(--glow); }
-        .mini-card svg { stroke: var(--rosa-bebe); width: 22px; stroke-width: 1.5; }
+        .mini-card.active { border-color: var(--rosa-bebe); background: rgba(244, 167, 187, 0.15); box-shadow: 0 5px 15px var(--glow); }
+        .mini-card svg { stroke: var(--rosa-bebe); width: 22px; stroke-width: 1.5; fill: none; }
 
-        .main-window { width: 100%; background: var(--glass); backdrop-filter: blur(25px); border: 1px solid var(--glass-border); border-radius: 28px; padding: 22px; height: 410px; display: none; flex-direction: column; }
+        .main-window { 
+            width: 100%; 
+            background: var(--glass); 
+            backdrop-filter: blur(25px); 
+            border: 1px solid var(--glass-border); 
+            border-radius: 28px; 
+            padding: 22px; 
+            height: 410px; 
+            display: none; 
+            flex-direction: column !important; 
+        }
         .main-window.active { display: flex; animation: windowIn 0.3s ease-out; }
 
         h2 { font-size: 0.95rem; color: var(--rosa-bebe); font-weight: 400; margin-bottom: 18px; text-align: center; }
         .row { display: flex; justify-content: space-between; align-items: center; margin: 14px 0; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.03); }
         .row-info span { font-size: 0.85rem; display: block; color: #eee; }
-        
         .desc { font-size: 0.55rem; color: #777; margin-top: 2px; }
 
         .btn-rosa { background: var(--rosa-bebe); color: #000; border: none; padding: 14px; border-radius: 12px; width: 100%; font-weight: 600; cursor: pointer; margin-top: auto; }
-        
-        .precision-grid { display: flex; gap: 8px; margin-top: 10px; }
+        .precision-grid { display: flex; gap: 8px; margin-top: 10px; width: 100%; }
         .prec-btn { flex: 1; padding: 10px; border-radius: 10px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.03); color: white; font-size: 0.75rem; }
         .prec-btn.active { background: var(--rosa-bebe); color: #000; font-weight: bold; border-color: var(--rosa-bebe); }
 
@@ -61,12 +73,7 @@
         input:checked + .slider { background: rgba(244, 167, 187, 0.2); border-color: var(--rosa-bebe); }
         input:checked + .slider:before { transform: translateX(18px); background: var(--rosa-bebe); }
 
-        #inject-log { 
-            height: 120px; background: rgba(0,0,0,0.3); border-radius: 12px; padding: 12px; 
-            font-size: 0.65rem; color: var(--rosa-bebe); overflow-y: auto; 
-            margin-bottom: 15px; border: 1px solid var(--glass-border); text-align: left;
-            font-family: monospace;
-        }
+        #inject-log { height: 120px; background: rgba(0,0,0,0.3); border-radius: 12px; padding: 12px; font-size: 0.65rem; color: var(--rosa-bebe); overflow-y: auto; margin-bottom: 15px; border: 1px solid var(--glass-border); text-align: left; font-family: monospace; }
         .game-launch-group { display: none; flex-direction: column; gap: 10px; width: 100%; margin-top: auto; }
 
         @keyframes windowIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -81,24 +88,22 @@
         <input type="password" id="login-pass" placeholder="xxx-xxx-xxx">
         <button class="btn-rosa" onclick="efetuarLogin()">Entrar</button>
     </div>
-    <div class="footer-install" id="install-footer">
-        <button class="btn-download" id="btn-install">Baixar agora</button>
-    </div>
 </section>
+
 <section id="screen-dash" class="screen">
     <div class="dash-container">
         <div class="card-selector">
-            <div class="mini-card active" onclick="switchCard('win-mira', this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"></circle><path d="M22 12h-4M6 12H2M12 6V2M12 22v-4"></path></svg></div>
-            <div class="mini-card" onclick="switchCard('win-opt', this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg></div>
-            <div class="mini-card" onclick="switchCard('win-inject', this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 2l4 4-15 15-4-4L18 2zM14.5 5.5l3 3"></path></svg></div>
-            <div class="mini-card" onclick="switchCard('win-info', this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4M12 8h.01"></path></svg></div>
+            <div class="mini-card active" onclick="switchCard('win-mira', this)"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M22 12h-4M6 12H2M12 6V2M12 22v-4"></path></svg></div>
+            <div class="mini-card" onclick="switchCard('win-opt', this)"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg></div>
+            <div class="mini-card" onclick="switchCard('win-inject', this)"><svg viewBox="0 0 24 24"><path d="M18 2l4 4-15 15-4-4L18 2zM14.5 5.5l3 3"></path></svg></div>
+            <div class="mini-card" onclick="switchCard('win-info', this)"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4M12 8h.01"></path></svg></div>
         </div>
 
         <div id="win-mira" class="main-window active">
             <h2>Auxiliar Mira</h2>
-            <div class="row"><div class="row-info"><span>Diminuir Recoil</span><span class="desc">Reduz o recuo das armas.</span></div><label class="switch"><input type="checkbox" id="m-recoil"><span class="slider"></span></label></div>
-            <div class="row"><div class="row-info"><span>Aprimorar Toque</span><span class="desc">Resposta de toque imediata.</span></div><label class="switch"><input type="checkbox" id="m-touch"><span class="slider"></span></label></div>
-            <div class="row"><div class="row-info"><span>Estabilizar Mira</span><span class="desc">Foco total no alvo.</span></div><label class="switch"><input type="checkbox" id="m-stab"><span class="slider"></span></label></div>
+            <div class="row"><div class="row-info"><span>Diminuir Recoil</span></div><label class="switch"><input type="checkbox" id="m-recoil"><span class="slider"></span></label></div>
+            <div class="row"><div class="row-info"><span>Aprimorar Toque</span></div><label class="switch"><input type="checkbox" id="m-touch"><span class="slider"></span></label></div>
+            <div class="row"><div class="row-info"><span>Estabilizar Mira</span></div><label class="switch"><input type="checkbox" id="m-stab"><span class="slider"></span></label></div>
             <div class="precision-grid">
                 <button class="prec-btn" onclick="setPrec(this)">Baixa</button>
                 <button class="prec-btn active" onclick="setPrec(this)">Média</button>
@@ -135,9 +140,7 @@
 </section>
 
 <script>
-    let deferredPrompt;
-    
-    // Canvas Estrelas (Original)
+    // Estrelas
     const canvas = document.getElementById('canvas-bg');
     const ctx = canvas.getContext('2d');
     let stars = [];
@@ -155,37 +158,10 @@
     }
     initCanvas(); drawStars();
 
-    // Funções de Navegação (Corrigidas para não quebrar o layout)
-    function switchCard(id, el) {
-        document.querySelectorAll('.main-window').forEach(w => {
-            w.classList.remove('active');
-            w.style.display = 'none';
-        });
-        document.querySelectorAll('.mini-card').forEach(c => c.classList.remove('active'));
-        const target = document.getElementById(id);
-        target.classList.add('active');
-        target.style.display = 'flex';
-        el.classList.add('active');
-    }
-
-    function efetuarLogin() {
-        if(document.getElementById('login-pass').value === '1234') {
-            document.getElementById('screen-login').classList.remove('active');
-            document.getElementById('screen-dash').classList.add('active');
-        } else { alert('PIN incorreto'); }
-    }
-
-    function setPrec(btn) {
-        document.querySelectorAll('.prec-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-    }
-
-        async function executarMotorInjecao() {
+    // Motor Original com frases técnicas
+    async function executarMotorInjecao() {
         const log = document.getElementById('inject-log');
         const btn = document.getElementById('btn-run');
-        const precision = document.querySelector('.prec-btn.active').innerText;
-        
-        // Mapeamento das opções marcadas
         const opt = {
             recoil: document.getElementById('m-recoil').checked,
             toque: document.getElementById('m-touch').checked,
@@ -194,63 +170,50 @@
             desempenho: document.getElementById('o-perf').checked,
             fps: document.getElementById('o-fps').checked
         };
-
-        // Frases técnicas para cada módulo
         const scripts = {
-            recoil: ["FIX_RECOIL_Y: 85%", "ANTI_VIBRATION: ON", "STABILIZE_BARREL"],
-            toque: ["TOUCH_FREQ: 360Hz", "LATENCY: -15ms", "SENSITIVITY_BOOST"],
-            estabilizar: ["HEAD_HITBOX: 100%", "Y_AXIS_LOCK: ACTIVE", "DECELERATION: 0.5x", "STICKY_AIM: ON"],
-            otimizar: ["CLEANING_CACHE...", "CPU_PRIORITY: HIGH", "RAM_PURGE: OK"],
-            desempenho: ["THERMAL_THROTTLE: OFF", "GPU_OVERCLOCK: 15%", "POWER_MODE: MAX"],
-            fps: ["REFRESH_RATE: 90Hz", "FRAME_STABILIZER: ON", "ZERO_LAG_ENGINE"]
+            recoil: ["FIX_RECOIL: 85%", "ANTI_VIBRATION: ON"],
+            toque: ["TOUCH_FREQ: 360Hz", "LATENCY: -15ms"],
+            estabilizar: ["HEAD_HITBOX: 100%", "Y_AXIS_LOCK: HEAD"],
+            otimizar: ["CLEAR_CACHE", "CPU_PRIORITY: HIGH"],
+            desempenho: ["THERMAL: OFF", "GPU_BOOST: ON"],
+            fps: ["REFRESH_RATE: 90Hz", "ZERO_LAG"]
         };
-
         btn.style.display = 'none';
-        log.innerHTML = "<b>[SYSTEM] INICIANDO YT MUSC V7...</b><br>";
-        await new Promise(r => setTimeout(r, 800));
-
-        log.innerHTML += `> Precisão Selecionada: ${precision}<br>`;
-        log.scrollTop = log.scrollHeight;
-
-        // Loop principal para injetar cada módulo ativado
+        log.innerHTML = "<b>[SYSTEM] INICIANDO V7...</b><br>";
+        await new Promise(r => setTimeout(r, 600));
         for (const [key, active] of Object.entries(opt)) {
             if (active) {
-                log.innerHTML += `<br><span style="color:#fff">> Injetando: ${key.toUpperCase()}...</span><br>`;
+                log.innerHTML += `<br>> Injetando: ${key.toUpperCase()}...<br>`;
                 log.scrollTop = log.scrollHeight;
-                await new Promise(r => setTimeout(r, 500));
-
-                // Escreve os sub-comandos de cada módulo
+                await new Promise(r => setTimeout(r, 400));
                 for (const s of scripts[key]) {
                     log.innerHTML += `<span style="opacity:0.5; font-size: 0.6rem;">[DEBUG] -- ${s}</span><br>`;
                     log.scrollTop = log.scrollHeight;
-                    await new Promise(r => setTimeout(r, 250)); // Velocidade das linhas
+                    await new Promise(r => setTimeout(r, 200));
                 }
             }
         }
-
-        log.innerHTML += "<br><b style='color:var(--rosa-bebe)'>[!] TODOS OS MÓDULOS ATIVOS!</b>";
-        log.scrollTop = log.scrollHeight;
+        log.innerHTML += "<br><b style='color:var(--rosa-bebe)'>[!] SUCESSO!</b>";
         document.getElementById('launch-group').style.display = 'flex';
     }
 
+    function switchCard(id, el) {
+        document.querySelectorAll('.main-window').forEach(w => { w.classList.remove('active'); w.style.display = 'none'; });
+        document.querySelectorAll('.mini-card').forEach(c => c.classList.remove('active'));
+        const target = document.getElementById(id);
+        target.classList.add('active'); target.style.display = 'flex'; el.classList.add('active');
+    }
+    function efetuarLogin() {
+        if(document.getElementById('login-pass').value === '1234') {
+            document.getElementById('screen-login').classList.remove('active');
+            document.getElementById('screen-dash').classList.add('active');
+        } else { alert('PIN incorreto'); }
+    }
+    function setPrec(btn) {
+        document.querySelectorAll('.prec-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+    }
     function abrirJogo(p) { window.location.replace(`intent://#Intent;package=${p};scheme=android-app;S.browser_fallback_url=;end`); }
-
-    // PWA Registro
-    if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js'); }
-
-    /* Ajuste específico para quando o site é aberto como App */
-@media (display-mode: standalone) {
-    .dash-container {
-        height: 100vh;
-        padding-top: 40px; /* Dá espaço para a barra de status do telemóvel */
-    }
-    .main-window {
-        height: auto; /* Deixa a janela crescer conforme o conteúdo */
-        min-height: 420px;
-    }
-}
-
 </script>
 </body>
-    </html>
-    
+</html>
