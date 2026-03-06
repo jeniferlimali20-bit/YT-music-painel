@@ -8,11 +8,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
     :root {
-        /* CORES ATUALIZADAS PARA O ESTILO DA FOTO */
+        /* Rosa Neon vibrante da imagem */
         --rosa-bebe: #FF4DA6; 
         --fundo-escuro: #050505; 
         --glass: rgba(15, 15, 15, 0.7);
         --glass-border: rgba(255, 77, 166, 0.25);
+        /* Brilho (glow) para o efeito de aura */
         --glow: rgba(255, 77, 166, 0.4);
     }
 
@@ -24,13 +25,13 @@
     .screen { display: none; height: 100vh; width: 100vw; flex-direction: column; align-items: center; justify-content: center; position: relative; z-index: 1; }
     .screen.active { display: flex; }
 
-    #screen-login { justify-content: center; padding-bottom: 100px; }
     .login-content { 
         width: 100%; max-width: 300px; text-align: center; 
         background: var(--glass); backdrop-filter: blur(15px); 
         border: 1px solid var(--glass-border); border-radius: 24px; 
         padding: 30px; transform: translateY(-35%);
-        box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        /* Brilho em volta do card de login */
+        box-shadow: 0 0 25px var(--glow);
     }
     
     h1 { color: var(--rosa-bebe); font-size: 1.1rem; font-weight: 600; letter-spacing: 2px; margin-bottom: 20px; text-transform: uppercase; text-shadow: 0 0 10px var(--glow); }
@@ -42,7 +43,13 @@
     .mini-card.active { border-color: var(--rosa-bebe); background: rgba(255, 77, 166, 0.15); transform: translateY(-3px); box-shadow: 0 5px 15px var(--glow); }
     .mini-card svg { stroke: var(--rosa-bebe); width: 22px; stroke-width: 1.5; fill: none; filter: drop-shadow(0 0 5px var(--glow)); }
 
-    .main-window { width: 100%; background: var(--glass); backdrop-filter: blur(25px); border: 1px solid var(--glass-border); border-radius: 28px; padding: 22px; height: 410px; display: none; flex-direction: column; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+    .main-window { 
+        width: 100%; background: var(--glass); backdrop-filter: blur(25px); 
+        border: 1px solid var(--glass-border); border-radius: 28px; 
+        padding: 22px; height: 410px; display: none; flex-direction: column;
+        /* AQUI ESTÁ O BRILHO EM VOLTA DE TODO O CARD */
+        box-shadow: 0 0 25px var(--glow); 
+    }
     .main-window.active { display: flex; animation: windowIn 0.3s ease-out; }
 
     h2 { font-size: 0.95rem; color: var(--rosa-bebe); font-weight: 600; margin-bottom: 18px; text-align: center; text-transform: uppercase; text-shadow: 0 0 8px var(--glow); }
@@ -66,10 +73,8 @@
 
     #inject-log { height: 120px; background: rgba(0,0,0,0.5); border-radius: 12px; padding: 12px; font-size: 0.65rem; color: var(--rosa-bebe); overflow-y: auto; margin-bottom: 15px; border: 1px solid var(--glass-border); text-align: left; font-family: monospace; }
     
-    #launch-group { display: none; flex-direction: column; gap: 12px; width: 100%; margin-top: 15px; }
-
     @keyframes windowIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        </style>
+</style>
 </head>
 <body>
 <canvas id="canvas-bg"></canvas>
