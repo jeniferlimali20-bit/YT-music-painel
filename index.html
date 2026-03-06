@@ -214,11 +214,24 @@
     }
 
     function efetuarLogin() {
-        if(document.getElementById('login-pass').value === '1234') {
-            document.getElementById('screen-login').classList.remove('active');
-            document.getElementById('screen-dash').classList.add('active');
-        } else { alert('PIN incorreto'); }
+    // Captura o que foi digitado
+    const campoSenha = document.getElementById('login-pass');
+    const senhaDigitada = campoSenha.value.trim();
+
+    // Tente logar com a sua senha (ex: 1234)
+    if (senhaDigitada === '1234') { 
+        document.getElementById('screen-login').classList.remove('active');
+        document.getElementById('screen-dash').classList.add('active');
+        
+        // Inicia o fundo de estrelas se a função existir
+        if (typeof initCanvas === 'function') {
+            initCanvas();
+        }
+    } else {
+        alert('PIN Incorreto ou expirado');
+        campoSenha.value = ''; // Limpa o campo se errar
     }
+}
 
     // 4. Ajuste do Motor de Precisão
     function setPrec(btn) {
