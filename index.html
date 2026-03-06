@@ -280,33 +280,57 @@
         });
     }
     function gerarConfiguracao() {
-    const userAgent = navigator.userAgent.toLowerCase();
+    const ua = navigator.userAgent.toLowerCase();
+    const platform = navigator.platform.toLowerCase();
     const width = window.screen.width;
     const height = window.screen.height;
-    let dispositivo = "Celular Padrão";
+    let dispositivo = "Android Padrão";
 
-    // Detecção básica de marca
-    if (userAgent.includes("samsung")) dispositivo = "Samsung Galaxy";
-    else if (userAgent.includes("motorola") || userAgent.includes("moto")) dispositivo = "Motorola Moto";
-    else if (userAgent.includes("xiaomi") || userAgent.includes("redmi")) dispositivo = "Xiaomi Redmi";
+    // Lógica de Detecção para iPhone (iOS)
+    if (ua.includes("iphone") || ua.includes("ipad") || (platform.includes("mac") && navigator.maxTouchPoints > 1)) {
+        dispositivo = "Apple iPhone";
+    } 
+    // Lógica para Motorola
+    else if (ua.includes("moto") || ua.includes("motorola") || ua.includes("g53")) {
+        dispositivo = "Motorola Moto";
+    } 
+    // Lógica para Xiaomi/Redmi
+    else if (ua.includes("redmi") || ua.includes("xiaomi")) {
+        dispositivo = "Xiaomi Redmi";
+    }
 
-    document.getElementById('device-detected').innerText = `Detectado: ${dispositivo} (${width}x${height})`;
+    document.getElementById('device-detected').innerText = `Hardware: ${dispositivo} (${width}x${height})`;
 
-    // Lógica matemática simples para sensibilidade baseada na largura da tela
-    // Telas menores precisam de sensibilidade maior
-    let sens = Math.floor(90 + (Math.random() * 10));
-    let dpi = width < 400 ? 580 : 620;
-    let btn = width < 400 ? "45%" : "52%";
+    // Configurações baseadas no hardware detectado
+    let sens, dpi, btn;
 
-    // Efeito de carregamento rápido
-    document.getElementById('val-sens').innerText = "Calculando...";
+    if (dispositivo === "Apple iPhone") {
+        // iPhones têm resposta de toque muito alta, a sensi pode ser menor
+        sens = Math.floor(88 + (Math.random() * 5));
+        dpi = "Padrão iOS"; // iPhone não usa DPI manual como Android
+        btn = width < 380 ? "42%" : "45%";
+    } else if (dispositivo.includes("Motorola")) {
+        sens = Math.floor(94 + (Math.random() * 4));
+        dpi = 580;
+        btn = "48%";
+    } else if (dispositivo.includes("Xiaomi")) {
+        sens = Math.floor(96 + (Math.random() * 3));
+        dpi = 620;
+        btn = "53%";
+    } else {
+        sens = 90;
+        dpi = 600;
+        btn = "50%";
+    }
+
+    document.getElementById('val-sens').innerText = "Calibrando...";
     
     setTimeout(() => {
         document.getElementById('val-sens').innerText = sens;
         document.getElementById('val-dpi').innerText = dpi;
         document.getElementById('val-btn').innerText = btn;
     }, 800);
-    }
+}
 </script>
 </body>
 </html>
