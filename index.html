@@ -46,7 +46,6 @@
         .row { display: flex; justify-content: space-between; align-items: center; margin: 14px 0; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.03); }
         .row-info span { font-size: 0.85rem; display: block; color: #eee; }
         
-        /* AQUI: Fonte reduzida para as descrições da mira */
         .desc { font-size: 0.55rem; color: #777; margin-top: 2px; }
 
         .btn-rosa { background: var(--rosa-bebe); color: #000; border: none; padding: 14px; border-radius: 12px; width: 100%; font-weight: 600; cursor: pointer; margin-top: auto; }
@@ -91,34 +90,11 @@
             <div class="mini-card active" onclick="switchCard('win-mira', this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"></circle><path d="M22 12h-4M6 12H2M12 6V2M12 22v-4"></path></svg></div>
             <div class="mini-card" onclick="switchCard('win-opt', this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg></div>
             <div class="mini-card" onclick="switchCard('win-inject', this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 2l4 4-15 15-4-4L18 2zM14.5 5.5l3 3"></path></svg></div>
-            <div class="mini-card" onclick="switchCard('win-info', this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4M12 8h.01"></path></svg></div>
-        </div>
-
-        <div id="win-mira" class="main-window active">
-            <h2>Auxiliar Mira</h2>
-            <div class="row"><div class="row-info"><span>Diminuir Recoil</span><span class="desc">Reduz o recuo das armas.</span></div><label class="switch"><input type="checkbox"><span class="slider"></span></label></div>
-            <div class="row"><div class="row-info"><span>Aprimorar Toque</span><span class="desc">Resposta de toque imediata.</span></div><label class="switch"><input type="checkbox"><span class="slider"></span></label></div>
-            <div class="row"><div class="row-info"><span>Estabilizar Mira</span><span class="desc">Foco total no alvo.</span></div><label class="switch"><input type="checkbox"><span class="slider"></span></label></div>
-            <div style="margin-top: 10px;">
-                <div class="precision-grid">
-                    <button class="prec-btn" onclick="setPrec(this)">Baixa</button>
-                    <button class="prec-btn active" onclick="setPrec(this)">Média</button>
-                    <button class="prec-btn" onclick="setPrec(this)">Alta</button>
-                </div>
-            </div>
-        </div>
-
-        <div id="win-opt" class="main-window">
-            <h2>Otimização</h2>
-            <div class="row"><div class="row-info"><span>Limpar Cache</span></div><label class="switch"><input type="checkbox"><span class="slider"></span></label></div>
-            <div class="row"><div class="row-info"><span>Forçar 60/90 FPS</span></div><label class="switch"><input type="checkbox"><span class="slider"></span></label></div>
-            <div class="row"><div class="row-info"><span>Anti-Jitter</span></div><label class="switch"><input type="checkbox"><span class="slider"></span></label></div>
-        </div>
-
-        <div id="win-inject" class="main-window" style="text-align: center;">
+            <div class="mini-card" onclick="switchCard('win-info', this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx
+                     <div id="win-inject" class="main-window" style="text-align: center;">
             <h2>Injetar Módulos</h2>
             <div id="inject-log">Aguardando comando...</div>
-            <button class="btn-rosa" id="btn-run" onclick="executarInjecao()">Injetar Agora</button>
+            <button class="btn-rosa" id="btn-run" onclick="executarMotorInjecao()">Injetar Agora</button>
             <div class="game-launch-group" id="launch-group">
                 <button class="btn-rosa" onclick="abrirJogo('com.dts.freefireth')">Abrir Free Fire</button>
                 <button class="btn-rosa" style="background:none; border:1px solid var(--rosa-bebe); color:var(--rosa-bebe);" onclick="abrirJogo('com.dts.freefiremax')">Abrir Free Fire Max</button>
@@ -157,28 +133,52 @@
     }
     initCanvas(); drawStars();
 
-    // --- INJEÇÃO COM LINHAS DE CÓDIGO ---
-    async function executarInjecao() {
+    // --- MOTOR DE INJEÇÃO (LÓGICA QUE VOCÊ PEDIU) ---
+    async function executarMotorInjecao() {
         const log = document.getElementById('inject-log');
         const btn = document.getElementById('btn-run');
-        const codigos = [
-            "Buscando diretórios do jogo...",
-            "Injetando: Anti-Recoil_v7.sys",
-            "Ativando: Touch_Sampling_Rate...",
-            "Limpando buffers de memória...",
-            "Estabilizando sensibilidade Y...",
-            "Injeção completa! Engine Master Ativa."
-        ];
-        
-        btn.style.display = 'none';
-        log.innerHTML = "";
+        const precision = document.querySelector('.prec-btn.active').innerText;
 
-        for (let i = 0; i < codigos.length; i++) {
-            log.innerHTML += codigos[i] + "<br>";
-            log.scrollTop = log.scrollHeight;
-            await new Promise(r => setTimeout(r, 700)); // Tempo entre cada linha
+        // Mapeamento das opções
+        const opt = {
+            recoil: document.getElementById('m-recoil').checked,
+            toque: document.getElementById('m-touch').checked,
+            estabilizar: document.getElementById('m-stab').checked,
+            otimizar: document.getElementById('o-dev').checked,
+            desempenho: document.getElementById('o-perf').checked,
+            fps: document.getElementById('o-fps').checked
+        };
+
+        const scripts = {
+            recoil: ["LOCK_VIBRATION: 100%", "FIX_CAMERA_JITTER: ON", "STABILIZE_BARREL: ACTIVE"],
+            toque: ["TOUCH_SAMPLING: 360Hz", "LATENCY_REDUCTION: -15ms", "INPUT_BOOST: MAXIMUM"],
+            estabilizar: ["HEAD_HITBOX_STICKINESS: 100%", "DISABLE_ACCEL_ON_TARGET: TRUE", "CENTER_SCREEN_DECELERATION: 0.5x", "Y_AXIS_LOCK_HEAD: ACTIVE", "ANTI_SKIP_HEAD: ACTIVE"],
+            otimizar: ["CLEAR_SYSTEM_CACHE", "CPU_PRIORITY: HIGH_TASK", "KILL_BACKGROUND_APPS"],
+            desempenho: ["THERMAL_THROTTLING: DISABLED", "PERFORMANCE_GOVERNOR: OVERDRIVE", "ZERO_LAG_BUFFER: ACTIVE"],
+            fps: ["REFRESH_RATE_LOCK: 90Hz", "HARDWARE_UNLEASH: ON", "GPU_RENDER_BOOST: 100%"]
+        };
+
+        btn.style.display = 'none';
+        log.innerHTML = "<b>[SYSTEM] MASTER ENGINE V7 INICIADO</b><br>";
+        await new Promise(r => setTimeout(r, 800));
+
+        log.innerHTML += `> Estabilizando Precisão: ${precision}...<br>`;
+
+        for (const [key, active] of Object.entries(opt)) {
+            if (active) {
+                log.innerHTML += `<br>> Aplicando: ${key.toUpperCase()}...<br>`;
+                log.scrollTop = log.scrollHeight;
+                await new Promise(r => setTimeout(r, 600));
+
+                for (const cmd of scripts[key]) {
+                    log.innerHTML += `<span style="color:rgba(244, 167, 187, 0.5)">-- ${cmd}</span><br>`;
+                    log.scrollTop = log.scrollHeight;
+                    await new Promise(r => setTimeout(r, 300));
+                }
+            }
         }
-        
+
+        log.innerHTML += "<br><b style='color:var(--rosa-bebe)'>[SUCCESS] MÓDULOS INJETADOS!</b>";
         document.getElementById('launch-group').style.display = 'flex';
     }
 
@@ -200,20 +200,18 @@
     }
     function abrirJogo(p) { window.location.replace(`intent://#Intent;package=${p};scheme=android-app;S.browser_fallback_url=;end`); }
 
-    // --- PWA (RODAPÉ DE INSTALAÇÃO) ---
+    // --- PWA ---
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js').then(() => console.log("PWA Ativo"));
+    }
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault(); deferredPrompt = e;
-        if (!window.matchMedia('(display-mode: standalone)').matches) {
-            document.getElementById('install-footer').style.display = 'block';
-        }
+        if (!window.matchMedia('(display-mode: standalone)').matches) document.getElementById('install-footer').style.display = 'block';
     });
     document.getElementById('btn-install')?.addEventListener('click', async () => {
-        if (deferredPrompt) {
-            deferredPrompt.prompt();
-            deferredPrompt = null;
-        }
+        if (deferredPrompt) { deferredPrompt.prompt(); deferredPrompt = null; }
     });
 </script>
 </body>
             </html>
-            
+                
