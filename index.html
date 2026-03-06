@@ -89,19 +89,20 @@
         flex: 1;
     }
 
-    /* Esconde o instalador no modo paisagem para não cobrir o painel */
+        /* Esconde o instalador no modo paisagem */
     #install-footer {
         display: none !important;
     }
-        }
-       /* Esconde o rodapé automaticamente se o app estiver instalado */
-@media (display-mode: standalone) {
+} /* <--- Essa chave fecha o modo paisagem */
+
+/* Este bloco abaixo esconde o botão quando o app está aberto/instalado */
+@media (display-mode: standalone), (display-mode: fullscreen) {
     #install-footer {
         display: none !important;
+        visibility: hidden !important;
     }
 }
-        
-    </style>
+</style>
 </head>
 <body>
 <canvas id="canvas-bg"></canvas>
