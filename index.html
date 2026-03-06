@@ -45,28 +45,10 @@
 
     h2 { font-size: 0.95rem; color: var(--rosa-bebe); font-weight: 400; margin-bottom: 18px; text-align: center; }
 
-    /* --- AJUSTES PREMIUM SOLICITADOS --- */
-    .row { 
-        display: flex; 
-        justify-content: space-between; 
-        align-items: center; 
-        margin: 18px 0; /* Aumentado para melhor respiro */
-        padding-bottom: 12px; 
-        border-bottom: 1px solid rgba(255,255,255,0.02); 
-    }
-    .row-info span { 
-        font-size: 0.82rem; /* Fonte mais equilibrada */
-        font-weight: 500; 
-        color: #eeeeee; 
-    }
-    .desc { 
-        font-size: 0.62rem !important; /* Letra pequena conforme pedido */
-        color: rgba(255, 255, 255, 0.4) !important; /* Cor cinza translúcida profissional */
-        margin-top: 4px; 
-        font-weight: 300; 
-        display: block;
-    }
-    /* ---------------------------------- */
+    /* --- AJUSTES PREMIUM --- */
+    .row { display: flex; justify-content: space-between; align-items: center; margin: 18px 0; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.02); }
+    .row-info span { font-size: 0.82rem; font-weight: 500; color: #eeeeee; }
+    .desc { font-size: 0.62rem !important; color: rgba(255, 255, 255, 0.4) !important; margin-top: 4px; font-weight: 300; display: block; }
 
     .btn-rosa { background: var(--rosa-bebe); color: #000; border: none; padding: 14px; border-radius: 12px; width: 100%; font-weight: 600; cursor: pointer; margin-top: auto; }
     
@@ -78,16 +60,17 @@
     .switch input { opacity: 0; width: 0; height: 0; }
     .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: #1a1a1a; border-radius: 18px; transition: 0.4s; border: 1px solid var(--glass-border); }
     .slider:before { content: ""; position: absolute; height: 12px; width: 12px; left: 2px; bottom: 2px; background: #555; border-radius: 50%; transition: 0.4s; }
-    input:checked + .slider { 
-        background: rgba(244, 167, 187, 0.2); 
-        border-color: var(--rosa-bebe); 
-        box-shadow: 0 0 8px rgba(244, 167, 187, 0.1); /* Glow sutil ao ativar */
-    }
+    input:checked + .slider { background: rgba(244, 167, 187, 0.2); border-color: var(--rosa-bebe); box-shadow: 0 0 8px rgba(244, 167, 187, 0.1); }
     input:checked + .slider:before { transform: translateX(18px); background: var(--rosa-bebe); }
 
     #inject-log { height: 120px; background: rgba(0,0,0,0.3); border-radius: 12px; padding: 12px; font-size: 0.65rem; color: var(--rosa-bebe); overflow-y: auto; margin-bottom: 15px; border: 1px solid var(--glass-border); text-align: left; font-family: monospace; }
     
     @keyframes windowIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* ESCONDER BOTÃO DE INSTALAR NO APP */
+    @media (display-mode: standalone), (display-mode: fullscreen) {
+        #install-footer { display: none !important; }
+    }
 
     @media (orientation: landscape) {
         .dash-container { flex-direction: row !important; max-width: 99% !important; gap: 15px; padding: 5px; }
@@ -97,7 +80,8 @@
         .row { margin: 8px 0 !important; }
         .desc { font-size: 0.6rem !important; }
     }
-</style>
+             </style>
+
 </head>
 <body>
 <canvas id="canvas-bg"></canvas>
