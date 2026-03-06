@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Painel Premium</title>
+
+<title>YT musc</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
@@ -21,6 +23,7 @@ margin:0;
 padding:0;
 box-sizing:border-box;
 font-family:'Inter',sans-serif;
+-webkit-tap-highlight-color:transparent;
 }
 
 body{
@@ -44,6 +47,7 @@ z-index:-1;
 .screen{
 display:none;
 height:100vh;
+width:100vw;
 align-items:center;
 justify-content:center;
 flex-direction:column;
@@ -58,23 +62,23 @@ display:flex;
 .login-box{
 background:var(--glass);
 border:1px solid var(--border);
-backdrop-filter:blur(20px);
-padding:30px;
+backdrop-filter:blur(15px);
 border-radius:20px;
+padding:30px;
 width:300px;
 text-align:center;
 }
 
 h1{
 color:var(--rosa);
+font-size:1.1rem;
 margin-bottom:20px;
-font-weight:400;
 }
 
 input{
 width:100%;
 padding:14px;
-border-radius:10px;
+border-radius:12px;
 border:1px solid var(--border);
 background:#000;
 color:white;
@@ -88,11 +92,12 @@ cursor:pointer;
 
 .btn{
 background:var(--rosa);
+color:black;
 border:none;
-padding:12px;
-border-radius:10px;
+padding:14px;
+border-radius:12px;
 width:100%;
-font-weight:bold;
+font-weight:600;
 }
 
 /* dashboard */
@@ -112,8 +117,8 @@ margin-bottom:10px;
 flex:1;
 background:var(--glass);
 border:1px solid var(--border);
+border-radius:12px;
 padding:10px;
-border-radius:10px;
 text-align:center;
 cursor:pointer;
 }
@@ -126,7 +131,7 @@ border-color:var(--rosa);
 display:none;
 background:var(--glass);
 border:1px solid var(--border);
-border-radius:20px;
+border-radius:25px;
 padding:20px;
 height:400px;
 }
@@ -139,13 +144,13 @@ flex-direction:column;
 .row{
 display:flex;
 justify-content:space-between;
-margin:10px 0;
+margin:12px 0;
 }
 
 .switch{
 position:relative;
-width:40px;
-height:20px;
+width:36px;
+height:18px;
 }
 
 .switch input{
@@ -154,19 +159,19 @@ opacity:0;
 
 .slider{
 position:absolute;
-background:#222;
 top:0;
 left:0;
 right:0;
 bottom:0;
+background:#222;
 border-radius:20px;
 }
 
 .slider:before{
 content:"";
 position:absolute;
-width:14px;
-height:14px;
+width:12px;
+height:12px;
 left:3px;
 top:3px;
 background:#555;
@@ -179,22 +184,22 @@ background:rgba(241,146,170,.3);
 }
 
 input:checked + .slider:before{
-transform:translateX(20px);
+transform:translateX(18px);
 background:var(--rosa);
 }
 
 .log{
 background:#000;
-height:120px;
-overflow:auto;
 border-radius:10px;
+height:120px;
 padding:10px;
+overflow:auto;
 font-family:monospace;
 font-size:12px;
 margin-bottom:10px;
 }
 
-.game-buttons{
+.games{
 display:none;
 flex-direction:column;
 gap:10px;
@@ -205,7 +210,7 @@ background:none;
 border:1px solid var(--rosa);
 color:var(--rosa);
 padding:12px;
-border-radius:10px;
+border-radius:12px;
 }
 
 </style>
@@ -221,16 +226,15 @@ border-radius:10px;
 
 <div class="login-box">
 
-<h1>Painel Premium</h1>
+<h1>Auxílio Premium</h1>
 
-<input id="senha" type="password" placeholder="Digite o PIN">
+<input id="senha" type="password" placeholder="xxx-xxx-xxx">
 
 <button class="btn" onclick="login()">Entrar</button>
 
 </div>
 
 </section>
-
 
 <!-- DASHBOARD -->
 
@@ -241,32 +245,18 @@ border-radius:10px;
 <div class="cards">
 
 <div class="card-btn active" onclick="trocar('mira',this)">Mira</div>
-
 <div class="card-btn" onclick="trocar('opt',this)">Otimização</div>
-
 <div class="card-btn" onclick="trocar('inject',this)">Inject</div>
-
 <div class="card-btn" onclick="trocar('info',this)">Info</div>
 
 </div>
-
 
 <!-- MIRA -->
 
 <div id="mira" class="window active">
 
-<h3>Auxiliar de Mira</h3>
-
 <div class="row">
 <span>Diminuir Recoil</span>
-<label class="switch">
-<input type="checkbox">
-<span class="slider"></span>
-</label>
-</div>
-
-<div class="row">
-<span>Estabilizar Mira</span>
 <label class="switch">
 <input type="checkbox">
 <span class="slider"></span>
@@ -281,14 +271,19 @@ border-radius:10px;
 </label>
 </div>
 
+<div class="row">
+<span>Estabilizar Mira</span>
+<label class="switch">
+<input type="checkbox">
+<span class="slider"></span>
+</label>
 </div>
 
+</div>
 
 <!-- OTIMIZAÇÃO -->
 
 <div id="opt" class="window">
-
-<h3>Otimização</h3>
 
 <div class="row">
 <span>Otimizar Dispositivo</span>
@@ -316,7 +311,6 @@ border-radius:10px;
 
 </div>
 
-
 <!-- INJECT -->
 
 <div id="inject" class="window">
@@ -325,31 +319,28 @@ border-radius:10px;
 
 <div id="log" class="log">Aguardando comando...</div>
 
-<button class="btn" onclick="inject()">Injetar</button>
+<button class="btn" onclick="executarInjecao()" id="btn-run">Injetar Agora</button>
 
-<div id="games" class="game-buttons">
+<div id="games" class="games">
 
-<button class="btn" onclick="abrirFF()">Abrir Free Fire</button>
+<button class="btn" onclick="abrirJogo('com.dts.freefireth')">
+Abrir Free Fire
+</button>
 
-<button class="btn-outline" onclick="abrirFFMax()">Abrir Free Fire Max</button>
+<button class="btn-outline" onclick="abrirJogo('com.dts.freefiremax')">
+Abrir Free Fire Max
+</button>
 
 </div>
 
 </div>
-
 
 <!-- INFO -->
 
 <div id="info" class="window">
 
-<h3>Informações</h3>
-
-<p style="margin-top:20px;">
-BUILD PREMIUM V10
-</p>
-
+<p>BUILD PREMIUM V7</p>
 <p>TikTok: @jeniizx7</p>
-
 <p>Contato: @gothxjen</p>
 
 </div>
@@ -358,18 +349,9 @@ BUILD PREMIUM V10
 
 </section>
 
-
 <script>
 
-/* vibração */
-
-function vibrar(){
-if(navigator.vibrate){
-navigator.vibrate(20);
-}
-}
-
-/* login */
+/* LOGIN */
 
 function login(){
 
@@ -388,7 +370,7 @@ alert("PIN incorreto");
 
 }
 
-/* trocar abas */
+/* TROCAR ABAS */
 
 function trocar(id,el){
 
@@ -400,27 +382,33 @@ el.classList.add("active");
 
 }
 
-/* injeção simulada */
+/* INJEÇÃO */
 
-async function inject(){
+async function executarInjecao(){
 
 const log=document.getElementById("log");
+const btn=document.getElementById("btn-run");
 
-log.innerHTML="Iniciando engine...";
+btn.style.display="none";
 
+log.innerHTML="Iniciando Engine...";
 await delay(1000);
 
 log.innerHTML+="<br>Carregando módulos...";
-
 await delay(1200);
 
 log.innerHTML+="<br>Aplicando otimizações...";
-
 await delay(1200);
 
-log.innerHTML+="<br>✔ Concluído";
+log.innerHTML+="<br>✔ Concluído!";
 
 document.getElementById("games").style.display="flex";
+
+/* abrir free fire automaticamente */
+
+setTimeout(()=>{
+abrirJogo("com.dts.freefireth");
+},2000);
 
 }
 
@@ -428,37 +416,27 @@ function delay(ms){
 return new Promise(r=>setTimeout(r,ms));
 }
 
-/* abrir free fire */
+/* ABRIR FREE FIRE */
 
-function abrirFF(){
-
-vibrar();
-
-const pkg="com.dts.freefireth";
+function abrirJogo(pkg){
 
 window.location.href=`intent://#Intent;package=${pkg};scheme=android-app;end`;
 
 setTimeout(()=>{
+
+if(pkg==="com.dts.freefireth"){
 window.location.href="https://play.google.com/store/apps/details?id=com.dts.freefireth";
-},1500);
-
 }
 
-function abrirFFMax(){
-
-vibrar();
-
-const pkg="com.dts.freefiremax";
-
-window.location.href=`intent://#Intent;package=${pkg};scheme=android-app;end`;
-
-setTimeout(()=>{
+if(pkg==="com.dts.freefiremax"){
 window.location.href="https://play.google.com/store/apps/details?id=com.dts.freefiremax";
+}
+
 },1500);
 
 }
 
-/* fundo animado */
+/* FUNDO ANIMADO */
 
 const canvas=document.getElementById("bg");
 const ctx=canvas.getContext("2d");
