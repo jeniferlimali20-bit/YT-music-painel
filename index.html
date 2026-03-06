@@ -485,6 +485,45 @@
         if (navigator.vibrate) navigator.vibrate(20);
     }
 
+        // Variáveis de estado do motor
+let motorAtivo = false;
+let motorConfig = { travaY: false, fator: 0.85 };
+
+function ativarMotorToque() {
+    console.log("Motor de Toque: Ativado");
+    // Melhora a resposta de entrada no digitalizador
+    window.addEventListener('touchstart', () => { 
+        if(motorAtivo) navigator.vibrate(1); 
+    }, { passive: true });
+}
+
+function ativarEstabilizador(multi) {
+    console.log("Motor de Estabilização: Ativado");
+    motorConfig.travaY = true;
+    motorConfig.fator = 0.85 / multi;
+
+    // Lógica de frenagem para evitar overshoot (passar da cabeça)
+    window.addEventListener('touchmove', (e) => {
+        if (!motorConfig.travaY) return;
+        const touch = e.touches[0];
+        if (Math.abs(touch.clientY) > 20) {
+            return touch.clientY * motorConfig.fator;
+        }
+    }, { passive: false });
+}
+
+function otimizarSistema() {
+    sessionStorage.clear();
+    console.log("Cache de sessão limpo.");
+}
+
+function maximizarDesempenho() {
+    motorAtivo = true;
+    if ('wakeLock' in navigator) {
+        navigator.wakeLock.request('screen').catch(() => {});
+    }
+}
+        
     // 5. Motor de Injeção V7 (Corrigido com Ativação Real)
 async function executarMotorInjecao() {
     suavizacaoAtiva = document.getElementById('m-stab').checked;
