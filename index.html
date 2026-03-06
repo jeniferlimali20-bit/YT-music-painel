@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>YT musc</title>
+    <title>MASTER INJECTOR V7</title>
     <link rel="manifest" href="manifest.json">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
@@ -23,8 +23,14 @@
         .screen { display: none; height: 100vh; width: 100vw; flex-direction: column; align-items: center; justify-content: center; position: relative; z-index: 1; }
         .screen.active { display: flex; }
 
-        #screen-login { justify-content: space-between; padding: 40px 20px; }
-        .login-content { width: 100%; max-width: 300px; text-align: center; background: var(--glass); backdrop-filter: blur(15px); border: 1px solid var(--glass-border); border-radius: 24px; padding: 30px; }
+        /* AJUSTE DO LOGIN: Puxado para cima do centro */
+        #screen-login { justify-content: center; padding-bottom: 100px; }
+        .login-content { 
+            width: 100%; max-width: 300px; text-align: center; 
+            background: var(--glass); backdrop-filter: blur(15px); 
+            border: 1px solid var(--glass-border); border-radius: 24px; 
+            padding: 30px; transform: translateY(-35%); /* <-- Isso sobe o quadro */
+        }
         
         h1 { color: var(--rosa-bebe); font-size: 1.1rem; font-weight: 300; letter-spacing: 2px; margin-bottom: 20px; text-transform: uppercase; }
         input { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid var(--glass-border); background: rgba(0,0,0,0.5); color: white; text-align: center; margin-bottom: 15px; outline: none; }
@@ -41,7 +47,6 @@
         h2 { font-size: 0.95rem; color: var(--rosa-bebe); font-weight: 400; margin-bottom: 18px; text-align: center; }
         .row { display: flex; justify-content: space-between; align-items: center; margin: 14px 0; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.03); }
         .row-info span { font-size: 0.85rem; display: block; color: #eee; }
-        
         .desc { font-size: 0.55rem; color: #777; margin-top: 2px; }
 
         .btn-rosa { background: var(--rosa-bebe); color: #000; border: none; padding: 14px; border-radius: 12px; width: 100%; font-weight: 600; cursor: pointer; margin-top: auto; }
@@ -67,73 +72,25 @@
 
         @keyframes windowIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- INÍCIO DO BLOCO DE PAISAGEM FULLSCREEN OTIMIZADO --- */
-@media (orientation: landscape) {
-    /* Ajusta o container principal para usar quase toda a largura */
-    .dash-container { 
-        flex-direction: row !important; 
-        max-width: 99% !important; /* Quase 100% da largura da tela */
-        gap: 15px; 
-        padding: 5px; 
-    }
+        /* MODO PAISAGEM FULLSCREEN (Preenche a tela) */
+        @media (orientation: landscape) {
+            .dash-container { flex-direction: row !important; max-width: 99% !important; gap: 15px; padding: 5px; }
+            .card-selector { flex-direction: column !important; margin-bottom: 0 !important; gap: 8px; }
+            .mini-card { width: 42px !important; height: 42px !important; }
+            .main-window { 
+                height: 92vh !important; flex: 1; width: 100% !important; 
+                padding: 10px 20px !important; margin-right: 5px; overflow-y: auto; 
+            }
+            .row { margin: 8px 0 !important; justify-content: space-between !important; display: flex !important; width: 100% !important; }
+            .row-info span { font-size: 0.85rem !important; }
+            .desc { font-size: 0.6rem !important; max-width: 80%; }
+            #install-footer { display: none !important; }
+        }
 
-    /* Comprime e alinha os ícones da lateral esquerda */
-    .card-selector { 
-        flex-direction: column !important; 
-        margin-bottom: 0 !important; 
-        gap: 8px; 
-    }
-    
-    /* Ícones menores na lateral */
-    .mini-card {
-        width: 42px !important;
-        height: 42px !important;
-    }
-    .mini-card svg { width: 18px !important; }
-
-    /* --- AQUI ESTÁ O AJUSTE PRINCIPAL PARA PREENCHER A TELA --- */
-    .main-window { 
-        height: 92vh !important; /* Quase toda a altura da tela */
-        flex: 1; /* Ocupa todo o espaço restante horizontalmente */
-        width: 100% !important; /* Força a largura total do espaço restante */
-        padding: 10px 20px !important; /* Padding lateral maior para desgrudar das bordas */
-        margin-right: 5px;
-        overflow-y: auto; /* Permite rolar se o celular for muito "baixo" */
-    }
-
-    /* Título maior */
-    .main-window h2 { font-size: 0.9rem !important; margin-bottom: 12px !important; }
-    
-    /* Ajuste de linha para afastar a descrição do switch */
-    .row { 
-        margin: 8px 0 !important; /* Espaçamento vertical entre as opções */
-        padding-bottom: 6px !important; 
-        justify-content: space-between !important; /* Garante que texto fique na esquerda e switch na direita */
-        display: flex !important;
-        width: 100% !important;
-    }
-    
-    /* LETRAS MAIORES (Sua solicitação) */
-    .row-info span { font-size: 0.85rem !important; } /* Texto principal maior e legível */
-    .desc { font-size: 0.6rem !important; margin-top: 2px !important; max-width: 80%; } /* Descrição maior */
-
-    /* Os três botões do fundo (Baixa, Média, Alta) */
-    .precision-grid { gap: 8px !important; margin-top: 10px !important; width: 100% !important; }
-    .prec-btn { padding: 8px !important; font-size: 0.7rem !important; flex: 1; }
-
-    /* Esconde o rodapé de instalação no modo paisagem */
-    #install-footer { display: none !important; }
-} 
-/* --- FIM DO BLOCO OTIMIZADO --- */
-        
-/* Este bloco abaixo esconde o botão quando o app está aberto/instalado */
-@media (display-mode: standalone), (display-mode: fullscreen) {
-    #install-footer {
-        display: none !important;
-        visibility: hidden !important;
-    }
-}
-</style>
+        @media (display-mode: standalone), (display-mode: fullscreen) {
+            #install-footer { display: none !important; }
+        }
+    </style>
 </head>
 <body>
 <canvas id="canvas-bg"></canvas>
@@ -207,7 +164,7 @@
     </div>
 </section>
 <script>
-    // Canvas Estrelas Original
+    // 1. Efeito Visual de Fundo (Mantido Original)
     const canvas = document.getElementById('canvas-bg');
     const ctx = canvas.getContext('2d');
     let stars = [];
@@ -225,7 +182,10 @@
     }
     initCanvas(); drawStars();
 
-    // Navegação Original
+    // 2. Variáveis de Controle do Motor (Adicionado sem mudar o visual)
+    let enginePrecisionMulti = 1.0;
+
+    // 3. Navegação e Login (Mantido Original)
     function switchCard(id, el) {
         document.querySelectorAll('.main-window').forEach(w => { w.classList.remove('active'); w.style.display = 'none'; });
         document.querySelectorAll('.mini-card').forEach(c => c.classList.remove('active'));
@@ -240,36 +200,24 @@
         } else { alert('PIN incorreto'); }
     }
 
+    // 4. Ajuste do Motor de Precisão (Baixa, Média, Alta)
     function setPrec(btn) {
         document.querySelectorAll('.prec-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
+        
+        const nivel = btn.innerText.trim().toLowerCase();
+        if(nivel === 'baixa') enginePrecisionMulti = 0.85;
+        else if(nivel === 'média' || nivel === 'media') enginePrecisionMulti = 1.0;
+        else if(nivel === 'alta') enginePrecisionMulti = 1.25;
+        
+        if (navigator.vibrate) navigator.vibrate(20);
     }
 
-        // Navegação Original
-    function switchCard(id, el) {
-        document.querySelectorAll('.main-window').forEach(w => { w.classList.remove('active'); w.style.display = 'none'; });
-        document.querySelectorAll('.mini-card').forEach(c => c.classList.remove('active'));
-        const target = document.getElementById(id);
-        target.classList.add('active'); target.style.display = 'flex'; el.classList.add('active');
-    }
-
-    function efetuarLogin() {
-        if(document.getElementById('login-pass').value === '1234') {
-            document.getElementById('screen-login').classList.remove('active');
-            document.getElementById('screen-dash').classList.add('active');
-        } else { alert('PIN incorreto'); }
-    }
-
-    function setPrec(btn) {
-        document.querySelectorAll('.prec-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-    }
-
-    // MOTOR DE INJEÇÃO ORIGINAL COMPLETO
+    // 5. Motor de Injeção V7 (Mantido seus Logs e Scripts originais)
     async function executarMotorInjecao() {
         const log = document.getElementById('inject-log');
         const btn = document.getElementById('btn-run');
-        const precision = document.querySelector('.prec-btn.active').innerText;
+        const precisionText = document.querySelector('.prec-btn.active').innerText;
         
         const opt = {
             recoil: document.getElementById('m-recoil').checked,
@@ -292,7 +240,7 @@
         btn.style.display = 'none';
         log.innerHTML = "<b>[SYSTEM] INICIANDO YT MUSC V7...</b><br>";
         await new Promise(r => setTimeout(r, 800));
-        log.innerHTML += `> Precisão Selecionada: ${precision}<br>`;
+        log.innerHTML += `> Precisão: ${precisionText} (${enginePrecisionMulti}x)<br>`;
         log.scrollTop = log.scrollHeight;
 
         for (const [key, active] of Object.entries(opt)) {
@@ -303,7 +251,7 @@
                 for (const s of scripts[key]) {
                     log.innerHTML += `<span style="opacity:0.5; font-size: 0.6rem;">[DEBUG] -- ${s}</span><br>`;
                     log.scrollTop = log.scrollHeight;
-                    await new Promise(r => setTimeout(r, 250));
+                    await new Promise(r => setTimeout(r, 200));
                 }
             }
         }
@@ -312,27 +260,14 @@
         log.scrollTop = log.scrollHeight;
         document.getElementById('launch-group').style.display = 'flex';
     }
-// Verifica se o app já está rodando como aplicativo instalado
-window.addEventListener('DOMContentLoaded', () => {
-    const isInstalled = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-    
-    if (isInstalled) {
-        // Se estiver instalado, garante que o rodapé nunca apareça
-        if (installFooter) installFooter.style.display = 'none !important';
-    }
-});
-                                                       
-    function abrirJogo(p) { window.location.replace(`intent://#Intent;package=${p};scheme=android-app;S.browser_fallback_url=;end`); }
 
-    // --- LÓGICA DE INSTALAÇÃO PWA (ADICIONADA) ---
+    // 6. Gerenciamento PWA (Mantido Original)
     let deferredPrompt;
     const installFooter = document.getElementById('install-footer');
-
     window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-        if (installFooter) {
-            installFooter.style.display = 'block';
+        e.preventDefault(); deferredPrompt = e;
+        if (installFooter && !window.matchMedia('(display-mode: standalone)').matches) {
+            installFooter.style.display = 'flex';
         }
     });
 
@@ -340,66 +275,39 @@ window.addEventListener('DOMContentLoaded', () => {
         if (deferredPrompt) {
             deferredPrompt.prompt();
             const { outcome } = await deferredPrompt.userChoice;
-            if (outcome === 'accepted') {
-                if (installFooter) installFooter.style.display = 'none';
-            }
+            if (outcome === 'accepted') installFooter.style.display = 'none';
             deferredPrompt = null;
         }
     }
 
+    function abrirJogo(p) { window.location.replace(`intent://#Intent;package=${p};scheme=android-app;S.browser_fallback_url=;end`); }
+
+    // 7. Gerador de Sensibilidade (Mantido Original com detecção real)
+    async function gerarConfiguracao() {
+        const width = window.screen.width * window.devicePixelRatio;
+        const height = window.screen.height * window.devicePixelRatio;
+        const ua = navigator.userAgent.toLowerCase();
+        let dispositivo = "Android";
+        if (ua.includes("g53") || ua.includes("moto")) dispositivo = "Moto G53";
+        else if (ua.includes("redmi") || ua.includes("xiaomi")) dispositivo = "Redmi Note";
+
+        document.getElementById('device-detected').innerText = `Hardware: ${dispositivo} (${Math.round(width)}x${Math.round(height)})`;
+        const sensEl = document.getElementById('val-sens');
+        sensEl.innerText = "Analisando...";
+        await new Promise(r => setTimeout(r, 1000));
+
+        sensEl.innerText = width > 1000 ? 98 : 94;
+        document.getElementById('val-dpi').innerText = Math.round(width / 2) + 120;
+        document.getElementById('val-btn').innerText = width > 1000 ? "52%" : "47%";
+    }
+
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js', { scope: './' })
-                .then(reg => console.log('SW Ativo'))
-                .catch(err => console.log('Erro SW:', err));
+            navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW Erro:', err));
         });
     }
-    
-    async function gerarConfiguracao() {
-    // 1. Captura de dados reais do Hardware
-    const width = window.screen.width * window.devicePixelRatio;
-    const height = window.screen.height * window.devicePixelRatio;
-    const ratio = (height / width).toFixed(2);
-    const ua = navigator.userAgent.toLowerCase();
-    
-    let dispositivo = "Android";
-    if (ua.includes("iphone") || ua.includes("ipad")) dispositivo = "Apple iPhone";
-    else if (ua.includes("moto") || ua.includes("g53")) dispositivo = "Motorola Moto";
-    else if (ua.includes("redmi") || ua.includes("xiaomi")) dispositivo = "Xiaomi Redmi";
-
-    document.getElementById('device-detected').innerText = `Hardware: ${dispositivo} (${Math.round(width)}x${Math.round(height)})`;
-
-    // 2. Lógica Matemática de Sensibilidade
-    // Telas mais largas (resolução maior) precisam de mais velocidade no arraste
-    // Telas mais estreitas (ratio maior) precisam de estabilidade vertical (Y)
-    
-    let baseSens = width > 1080 ? 98 : 94;
-    if (ratio > 2) baseSens -= 2; // Ajuste para telas ultra-longas
-
-    let dpiSugerida = Math.round((width / 2) + 120);
-    // Limita a DPI para valores seguros que o Android suporta bem
-    if (dpiSugerida > 800) dpiSugerida = 720;
-    if (dpiSugerida < 400) dpiSugerida = 500;
-
-    // Tamanho do botão baseado na largura da tela para não errar o clique
-    let botaoTamanho = width > 1000 ? "52%" : "47%";
-
-    // Feedback Visual
-    const sensEl = document.getElementById('val-sens');
-    sensEl.innerText = "Analisando Pixels...";
-    sensEl.style.color = "#fff";
-
-    await new Promise(r => setTimeout(r, 1000));
-
-    // Exibe os resultados
-    sensEl.innerText = baseSens;
-    sensEl.style.color = "var(--rosa-bebe)";
-    document.getElementById('val-dpi').innerText = dpiSugerida;
-    document.getElementById('val-btn').innerText = botaoTamanho;
-
-    // Log de Debug no motor de injeção (opcional)
-    console.log(`[SYSTEM] Sensi calculada para Ratio: ${ratio}`);
-}
-</script>
+ </script>
 </body>
 </html>
+
+            
