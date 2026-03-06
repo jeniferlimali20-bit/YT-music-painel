@@ -94,6 +94,12 @@
         display: none !important;
     }
         }
+       /* Esconde o rodapé automaticamente se o app estiver instalado */
+@media (display-mode: standalone) {
+    #install-footer {
+        display: none !important;
+    }
+}
         
     </style>
 </head>
@@ -274,7 +280,16 @@
         log.scrollTop = log.scrollHeight;
         document.getElementById('launch-group').style.display = 'flex';
     }
-
+// Verifica se o app já está rodando como aplicativo instalado
+window.addEventListener('DOMContentLoaded', () => {
+    const isInstalled = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+    
+    if (isInstalled) {
+        // Se estiver instalado, garante que o rodapé nunca apareça
+        if (installFooter) installFooter.style.display = 'none !important';
+    }
+});
+                                                       
     function abrirJogo(p) { window.location.replace(`intent://#Intent;package=${p};scheme=android-app;S.browser_fallback_url=;end`); }
 
     // --- LÓGICA DE INSTALAÇÃO PWA (ADICIONADA) ---
