@@ -6,91 +6,98 @@
     <title>MASTER INJECTOR V7</title>
     <link rel="manifest" href="manifest.json">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --rosa-bebe: #F58BA2;
-            --fundo-escuro: #0A0A0A;
-            --glass: rgba(255, 255, 255, 0.04);
-            --glass-border: rgba(255, 255, 255, 0.08);
-            --glow: rgba(244, 167, 187, 0.2);
-        }
+<style>
+    :root {
+        --rosa-bebe: #F58BA2;
+        --fundo-escuro: #0A0A0A;
+        --glass: rgba(255, 255, 255, 0.04);
+        --glass-border: rgba(255, 255, 255, 0.08);
+        --glow: rgba(244, 167, 187, 0.2);
+    }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background-color: var(--fundo-escuro); color: white; overflow: hidden; height: 100vh; width: 100vw; }
-        
-        #canvas-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+    body { background-color: var(--fundo-escuro); color: white; overflow: hidden; height: 100vh; width: 100vw; }
+    
+    #canvas-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
 
-        .screen { display: none; height: 100vh; width: 100vw; flex-direction: column; align-items: center; justify-content: center; position: relative; z-index: 1; }
-        .screen.active { display: flex; }
+    .screen { display: none; height: 100vh; width: 100vw; flex-direction: column; align-items: center; justify-content: center; position: relative; z-index: 1; }
+    .screen.active { display: flex; }
 
-        /* AJUSTE DO LOGIN: Puxado para cima do centro */
-        #screen-login { justify-content: center; padding-bottom: 100px; }
-        .login-content { 
-            width: 100%; max-width: 300px; text-align: center; 
-            background: var(--glass); backdrop-filter: blur(15px); 
-            border: 1px solid var(--glass-border); border-radius: 24px; 
-            padding: 30px; transform: translateY(-35%); /* <-- Isso sobe o quadro */
-        }
-        
-        h1 { color: var(--rosa-bebe); font-size: 1.1rem; font-weight: 300; letter-spacing: 2px; margin-bottom: 20px; text-transform: uppercase; }
-        input { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid var(--glass-border); background: rgba(0,0,0,0.5); color: white; text-align: center; margin-bottom: 15px; outline: none; }
-        
-        .dash-container { width: 100%; max-width: 360px; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
-        .card-selector { display: flex; gap: 12px; margin-bottom: 15px; z-index: 10; }
-        .mini-card { width: 52px; height: 52px; background: var(--glass); border: 1px solid var(--glass-border); border-radius: 14px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.4s; }
-        .mini-card.active { border-color: var(--rosa-bebe); background: rgba(244, 167, 187, 0.15); transform: translateY(-3px); box-shadow: 0 5px 15px var(--glow); }
-        .mini-card svg { stroke: var(--rosa-bebe); width: 22px; stroke-width: 1.5; fill: none; }
+    #screen-login { justify-content: center; padding-bottom: 100px; }
+    .login-content { 
+        width: 100%; max-width: 300px; text-align: center; 
+        background: var(--glass); backdrop-filter: blur(15px); 
+        border: 1px solid var(--glass-border); border-radius: 24px; 
+        padding: 30px; transform: translateY(-35%);
+    }
+    
+    h1 { color: var(--rosa-bebe); font-size: 1.1rem; font-weight: 300; letter-spacing: 2px; margin-bottom: 20px; text-transform: uppercase; }
+    input { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid var(--glass-border); background: rgba(0,0,0,0.5); color: white; text-align: center; margin-bottom: 15px; outline: none; }
+    
+    .dash-container { width: 100%; max-width: 360px; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+    .card-selector { display: flex; gap: 12px; margin-bottom: 15px; z-index: 10; }
+    .mini-card { width: 52px; height: 52px; background: var(--glass); border: 1px solid var(--glass-border); border-radius: 14px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.4s; }
+    .mini-card.active { border-color: var(--rosa-bebe); background: rgba(244, 167, 187, 0.15); transform: translateY(-3px); box-shadow: 0 5px 15px var(--glow); }
+    .mini-card svg { stroke: var(--rosa-bebe); width: 22px; stroke-width: 1.5; fill: none; }
 
-        .main-window { width: 100%; background: var(--glass); backdrop-filter: blur(25px); border: 1px solid var(--glass-border); border-radius: 28px; padding: 22px; height: 410px; display: none; flex-direction: column; }
-        .main-window.active { display: flex; animation: windowIn 0.3s ease-out; }
+    .main-window { width: 100%; background: var(--glass); backdrop-filter: blur(25px); border: 1px solid var(--glass-border); border-radius: 28px; padding: 22px; height: 410px; display: none; flex-direction: column; }
+    .main-window.active { display: flex; animation: windowIn 0.3s ease-out; }
 
-        h2 { font-size: 0.95rem; color: var(--rosa-bebe); font-weight: 400; margin-bottom: 18px; text-align: center; }
-        .row { display: flex; justify-content: space-between; align-items: center; margin: 14px 0; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.03); }
-        .row-info span { font-size: 0.85rem; display: block; color: #eee; }
-        .desc { font-size: 0.55rem; color: #777; margin-top: 2px; }
+    h2 { font-size: 0.95rem; color: var(--rosa-bebe); font-weight: 400; margin-bottom: 18px; text-align: center; }
 
-        .btn-rosa { background: var(--rosa-bebe); color: #000; border: none; padding: 14px; border-radius: 12px; width: 100%; font-weight: 600; cursor: pointer; margin-top: auto; }
-        
-        .precision-grid { display: flex; gap: 8px; margin-top: 10px; }
-        .prec-btn { flex: 1; padding: 10px; border-radius: 10px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.03); color: white; font-size: 0.75rem; }
-        .prec-btn.active { background: var(--rosa-bebe); color: #000; font-weight: bold; border-color: var(--rosa-bebe); }
+    /* --- AJUSTES PREMIUM SOLICITADOS --- */
+    .row { 
+        display: flex; 
+        justify-content: space-between; 
+        align-items: center; 
+        margin: 18px 0; /* Aumentado para melhor respiro */
+        padding-bottom: 12px; 
+        border-bottom: 1px solid rgba(255,255,255,0.02); 
+    }
+    .row-info span { 
+        font-size: 0.82rem; /* Fonte mais equilibrada */
+        font-weight: 500; 
+        color: #eeeeee; 
+    }
+    .desc { 
+        font-size: 0.62rem !important; /* Letra pequena conforme pedido */
+        color: rgba(255, 255, 255, 0.4) !important; /* Cor cinza translúcida profissional */
+        margin-top: 4px; 
+        font-weight: 300; 
+        display: block;
+    }
+    /* ---------------------------------- */
 
-        .switch { width: 36px; height: 18px; position: relative; display: inline-block; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: #1a1a1a; border-radius: 18px; transition: 0.4s; border: 1px solid var(--glass-border); }
-        .slider:before { content: ""; position: absolute; height: 12px; width: 12px; left: 2px; bottom: 2px; background: #555; border-radius: 50%; transition: 0.4s; }
-        input:checked + .slider { background: rgba(244, 167, 187, 0.2); border-color: var(--rosa-bebe); }
-        input:checked + .slider:before { transform: translateX(18px); background: var(--rosa-bebe); }
+    .btn-rosa { background: var(--rosa-bebe); color: #000; border: none; padding: 14px; border-radius: 12px; width: 100%; font-weight: 600; cursor: pointer; margin-top: auto; }
+    
+    .precision-grid { display: flex; gap: 8px; margin-top: 10px; }
+    .prec-btn { flex: 1; padding: 10px; border-radius: 10px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.03); color: white; font-size: 0.75rem; }
+    .prec-btn.active { background: var(--rosa-bebe); color: #000; font-weight: bold; border-color: var(--rosa-bebe); }
 
-        #inject-log { 
-            height: 120px; background: rgba(0,0,0,0.3); border-radius: 12px; padding: 12px; 
-            font-size: 0.65rem; color: var(--rosa-bebe); overflow-y: auto; 
-            margin-bottom: 15px; border: 1px solid var(--glass-border); text-align: left;
-            font-family: monospace;
-        }
-        .game-launch-group { display: none; flex-direction: column; gap: 10px; width: 100%; margin-top: auto; }
+    .switch { width: 36px; height: 18px; position: relative; display: inline-block; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: #1a1a1a; border-radius: 18px; transition: 0.4s; border: 1px solid var(--glass-border); }
+    .slider:before { content: ""; position: absolute; height: 12px; width: 12px; left: 2px; bottom: 2px; background: #555; border-radius: 50%; transition: 0.4s; }
+    input:checked + .slider { 
+        background: rgba(244, 167, 187, 0.2); 
+        border-color: var(--rosa-bebe); 
+        box-shadow: 0 0 8px rgba(244, 167, 187, 0.1); /* Glow sutil ao ativar */
+    }
+    input:checked + .slider:before { transform: translateX(18px); background: var(--rosa-bebe); }
 
-        @keyframes windowIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    #inject-log { height: 120px; background: rgba(0,0,0,0.3); border-radius: 12px; padding: 12px; font-size: 0.65rem; color: var(--rosa-bebe); overflow-y: auto; margin-bottom: 15px; border: 1px solid var(--glass-border); text-align: left; font-family: monospace; }
+    
+    @keyframes windowIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* MODO PAISAGEM FULLSCREEN (Preenche a tela) */
-        @media (orientation: landscape) {
-            .dash-container { flex-direction: row !important; max-width: 99% !important; gap: 15px; padding: 5px; }
-            .card-selector { flex-direction: column !important; margin-bottom: 0 !important; gap: 8px; }
-            .mini-card { width: 42px !important; height: 42px !important; }
-            .main-window { 
-                height: 92vh !important; flex: 1; width: 100% !important; 
-                padding: 10px 20px !important; margin-right: 5px; overflow-y: auto; 
-            }
-            .row { margin: 8px 0 !important; justify-content: space-between !important; display: flex !important; width: 100% !important; }
-            .row-info span { font-size: 0.85rem !important; }
-            .desc { font-size: 0.6rem !important; max-width: 80%; }
-            #install-footer { display: none !important; }
-        }
-
-        @media (display-mode: standalone), (display-mode: fullscreen) {
-            #install-footer { display: none !important; }
-        }
-    </style>
+    @media (orientation: landscape) {
+        .dash-container { flex-direction: row !important; max-width: 99% !important; gap: 15px; padding: 5px; }
+        .card-selector { flex-direction: column !important; margin-bottom: 0 !important; gap: 8px; }
+        .mini-card { width: 42px !important; height: 42px !important; }
+        .main-window { height: 92vh !important; flex: 1; width: 100% !important; padding: 10px 20px !important; margin-right: 5px; overflow-y: auto; }
+        .row { margin: 8px 0 !important; }
+        .desc { font-size: 0.6rem !important; }
+    }
+</style>
 </head>
 <body>
 <canvas id="canvas-bg"></canvas>
@@ -320,32 +327,4 @@
         }, 1500);
     }
     
-    // 7. Gerador de Sensibilidade
-    async function gerarConfiguracao() {
-        const width = window.screen.width * window.devicePixelRatio;
-        const height = window.screen.height * window.devicePixelRatio;
-        const ua = navigator.userAgent.toLowerCase();
-        let dispositivo = "Android";
-        if (ua.includes("g53") || ua.includes("moto")) dispositivo = "Moto G53";
-        else if (ua.includes("redmi") || ua.includes("xiaomi")) dispositivo = "Redmi Note";
 
-        document.getElementById('device-detected').innerText = `Hardware: ${dispositivo} (${Math.round(width)}x${Math.round(height)})`;
-        const sensEl = document.getElementById('val-sens');
-        sensEl.innerText = "Analisando...";
-        await new Promise(r => setTimeout(r, 1000));
-
-        sensEl.innerText = width > 1000 ? 98 : 94;
-        document.getElementById('val-dpi').innerText = Math.round(width / 2) + 120;
-        document.getElementById('val-btn').innerText = width > 1000 ? "52%" : "47%";
-    }
-
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW Erro:', err));
-        });
-    }
- </script>
-</body>
-</html>
-
-            
