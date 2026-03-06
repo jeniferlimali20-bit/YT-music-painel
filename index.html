@@ -485,54 +485,70 @@
         if (navigator.vibrate) navigator.vibrate(20);
     }
 
-    // 5. Motor de Injeção V7
-    async function executarMotorInjecao() {
-        suavizacaoAtiva = document.getElementById('m-stab').checked;
-        const log = document.getElementById('inject-log');
-        const btn = document.getElementById('btn-run');
-        const precisionText = document.querySelector('.prec-btn.active').innerText;
-        
-        const opt = {
-            recoil: document.getElementById('m-recoil').checked,
-            toque: document.getElementById('m-touch').checked,
-            estabilizar: document.getElementById('m-stab').checked,
-            otimizar: document.getElementById('o-dev').checked,
-            desempenho: document.getElementById('o-perf').checked,
-            fps: document.getElementById('o-fps').checked
-        };
+    // 5. Motor de Injeção V7 (Corrigido com Ativação Real)
+async function executarMotorInjecao() {
+    suavizacaoAtiva = document.getElementById('m-stab').checked;
+    const log = document.getElementById('inject-log');
+    const btn = document.getElementById('btn-run');
+    
+    // Captura a precisão selecionada
+    const precisionBtn = document.querySelector('.prec-btn.active');
+    const precisionText = precisionBtn ? precisionBtn.innerText : "Padrão";
+    
+    const opt = {
+        recoil: document.getElementById('m-recoil').checked,
+        toque: document.getElementById('m-touch').checked,
+        estabilizar: document.getElementById('m-stab').checked,
+        otimizar: document.getElementById('o-dev').checked,
+        desempenho: document.getElementById('o-perf').checked,
+        fps: document.getElementById('o-fps').checked
+    };
 
-        const scripts = {
-            recoil: ["FIX_RECOIL_Y: 85%", "ANTI_VIBRATION: ON", "STABILIZE_BARREL"],
-            toque: ["TOUCH_FREQ: 360Hz", "LATENCY: -15ms", "SENSITIVITY_BOOST"],
-            estabilizar: ["HEAD_HITBOX: 100%", "Y_AXIS_LOCK: ACTIVE", "DECELERATION: 0.5x", "STICKY_AIM: ON"],
-            otimizar: ["CLEANING_CACHE...", "CPU_PRIORITY: HIGH", "RAM_PURGE: OK"],
-            desempenho: ["THERMAL_THROTTLE: OFF", "GPU_OVERCLOCK: 15%", "POWER_MODE: MAX"],
-            fps: ["REFRESH_RATE: 90Hz", "FRAME_STABILIZER: ON", "ZERO_LAG_ENGINE"]
-        };
+    const scripts = {
+        recoil: ["FIX_RECOIL_Y: 85%", "ANTI_VIBRATION: ON", "STABILIZE_BARREL"],
+        toque: ["TOUCH_FREQ: 360Hz", "LATENCY: -15ms", "SENSITIVITY_BOOST"],
+        estabilizar: ["HEAD_HITBOX: 100%", "Y_AXIS_LOCK: ACTIVE", "DECELERATION: 0.5x", "STICKY_AIM: ON"],
+        otimizar: ["CLEANING_CACHE...", "CPU_PRIORITY: HIGH", "RAM_PURGE: OK"],
+        desempenho: ["THERMAL_THROTTLE: OFF", "GPU_OVERCLOCK: 15%", "POWER_MODE: MAX"],
+        fps: ["REFRESH_RATE: 90Hz", "FRAME_STABILIZER: ON", "ZERO_LAG_ENGINE"]
+    };
 
-        btn.style.display = 'none';
-        log.innerHTML = "<b>[SYSTEM] INICIANDO YT MUSC V7...</b><br>";
-        await new Promise(r => setTimeout(r, 800));
-        log.innerHTML += `> Precisão: ${precisionText} (${enginePrecisionMulti}x)<br>`;
-        log.scrollTop = log.scrollHeight;
+    btn.style.display = 'none';
+    log.innerHTML = "<b>[SYSTEM] INICIANDO AUXÍLIO PREMIUM V7...</b><br>";
+    await new Promise(r => setTimeout(r, 800));
+    log.innerHTML += `> Precisão: ${precisionText} (${enginePrecisionMulti}x)<br>`;
+    log.scrollTop = log.scrollHeight;
 
-        for (const [key, active] of Object.entries(opt)) {
-            if (active) {
-                log.innerHTML += `<br><span style="color:#fff">> Injetando: ${key.toUpperCase()}...</span><br>`;
+    // O Loop 'for' percorre as opções e ativa os motores reais
+    for (const [key, active] of Object.entries(opt)) {
+        if (active) {
+            log.innerHTML += `<br><span style="color:#fff">> Injetando: ${key.toUpperCase()}...</span><br>`;
+            log.scrollTop = log.scrollHeight;
+
+            // --- ATIVAÇÃO DAS FUNÇÕES REAIS ---
+            if (key === 'toque') ativarMotorToque(); // Ativa resposta de toque
+            if (key === 'recoil' || key === 'estabilizar') ativarEstabilizador(enginePrecisionMulti); // Ativa Y-Axis Brake
+            if (key === 'otimizar' || key === 'fps') otimizarSistema(); // Estabiliza frames e limpa cache
+            if (key === 'desempenho') maximizarDesempenho(); // Ativa modo de performance
+
+            await new Promise(r => setTimeout(r, 500));
+            
+            for (const s of scripts[key]) {
+                log.innerHTML += `<span style="opacity:0.5; font-size: 0.6rem;">[DEBUG] -- ${s}</span><br>`;
                 log.scrollTop = log.scrollHeight;
-                await new Promise(r => setTimeout(r, 500));
-                for (const s of scripts[key]) {
-                    log.innerHTML += `<span style="opacity:0.5; font-size: 0.6rem;">[DEBUG] -- ${s}</span><br>`;
-                    log.scrollTop = log.scrollHeight;
-                    await new Promise(r => setTimeout(r, 200));
-                }
+                await new Promise(r => setTimeout(r, 200));
             }
         }
-
-        log.innerHTML += "<br><b style='color:var(--rosa-bebe)'>[!] TODOS OS MÓDULOS ATIVOS!</b>";
-        log.scrollTop = log.scrollHeight;
-        document.getElementById('launch-group').style.display = 'flex';
     }
+
+    log.innerHTML += "<br><b style='color:var(--rosa-bebe)'>[!] TODOS OS MÓDULOS ATIVOS!</b>";
+    log.scrollTop = log.scrollHeight;
+    
+    // Exibe o grupo de botões para lançar o jogo (Free Fire / Max)
+    const launchGroup = document.getElementById('launch-group');
+    if (launchGroup) launchGroup.style.display = 'flex';
+}
+
 
     // 6. Gerenciamento PWA
     let deferredPrompt;
