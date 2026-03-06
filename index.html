@@ -1,268 +1,515 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YT musc</title>
-    <link rel="manifest" href="manifest.json">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --rosa-bebe: #F192AA;
-            --fundo-escuro: #0A0A0A;
-            --glass: rgba(255, 255, 255, 0.04);
-            --glass-border: rgba(255, 255, 255, 0.08);
-            --glow: rgba(244, 167, 187, 0.2);
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel Premium</title>
 
-        /* Reset e Base */
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background-color: var(--fundo-escuro); color: white; overflow: hidden; height: 100vh; width: 100vw; }
-        
-        /* Background Animado */
-        #canvas-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
-        /* Estrutura de Telas */
-        .screen { display: none; height: 100vh; width: 100vw; flex-direction: column; align-items: center; justify-content: center; position: relative; z-index: 1; }
-        .screen.active { display: flex; }
+<style>
 
-        /* --- Estilo Login --- */
-        #screen-login { justify-content: space-between; padding: 40px 20px; }
-        .login-content { width: 100%; max-width: 300px; text-align: center; background: var(--glass); backdrop-filter: blur(15px); border: 1px solid var(--glass-border); border-radius: 24px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        
-        h1 { color: var(--rosa-bebe); font-size: 1.1rem; font-weight: 300; letter-spacing: 2px; margin-bottom: 20px; text-transform: uppercase; }
-        .placeholder-img { height: 60px; background: rgba(255,255,255,0.02); border: 1px dashed rgba(244, 167, 187, 0.3); border-radius: 12px; margin-bottom: 20px; }
-        
-        input { 
-            width: 100%; padding: 14px; border-radius: 12px; border: 1px solid var(--glass-border); 
-            background: rgba(0,0,0,0.5); color: white; text-align: center; margin-bottom: 15px; 
-            outline: none; font-size: 0.9rem; transition: 0.3s;
-        }
-        input:focus { border-color: var(--rosa-bebe); background: rgba(0,0,0,0.7); }
-        
-        .footer-install { width: 100%; text-align: center; padding-bottom: 30px; }
-        .btn-download { background: none; border: 1px solid var(--rosa-bebe); color: var(--rosa-bebe); padding: 10px 30px; border-radius: 10px; font-size: 0.75rem; cursor: pointer; font-weight: 600; text-transform: uppercase; transition: 0.3s; }
-        .btn-download:active { background: var(--rosa-bebe); color: black; }
+:root{
+--rosa:#F192AA;
+--fundo:#0A0A0A;
+--glass:rgba(255,255,255,0.04);
+--border:rgba(255,255,255,0.08);
+}
 
-        /* --- Estilo Dashboard --- */
-        .dash-container { width: 100%; max-width: 360px; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
-        
-        .card-selector { display: flex; gap: 12px; margin-bottom: 15px; width: 100%; justify-content: center; z-index: 10; }
-        .mini-card { width: 52px; height: 52px; background: var(--glass); border: 1px solid var(--glass-border); border-radius: 14px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        .mini-card.active { border-color: var(--rosa-bebe); background: rgba(244, 167, 187, 0.15); transform: translateY(-3px); box-shadow: 0 5px 15px var(--glow); }
-        .mini-card svg { stroke: var(--rosa-bebe); width: 22px; stroke-width: 1.5; }
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Inter',sans-serif;
+}
 
-        .main-window { width: 100%; background: var(--glass); backdrop-filter: blur(25px); border: 1px solid var(--glass-border); border-radius: 28px; padding: 22px; height: 410px; display: none; box-shadow: 0 15px 35px rgba(0,0,0,0.4); }
-        .main-window.active { display: flex; flex-direction: column; animation: windowIn 0.5s ease-out; }
+body{
+background:var(--fundo);
+color:white;
+height:100vh;
+overflow:hidden;
+}
 
-        @keyframes windowIn { from { opacity: 0; transform: scale(0.95) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+canvas{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+z-index:-1;
+}
 
-        h2 { font-size: 0.95rem; color: var(--rosa-bebe); font-weight: 400; margin-bottom: 18px; text-align: center; letter-spacing: 1px; }
+/* telas */
 
-        .row { display: flex; justify-content: space-between; align-items: center; margin: 14px 0; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.03); }
-        .row:last-child { border: none; }
-        .row-info { flex: 1; padding-right: 10px; }
-        .row-info span { font-size: 0.85rem; font-weight: 400; display: block; color: #eee; }
-        .desc { font-size: 0.68rem; color: #777; margin-top: 2px; }
+.screen{
+display:none;
+height:100vh;
+align-items:center;
+justify-content:center;
+flex-direction:column;
+}
 
-        .btn-rosa { background: var(--rosa-bebe); color: #000; border: none; padding: 14px; border-radius: 12px; width: 100%; font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: 0.3s; margin-top: auto; }
-        .btn-rosa:active { transform: scale(0.97); filter: brightness(0.9); }
-        
-        .precision-grid { display: flex; gap: 8px; margin-top: 10px; }
-        .prec-btn { flex: 1; padding: 10px; border-radius: 10px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.03); color: white; font-size: 0.75rem; cursor: pointer; transition: 0.3s; }
-        .prec-btn.active { background: var(--rosa-bebe); color: #000; font-weight: bold; border-color: var(--rosa-bebe); box-shadow: 0 0 10px var(--glow); }
+.screen.active{
+display:flex;
+}
 
-        .switch { width: 36px; height: 18px; position: relative; display: inline-block; flex-shrink: 0; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: #1a1a1a; border-radius: 18px; transition: 0.4s; border: 1px solid var(--glass-border); }
-        .slider:before { content: ""; position: absolute; height: 12px; width: 12px; left: 2px; bottom: 2px; background: #555; border-radius: 50%; transition: 0.4s; }
-        input:checked + .slider { background: rgba(244, 167, 187, 0.2); border-color: var(--rosa-bebe); }
-        input:checked + .slider:before { transform: translateX(18px); background: var(--rosa-bebe); box-shadow: 0 0 8px var(--rosa-bebe); }
+/* login */
 
-        #inject-log { 
-            height: 120px; background: rgba(0,0,0,0.3); border-radius: 12px; padding: 12px; 
-            font-family: 'Courier New', monospace; font-size: 0.7rem; color: var(--rosa-bebe); 
-            overflow-y: auto; margin-bottom: 15px; border: 1px solid var(--glass-border);
-            text-align: left; line-height: 1.4;
-        }
-        #inject-log::-webkit-scrollbar { width: 3px; }
-        #inject-log::-webkit-scrollbar-thumb { background: var(--rosa-bebe); border-radius: 10px; }
+.login-box{
+background:var(--glass);
+border:1px solid var(--border);
+backdrop-filter:blur(20px);
+padding:30px;
+border-radius:20px;
+width:300px;
+text-align:center;
+}
 
-        .game-launch-group { display: none; flex-direction: column; gap: 10px; width: 100%; margin-top: auto; }
-    </style>
+h1{
+color:var(--rosa);
+margin-bottom:20px;
+font-weight:400;
+}
+
+input{
+width:100%;
+padding:14px;
+border-radius:10px;
+border:1px solid var(--border);
+background:#000;
+color:white;
+text-align:center;
+margin-bottom:15px;
+}
+
+button{
+cursor:pointer;
+}
+
+.btn{
+background:var(--rosa);
+border:none;
+padding:12px;
+border-radius:10px;
+width:100%;
+font-weight:bold;
+}
+
+/* dashboard */
+
+.container{
+width:360px;
+max-width:95%;
+}
+
+.cards{
+display:flex;
+gap:10px;
+margin-bottom:10px;
+}
+
+.card-btn{
+flex:1;
+background:var(--glass);
+border:1px solid var(--border);
+padding:10px;
+border-radius:10px;
+text-align:center;
+cursor:pointer;
+}
+
+.card-btn.active{
+border-color:var(--rosa);
+}
+
+.window{
+display:none;
+background:var(--glass);
+border:1px solid var(--border);
+border-radius:20px;
+padding:20px;
+height:400px;
+}
+
+.window.active{
+display:flex;
+flex-direction:column;
+}
+
+.row{
+display:flex;
+justify-content:space-between;
+margin:10px 0;
+}
+
+.switch{
+position:relative;
+width:40px;
+height:20px;
+}
+
+.switch input{
+opacity:0;
+}
+
+.slider{
+position:absolute;
+background:#222;
+top:0;
+left:0;
+right:0;
+bottom:0;
+border-radius:20px;
+}
+
+.slider:before{
+content:"";
+position:absolute;
+width:14px;
+height:14px;
+left:3px;
+top:3px;
+background:#555;
+border-radius:50%;
+transition:.3s;
+}
+
+input:checked + .slider{
+background:rgba(241,146,170,.3);
+}
+
+input:checked + .slider:before{
+transform:translateX(20px);
+background:var(--rosa);
+}
+
+.log{
+background:#000;
+height:120px;
+overflow:auto;
+border-radius:10px;
+padding:10px;
+font-family:monospace;
+font-size:12px;
+margin-bottom:10px;
+}
+
+.game-buttons{
+display:none;
+flex-direction:column;
+gap:10px;
+}
+
+.btn-outline{
+background:none;
+border:1px solid var(--rosa);
+color:var(--rosa);
+padding:12px;
+border-radius:10px;
+}
+
+</style>
 </head>
+
 <body>
 
-<canvas id="canvas-bg"></canvas>
+<canvas id="bg"></canvas>
 
-<section id="screen-login" class="screen active">
-    <div class="login-content">
-        <h1>Auxílio Premium</h1>
-        <div class="placeholder-img"></div>
-        <input type="password" id="login-pass" placeholder="xxx-xxx-xxx">
-        <button class="btn-rosa" onclick="efetuarLogin()">Entrar</button>
-    </div>
+<!-- LOGIN -->
 
-    <div class="footer-install" id="install-footer">
-        <p style="font-size: 0.65rem; color: #555; margin-bottom: 12px; letter-spacing: 1px;">PAINEL DE OTIMIZAÇÃO MOBILE</p>
-        <button class="btn-download">Baixar agora</button>
-    </div>
+<section id="login" class="screen active">
+
+<div class="login-box">
+
+<h1>Painel Premium</h1>
+
+<input id="senha" type="password" placeholder="Digite o PIN">
+
+<button class="btn" onclick="login()">Entrar</button>
+
+</div>
+
 </section>
 
-<section id="screen-dash" class="screen">
-    <div class="dash-container">
-        <div class="card-selector">
-            <div class="mini-card active" onclick="switchCard('win-mira', this)">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"></circle><path d="M22 12h-4M6 12H2M12 6V2M12 22v-4"></path></svg>
-            </div>
-            <div class="mini-card" onclick="switchCard('win-opt', this)">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
-            </div>
-            <div class="mini-card" onclick="switchCard('win-inject', this)">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 2l4 4-15 15-4-4L18 2zM14.5 5.5l3 3"></path></svg>
-            </div>
-            <div class="mini-card" onclick="switchCard('win-info', this)">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4M12 8h.01"></path></svg>
-            </div>
-        </div>
 
-        <div id="win-mira" class="main-window active">
-            <h2>Auxiliar Mira</h2>
-            <div class="row"><div class="row-info"><span>Diminuir Recoil</span><span class="desc">Reduz o recuo.</span></div><label class="switch"><input type="checkbox" id="m-recoil"><span class="slider"></span></label></div>
-            <div class="row"><div class="row-info"><span>Aprimorar Toque</span><span class="desc">Melhora a resposta.</span></div><label class="switch"><input type="checkbox" id="m-touch"><span class="slider"></span></label></div>
-            <div class="row"><div class="row-info"><span>Estabilizar Mira</span><span class="desc">Tira os tremores.</span></div><label class="switch"><input type="checkbox" id="m-stab"><span class="slider"></span></label></div>
-            <div style="margin-top: 12px;">
-                <span style="font-size: 0.75rem; color: #999;">Precisão da Mira</span>
-                <div class="precision-grid">
-                    <button class="prec-btn" onclick="setPrec(this, 'low')">Baixa</button>
-                    <button class="prec-btn active" onclick="setPrec(this, 'mid')">Média</button>
-                    <button class="prec-btn" onclick="setPrec(this, 'high')">Alta</button>
-                </div>
-            </div>
-        </div>
+<!-- DASHBOARD -->
 
-        <div id="win-opt" class="main-window">
-            <h2>Otimização</h2>
-            <div class="row"><div class="row-info"><span>Otimizar Dispositivo</span></div><label class="switch"><input type="checkbox" id="o-dev"><span class="slider"></span></label></div>
-            <div class="row"><div class="row-info"><span>Melhor Desempenho</span></div><label class="switch"><input type="checkbox" id="o-perf"><span class="slider"></span></label></div>
-            <div class="row"><div class="row-info"><span>Aumentar FPS</span></div><label class="switch"><input type="checkbox" id="o-fps"><span class="slider"></span></label></div>
-        </div>
+<section id="dash" class="screen">
 
-        <div id="win-inject" class="main-window" style="text-align: center;">
-            <h2>Injetar Módulos</h2>
-            <div id="inject-log">Aguardando comando...</div>
-            <button class="btn-rosa" id="btn-run" onclick="executarInjecao()">Injetar Agora</button>
-            <div class="game-launch-group" id="launch-group">
-                <button class="btn-rosa" onclick="abrirJogo('com.dts.freefireth')">Abrir Free Fire</button>
-                <button class="btn-rosa" style="background:none; border:1px solid var(--rosa-bebe); color:var(--rosa-bebe);" onclick="abrirJogo('com.dts.freefiremax')">Abrir Free Fire Max</button>
-            </div>
-        </div>
+<div class="container">
 
-        <div id="win-info" class="main-window" style="text-align: center;">
-            <h2>Informações</h2>
-            <div style="margin-top: 40px; font-size: 0.85rem; line-height: 2;">
-                <p>BUILD PREMIUM V7</p>
-                <p>TikTok: @jeniizx7</p>
-                <p>Contato: @gothxjen</p>
-            </div>
-        </div>
-    </div>
+<div class="cards">
+
+<div class="card-btn active" onclick="trocar('mira',this)">Mira</div>
+
+<div class="card-btn" onclick="trocar('opt',this)">Otimização</div>
+
+<div class="card-btn" onclick="trocar('inject',this)">Inject</div>
+
+<div class="card-btn" onclick="trocar('info',this)">Info</div>
+
+</div>
+
+
+<!-- MIRA -->
+
+<div id="mira" class="window active">
+
+<h3>Auxiliar de Mira</h3>
+
+<div class="row">
+<span>Diminuir Recoil</span>
+<label class="switch">
+<input type="checkbox">
+<span class="slider"></span>
+</label>
+</div>
+
+<div class="row">
+<span>Estabilizar Mira</span>
+<label class="switch">
+<input type="checkbox">
+<span class="slider"></span>
+</label>
+</div>
+
+<div class="row">
+<span>Aprimorar Toque</span>
+<label class="switch">
+<input type="checkbox">
+<span class="slider"></span>
+</label>
+</div>
+
+</div>
+
+
+<!-- OTIMIZAÇÃO -->
+
+<div id="opt" class="window">
+
+<h3>Otimização</h3>
+
+<div class="row">
+<span>Otimizar Dispositivo</span>
+<label class="switch">
+<input type="checkbox">
+<span class="slider"></span>
+</label>
+</div>
+
+<div class="row">
+<span>Aumentar FPS</span>
+<label class="switch">
+<input type="checkbox">
+<span class="slider"></span>
+</label>
+</div>
+
+<div class="row">
+<span>Melhor Desempenho</span>
+<label class="switch">
+<input type="checkbox">
+<span class="slider"></span>
+</label>
+</div>
+
+</div>
+
+
+<!-- INJECT -->
+
+<div id="inject" class="window">
+
+<h3>Injetar Módulos</h3>
+
+<div id="log" class="log">Aguardando comando...</div>
+
+<button class="btn" onclick="inject()">Injetar</button>
+
+<div id="games" class="game-buttons">
+
+<button class="btn" onclick="abrirFF()">Abrir Free Fire</button>
+
+<button class="btn-outline" onclick="abrirFFMax()">Abrir Free Fire Max</button>
+
+</div>
+
+</div>
+
+
+<!-- INFO -->
+
+<div id="info" class="window">
+
+<h3>Informações</h3>
+
+<p style="margin-top:20px;">
+BUILD PREMIUM V10
+</p>
+
+<p>TikTok: @jeniizx7</p>
+
+<p>Contato: @gothxjen</p>
+
+</div>
+
+</div>
+
 </section>
+
 
 <script>
-    let selectedPrecision = 'mid';
-    let deferredPrompt;
-    const btnInstall = document.querySelector('.btn-download');
-    const installFooter = document.getElementById('install-footer');
 
-    if (window.matchMedia('(display-mode: standalone)').matches) {
-        installFooter.style.display = 'none';
-    }
+/* vibração */
 
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./sw.js').catch(err => console.log(err));
-    }
+function vibrar(){
+if(navigator.vibrate){
+navigator.vibrate(20);
+}
+}
 
-    function efetuarLogin() {
-        const pass = document.getElementById('login-pass').value.trim();
-        if(pass === '1234') {
-            document.getElementById('screen-login').classList.remove('active');
-            document.getElementById('screen-dash').classList.add('active');
-            initCanvas();
-        } else {
-            alert('PIN incorreto.');
-        }
-    }
+/* login */
 
-    function switchCard(id, el) {
-        document.querySelectorAll('.main-window').forEach(w => w.classList.remove('active'));
-        document.querySelectorAll('.mini-card').forEach(c => c.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        el.classList.add('active');
-    }
+function login(){
 
-    function setPrec(btn, val) {
-        document.querySelectorAll('.prec-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        selectedPrecision = val;
-    }
+let senha=document.getElementById("senha").value;
 
-    window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-        installFooter.style.display = 'block';
-    });
+if(senha==="1234"){
 
-    btnInstall.addEventListener('click', async () => {
-        if (deferredPrompt) {
-            deferredPrompt.prompt();
-            const { outcome } = await deferredPrompt.userChoice;
-            if (outcome === 'accepted') installFooter.style.display = 'none';
-            deferredPrompt = null;
-        }
-    });
+document.getElementById("login").classList.remove("active");
+document.getElementById("dash").classList.add("active");
 
-    async function executarInjecao() {
-        const log = document.getElementById('inject-log');
-        const btn = document.getElementById('btn-run');
-        btn.style.display = 'none';
-        log.innerHTML = "Iniciando Engine...";
-        await new Promise(r => setTimeout(r, 1000));
-        log.innerHTML += "<br>Concluído!";
-        document.getElementById('launch-group').style.display = 'flex';
-    }
+}else{
 
-    function abrirJogo(p) {
-        window.location.href = `intent://scan/#Intent;scheme=android-app;package=${p};end`;
-    }
+alert("PIN incorreto");
 
-    const canvas = document.getElementById('canvas-bg');
-    const ctx = canvas.getContext('2d');
-    function initCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-    
-    let stars = Array(80).fill().map(() => ({ 
-        x: Math.random() * window.innerWidth, 
-        y: Math.random() * window.innerHeight, 
-        size: Math.random() * 1.5, 
-        speed: Math.random() * 0.4 + 0.1 
-    }));
+}
 
-    function drawStars() {
-        ctx.fillStyle = '#0A0A0A';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        stars.forEach(s => {
-            ctx.fillStyle = 'rgba(244, 167, 187, 0.6)';
-            ctx.beginPath();
-            ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
-            ctx.fill();
-            s.y -= s.speed;
-            if (s.y < 0) s.y = canvas.height;
-        });
-        requestAnimationFrame(drawStars);
-    }
-    window.addEventListener('resize', initCanvas);
-    initCanvas(); drawStars();
+}
+
+/* trocar abas */
+
+function trocar(id,el){
+
+document.querySelectorAll(".window").forEach(w=>w.classList.remove("active"));
+document.querySelectorAll(".card-btn").forEach(b=>b.classList.remove("active"));
+
+document.getElementById(id).classList.add("active");
+el.classList.add("active");
+
+}
+
+/* injeção simulada */
+
+async function inject(){
+
+const log=document.getElementById("log");
+
+log.innerHTML="Iniciando engine...";
+
+await delay(1000);
+
+log.innerHTML+="<br>Carregando módulos...";
+
+await delay(1200);
+
+log.innerHTML+="<br>Aplicando otimizações...";
+
+await delay(1200);
+
+log.innerHTML+="<br>✔ Concluído";
+
+document.getElementById("games").style.display="flex";
+
+}
+
+function delay(ms){
+return new Promise(r=>setTimeout(r,ms));
+}
+
+/* abrir free fire */
+
+function abrirFF(){
+
+vibrar();
+
+const pkg="com.dts.freefireth";
+
+window.location.href=`intent://#Intent;package=${pkg};scheme=android-app;end`;
+
+setTimeout(()=>{
+window.location.href="https://play.google.com/store/apps/details?id=com.dts.freefireth";
+},1500);
+
+}
+
+function abrirFFMax(){
+
+vibrar();
+
+const pkg="com.dts.freefiremax";
+
+window.location.href=`intent://#Intent;package=${pkg};scheme=android-app;end`;
+
+setTimeout(()=>{
+window.location.href="https://play.google.com/store/apps/details?id=com.dts.freefiremax";
+},1500);
+
+}
+
+/* fundo animado */
+
+const canvas=document.getElementById("bg");
+const ctx=canvas.getContext("2d");
+
+function resize(){
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+}
+
+window.addEventListener("resize",resize);
+resize();
+
+let stars=[];
+
+for(let i=0;i<80;i++){
+stars.push({
+x:Math.random()*canvas.width,
+y:Math.random()*canvas.height,
+s:Math.random()*2,
+v:Math.random()*0.5
+});
+}
+
+function anim(){
+
+ctx.fillStyle="#0A0A0A";
+ctx.fillRect(0,0,canvas.width,canvas.height);
+
+ctx.fillStyle="rgba(241,146,170,0.7)";
+
+stars.forEach(st=>{
+
+ctx.beginPath();
+ctx.arc(st.x,st.y,st.s,0,Math.PI*2);
+ctx.fill();
+
+st.y-=st.v;
+
+if(st.y<0){
+st.y=canvas.height;
+}
+
+});
+
+requestAnimationFrame(anim);
+
+}
+
+anim();
+
 </script>
+
 </body>
-    </html>
-    
+</html>
