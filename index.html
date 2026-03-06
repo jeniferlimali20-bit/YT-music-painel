@@ -333,7 +333,24 @@
     @media (display-mode: standalone), (display-mode: fullscreen) {
         #install-footer { display: none !important; }
     }
-       
+       /* Ajuste para as descrições ficarem pequenas e transparentes */
+.row-info .desc {
+    display: block;         /* Coloca o texto na linha de baixo */
+    font-size: 0.65rem;     /* Tamanho reduzido para não poluir */
+    color: #ffffff;         /* Cor branca pura */
+    opacity: 0.5;           /* 50% de transparência para dar o efeito da imagem */
+    margin-top: 2px;        /* Espaço mínimo entre o título e a descrição */
+    font-weight: 300;       /* Fonte mais fina para elegância */
+}
+
+/* Garante que o título principal seja o destaque */
+.row-info span:first-child {
+    font-size: 0.9rem;
+    color: #ffffff;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+        
     </style>
 </head>
 <body>
