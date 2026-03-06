@@ -502,9 +502,9 @@
             <span class="status-value">BUILD PREMIUM V7</span>
         </div>
         <div class="status-item">
-            <span class="status-label">Status</span>
-            <span class="status-value" style="color: #4ade80;">Ativo</span>
-        </div>
+    <span class="status-label">Status</span>
+    <span id="status-real" class="status-value" style="color: #ff4a4a;">Inativo</span>
+</div>
     </div>
 
     <div class="social-list">
@@ -700,12 +700,16 @@ async function executarMotorInjecao() {
 
     log.innerHTML += "<br><b style='color:var(--rosa-bebe)'>[!] TODOS OS MÓDULOS ATIVOS!</b>";
     log.scrollTop = log.scrollHeight;
-    
+    // Logo após a linha que diz "TODOS OS MÓDULOS ATIVOS!"
+    const statusLabel = document.getElementById('status-real');
+    if (statusLabel) {
+        statusLabel.innerText = "Ativo";
+        statusLabel.style.color = "#4ade80"; // Muda para verde neon
+        statusLabel.style.textShadow = "0 0 10px #4ade80"; // Adiciona um brilho
+        
     // Exibe o grupo de botões para lançar o jogo (Free Fire / Max)
     const launchGroup = document.getElementById('launch-group');
     if (launchGroup) launchGroup.style.display = 'flex';
-}
-
 
     // 6. Gerenciamento PWA
     let deferredPrompt;
