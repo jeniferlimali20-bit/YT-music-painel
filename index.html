@@ -333,6 +333,24 @@
     @media (display-mode: standalone), (display-mode: fullscreen) {
         #install-footer { display: none !important; }
     }
+        .btn-logout {
+    background: transparent;
+    color: #666;
+    border: 1px solid var(--glass-border);
+    padding: 10px;
+    border-radius: 12px;
+    width: 100%;
+    margin-top: 15px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: 0.3s;
+}
+
+.btn-logout:hover {
+    color: var(--rosa-bebe);
+    border-color: var(--rosa-bebe);
+}
+        
     </style>
 </head>
 <body>
@@ -353,6 +371,7 @@
     
 <section id="screen-dash" class="screen">
     <div class="dash-container">
+        <button class="btn-logout" onclick="fazerLogout()">Sair do Painel</button>
         <div class="card-selector">
             <div class="mini-card active" onclick="switchCard('win-mira', this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"></circle><path d="M22 12h-4M6 12H2M12 6V2M12 22v-4"></path></svg></div>
             <div class="mini-card" onclick="switchCard('win-opt', this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg></div>
@@ -642,6 +661,32 @@ async function executarMotorInjecao() {
             navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW Erro:', err));
         });
     }
+        
+        function fazerLogout() {
+    // 1. Desativa as variáveis de controle dos motores
+    motorAtivo = false;
+    if (typeof motorConfig !== 'undefined') {
+        motorConfig.travaY = false;
+        motorConfig.suavizar = false;
+    }
+
+    // 2. Reseta o visual do log e dos botões
+    const log = document.getElementById('inject-log');
+    const btnRun = document.getElementById('btn-run');
+    const launchGroup = document.getElementById('launch-group');
+
+    if (log) log.innerHTML = "";
+    if (btnRun) btnRun.style.display = 'block';
+    if (launchGroup) launchGroup.style.display = 'none';
+
+    // 3. Troca as telas (Volta para o Login)
+    document.getElementById('screen-dash').classList.remove('active');
+    document.getElementById('screen-login').classList.add('active');
+
+    // 4. Recarrega a página (Opcional, mas é a forma mais segura de "limpar" todos os EventListeners)
+    // location.reload(); 
+        }
+        
  </script>
 </body>
 </html>
