@@ -180,10 +180,12 @@
         btn.classList.add('active');
     }
 
-    async function executarMotorInjecao() {
+        async function executarMotorInjecao() {
         const log = document.getElementById('inject-log');
         const btn = document.getElementById('btn-run');
         const precision = document.querySelector('.prec-btn.active').innerText;
+        
+        // Mapeamento das opções marcadas
         const opt = {
             recoil: document.getElementById('m-recoil').checked,
             toque: document.getElementById('m-touch').checked,
@@ -192,30 +194,42 @@
             desempenho: document.getElementById('o-perf').checked,
             fps: document.getElementById('o-fps').checked
         };
+
+        // Frases técnicas para cada módulo
         const scripts = {
-            recoil: ["LOCK_VIBRATION: 100%", "FIX_CAMERA_JITTER: ON"],
-            toque: ["TOUCH_SAMPLING: 360Hz", "INPUT_BOOST: MAX"],
-            estabilizar: ["HEAD_HITBOX: 100%", "Y_AXIS_LOCK: ACTIVE", "DECELERATION: 0.5x"],
-            otimizar: ["CLEAR_CACHE", "CPU_PRIORITY: HIGH"],
-            desempenho: ["THERMAL: DISABLED", "GPU_BOOST: ON"],
-            fps: ["REFRESH_RATE: 90Hz", "ZERO_LAG: ACTIVE"]
+            recoil: ["FIX_RECOIL_Y: 85%", "ANTI_VIBRATION: ON", "STABILIZE_BARREL"],
+            toque: ["TOUCH_FREQ: 360Hz", "LATENCY: -15ms", "SENSITIVITY_BOOST"],
+            estabilizar: ["HEAD_HITBOX: 100%", "Y_AXIS_LOCK: ACTIVE", "DECELERATION: 0.5x", "STICKY_AIM: ON"],
+            otimizar: ["CLEANING_CACHE...", "CPU_PRIORITY: HIGH", "RAM_PURGE: OK"],
+            desempenho: ["THERMAL_THROTTLE: OFF", "GPU_OVERCLOCK: 15%", "POWER_MODE: MAX"],
+            fps: ["REFRESH_RATE: 90Hz", "FRAME_STABILIZER: ON", "ZERO_LAG_ENGINE"]
         };
+
         btn.style.display = 'none';
-        log.innerHTML = "<b>[SYSTEM] MASTER V7 INICIADO</b><br>";
-        await new Promise(r => setTimeout(r, 600));
+        log.innerHTML = "<b>[SYSTEM] INICIANDO YT MUSC V7...</b><br>";
+        await new Promise(r => setTimeout(r, 800));
+
+        log.innerHTML += `> Precisão Selecionada: ${precision}<br>`;
+        log.scrollTop = log.scrollHeight;
+
+        // Loop principal para injetar cada módulo ativado
         for (const [key, active] of Object.entries(opt)) {
             if (active) {
-                log.innerHTML += `> Ativando ${key}...<br>`;
+                log.innerHTML += `<br><span style="color:#fff">> Injetando: ${key.toUpperCase()}...</span><br>`;
                 log.scrollTop = log.scrollHeight;
-                await new Promise(r => setTimeout(r, 400));
+                await new Promise(r => setTimeout(r, 500));
+
+                // Escreve os sub-comandos de cada módulo
                 for (const s of scripts[key]) {
-                    log.innerHTML += `<span style="opacity:0.5">-- ${s}</span><br>`;
+                    log.innerHTML += `<span style="opacity:0.5; font-size: 0.6rem;">[DEBUG] -- ${s}</span><br>`;
                     log.scrollTop = log.scrollHeight;
-                    await new Promise(r => setTimeout(r, 200));
+                    await new Promise(r => setTimeout(r, 250)); // Velocidade das linhas
                 }
             }
         }
-        log.innerHTML += "<br><b style='color:var(--rosa-bebe)'>SUCESSO!</b>";
+
+        log.innerHTML += "<br><b style='color:var(--rosa-bebe)'>[!] TODOS OS MÓDULOS ATIVOS!</b>";
+        log.scrollTop = log.scrollHeight;
         document.getElementById('launch-group').style.display = 'flex';
     }
 
