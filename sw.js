@@ -1,8 +1,9 @@
-const CACHE_NAME = 'master-injector-v7';
+const CACHE_NAME = 'yt-musc-v7';
 const urlsToCache = [
   './',
   './index.html',
-  './manifest.json'
+  './manifest.json',
+  './icon512.png'
 ];
 
 self.addEventListener('install', event => {
