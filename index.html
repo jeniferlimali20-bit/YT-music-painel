@@ -66,19 +66,7 @@
         .game-launch-group { display: none; flex-direction: column; gap: 10px; width: 100%; margin-top: auto; }
 
         @keyframes windowIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* TRAVA PARA APARECER SÓ NO SITE */
-        @media (display-mode: standalone) {
-            body * { display: none !important; }
-            body { background: #000 !important; }
-            body::after { 
-                content: "ACESSO NEGADO. USE O NAVEGADOR."; 
-                display: flex; height: 100vh; width: 100vw; 
-                align-items: center; justify-content: center; 
-                color: var(--rosa-bebe); font-weight: bold; font-size: 0.8rem;
-                letter-spacing: 1px;
-            }
-        }
+        
     </style>
 </head>
 <body>
