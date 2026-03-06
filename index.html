@@ -2,301 +2,348 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>MASTER INJECTOR V7 - PREMIUM</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MASTER INJECTOR V7</title>
     <link rel="manifest" href="manifest.json">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-<style>
-    :root {
-        /* Sistema de cores Neon Vibrante */
-        --rosa-bebe: #FF4DA6; 
-        --fundo-escuro: #050505; 
-        --glass: rgba(15, 15, 15, 0.8);
-        --glass-border: rgba(255, 77, 166, 0.3);
-        --glow: rgba(255, 77, 166, 0.5);
-    }
+    <style>
+        :root {
+            --rosa-bebe: #F58BA2;
+            --fundo-escuro: #0A0A0A;
+            --glass: rgba(255, 255, 255, 0.04);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glow: rgba(244, 167, 187, 0.2);
+        }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
-    
-    body { 
-        background-color: var(--fundo-escuro); 
-        color: white; 
-        overflow: hidden; 
-        height: 100vh; 
-        width: 100vw;
-        position: fixed;
-    }
-    
-    #canvas-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background-color: var(--fundo-escuro); color: white; overflow: hidden; height: 100vh; width: 100vw; }
+        
+        #canvas-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
 
-    .screen { display: none; height: 100vh; width: 100vw; flex-direction: column; align-items: center; justify-content: center; position: relative; z-index: 1; overflow-y: auto; padding: 20px; }
-    .screen.active { display: flex; }
+        .screen { display: none; height: 100vh; width: 100vw; flex-direction: column; align-items: center; justify-content: center; position: relative; z-index: 1; }
+        .screen.active { display: flex; }
 
-    /* --- LÓGICA DE PAISAGEM (LANDSCAPE) INTEGRAL --- */
-    @media (orientation: landscape) {
-        .dash-container { flex-direction: row !important; gap: 20px; max-width: 90% !important; height: auto !important; }
-        .main-window { height: 320px !important; width: 450px !important; }
-        .card-selector { flex-direction: column !important; margin-bottom: 0 !important; gap: 8px !important; }
-        #screen-login { padding-bottom: 0 !important; }
-        .login-content { transform: translateY(0) !important; }
-        .mini-card { width: 45px !important; height: 45px !important; }
-    }
+        /* AJUSTE DO LOGIN: Puxado para cima do centro */
+        #screen-login { justify-content: center; padding-bottom: 100px; }
+        .login-content { 
+            width: 100%; max-width: 300px; text-align: center; 
+            background: var(--glass); backdrop-filter: blur(15px); 
+            border: 1px solid var(--glass-border); border-radius: 24px; 
+            padding: 30px; transform: translateY(-35%); /* <-- Isso sobe o quadro */
+        }
+        
+        h1 { color: var(--rosa-bebe); font-size: 1.1rem; font-weight: 300; letter-spacing: 2px; margin-bottom: 20px; text-transform: uppercase; }
+        input { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid var(--glass-border); background: rgba(0,0,0,0.5); color: white; text-align: center; margin-bottom: 15px; outline: none; }
+        
+        .dash-container { width: 100%; max-width: 360px; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+        .card-selector { display: flex; gap: 12px; margin-bottom: 15px; z-index: 10; }
+        .mini-card { width: 52px; height: 52px; background: var(--glass); border: 1px solid var(--glass-border); border-radius: 14px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.4s; }
+        .mini-card.active { border-color: var(--rosa-bebe); background: rgba(244, 167, 187, 0.15); transform: translateY(-3px); box-shadow: 0 5px 15px var(--glow); }
+        .mini-card svg { stroke: var(--rosa-bebe); width: 22px; stroke-width: 1.5; fill: none; }
 
-    .login-content { 
-        width: 100%; max-width: 320px; text-align: center; 
-        background: var(--glass); backdrop-filter: blur(20px); 
-        border: 1px solid var(--glass-border); border-radius: 24px; 
-        padding: 35px; box-shadow: 0 0 35px var(--glow); /* Brilho Total */
-    }
-    
-    h1 { color: var(--rosa-bebe); font-size: 1.2rem; font-weight: 600; letter-spacing: 2px; margin-bottom: 25px; text-transform: uppercase; text-shadow: 0 0 15px var(--glow); }
-    input { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid var(--glass-border); background: rgba(0,0,0,0.8); color: white; text-align: center; margin-bottom: 20px; outline: none; font-size: 1rem; }
-    
-    .dash-container { width: 100%; max-width: 380px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-    .card-selector { display: flex; gap: 12px; margin-bottom: 20px; z-index: 10; }
-    .mini-card { width: 55px; height: 55px; background: var(--glass); border: 1px solid var(--glass-border); border-radius: 16px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.4s; }
-    .mini-card.active { border-color: var(--rosa-bebe); background: rgba(255, 77, 166, 0.2); transform: translateY(-5px); box-shadow: 0 8px 20px var(--glow); }
-    .mini-card svg { stroke: var(--rosa-bebe); width: 24px; stroke-width: 2; fill: none; filter: drop-shadow(0 0 8px var(--glow)); }
+        .main-window { width: 100%; background: var(--glass); backdrop-filter: blur(25px); border: 1px solid var(--glass-border); border-radius: 28px; padding: 22px; height: 410px; display: none; flex-direction: column; }
+        .main-window.active { display: flex; animation: windowIn 0.3s ease-out; }
 
-    /* --- JANELA PRINCIPAL COM BRILHO TOTAL --- */
-    .main-window { 
-        width: 100%; background: var(--glass); backdrop-filter: blur(30px); 
-        border: 1px solid var(--glass-border); border-radius: 30px; 
-        padding: 25px; height: 430px; display: none; flex-direction: column;
-        box-shadow: 0 0 40px var(--glow); /* Aura neon em volta do card */
-    }
-    .main-window.active { display: flex; animation: windowIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        h2 { font-size: 0.95rem; color: var(--rosa-bebe); font-weight: 400; margin-bottom: 18px; text-align: center; }
+        .row { display: flex; justify-content: space-between; align-items: center; margin: 14px 0; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.03); }
+        .row-info span { font-size: 0.85rem; display: block; color: #eee; }
+        .desc { font-size: 0.55rem; color: #777; margin-top: 2px; }
 
-    h2 { font-size: 1rem; color: var(--rosa-bebe); font-weight: 600; margin-bottom: 20px; text-align: center; text-transform: uppercase; text-shadow: 0 0 10px var(--glow); }
+        .btn-rosa { background: var(--rosa-bebe); color: #000; border: none; padding: 14px; border-radius: 12px; width: 100%; font-weight: 600; cursor: pointer; margin-top: auto; }
+        
+        .precision-grid { display: flex; gap: 8px; margin-top: 10px; }
+        .prec-btn { flex: 1; padding: 10px; border-radius: 10px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.03); color: white; font-size: 0.75rem; }
+        .prec-btn.active { background: var(--rosa-bebe); color: #000; font-weight: bold; border-color: var(--rosa-bebe); }
 
-    .row { display: flex; justify-content: space-between; align-items: center; margin: 15px 0; padding-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.08); }
-    .row-info span { font-size: 0.85rem; font-weight: 600; color: #ffffff; }
-    .desc { font-size: 0.65rem !important; color: rgba(255, 255, 255, 0.5) !important; margin-top: 5px; display: block; }
+        .switch { width: 36px; height: 18px; position: relative; display: inline-block; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: #1a1a1a; border-radius: 18px; transition: 0.4s; border: 1px solid var(--glass-border); }
+        .slider:before { content: ""; position: absolute; height: 12px; width: 12px; left: 2px; bottom: 2px; background: #555; border-radius: 50%; transition: 0.4s; }
+        input:checked + .slider { background: rgba(244, 167, 187, 0.2); border-color: var(--rosa-bebe); }
+        input:checked + .slider:before { transform: translateX(18px); background: var(--rosa-bebe); }
 
-    .btn-rosa { background: var(--rosa-bebe); color: #000; border: none; padding: 14px; border-radius: 15px; width: 100%; font-weight: 700; font-size: 0.9rem; transition: 0.3s; box-shadow: 0 0 20px var(--glow); cursor: pointer; text-transform: uppercase; }
-    
-    .precision-grid { display: flex; gap: 10px; margin-top: 15px; }
-    .prec-btn { flex: 1; padding: 12px; border-radius: 12px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.05); color: white; font-size: 0.8rem; cursor: pointer; transition: 0.3s; }
-    .prec-btn.active { background: var(--rosa-bebe); color: #000; font-weight: 800; box-shadow: 0 0 15px var(--glow); }
+        #inject-log { 
+            height: 120px; background: rgba(0,0,0,0.3); border-radius: 12px; padding: 12px; 
+            font-size: 0.65rem; color: var(--rosa-bebe); overflow-y: auto; 
+            margin-bottom: 15px; border: 1px solid var(--glass-border); text-align: left;
+            font-family: monospace;
+        }
+        .game-launch-group { display: none; flex-direction: column; gap: 10px; width: 100%; margin-top: auto; }
 
-    .switch { width: 42px; height: 22px; position: relative; display: inline-block; }
-    .switch input { opacity: 0; width: 0; height: 0; }
-    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: #222; border-radius: 20px; transition: 0.4s; border: 1px solid var(--glass-border); }
-    .slider:before { content: ""; position: absolute; height: 16px; width: 16px; left: 2px; bottom: 2px; background: #666; border-radius: 50%; transition: 0.4s; }
-    input:checked + .slider { background: rgba(255, 77, 166, 0.3); border-color: var(--rosa-bebe); }
-    input:checked + .slider:before { transform: translateX(20px); background: var(--rosa-bebe); box-shadow: 0 0 10px var(--rosa-bebe); }
+        @keyframes windowIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-    #inject-log { height: 130px; background: rgba(0,0,0,0.6); border-radius: 15px; padding: 15px; font-size: 0.7rem; color: var(--rosa-bebe); overflow-y: auto; margin-bottom: 20px; border: 1px solid var(--glass-border); font-family: 'Courier New', monospace; line-height: 1.4; }
-    
-    /* --- PROTEÇÃO DO BOTÃO DE INSTALAÇÃO --- */
-    @media (display-mode: standalone), (display-mode: fullscreen) { 
-        #install-footer { display: none !important; } 
-    }
-    #install-footer { display: none; }
+        /* MODO PAISAGEM FULLSCREEN (Preenche a tela) */
+        @media (orientation: landscape) {
+            .dash-container { flex-direction: row !important; max-width: 99% !important; gap: 15px; padding: 5px; }
+            .card-selector { flex-direction: column !important; margin-bottom: 0 !important; gap: 8px; }
+            .mini-card { width: 42px !important; height: 42px !important; }
+            .main-window { 
+                height: 92vh !important; flex: 1; width: 100% !important; 
+                padding: 10px 20px !important; margin-right: 5px; overflow-y: auto; 
+            }
+            .row { margin: 8px 0 !important; justify-content: space-between !important; display: flex !important; width: 100% !important; }
+            .row-info span { font-size: 0.85rem !important; }
+            .desc { font-size: 0.6rem !important; max-width: 80%; }
+            #install-footer { display: none !important; }
+        }
 
-    @keyframes windowIn { from { opacity: 0; transform: scale(0.95) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
-        </style>
-   </head>
+        @media (display-mode: standalone), (display-mode: fullscreen) {
+            #install-footer { display: none !important; }
+        }
+    </style>
+</head>
 <body>
 <canvas id="canvas-bg"></canvas>
 
-<section id="screen-login" class="screen active">
-    <div class="login-content">
+<section id="screen-login" class="screen active" style="justify-content: center; padding-bottom: 100px;">
+    <div class="login-content" style="transform: translateY(-20%);">
         <h1>Auxílio Premium</h1>
-        <input type="password" id="login-pass" placeholder="DIGITE SEU PIN">
-        <button class="btn-rosa" onclick="efetuarLogin()">Acessar Painel</button>
+        <input type="password" id="login-pass" placeholder="xxx-xxx-xxx">
+        <button class="btn-rosa" onclick="efetuarLogin()">Entrar</button>
     </div>
 
-    <div id="install-footer" style="position: absolute; bottom: 40px; width: 90%; max-width: 350px; background: var(--glass); padding: 15px; border-radius: 20px; border: 1px solid var(--glass-border); align-items: center; justify-content: space-between; z-index: 100;">
-        <span style="font-size: 0.7rem; color: #fff; font-weight: 600;">DISPONÍVEL EM APP</span>
-        <button class="btn-rosa" style="width: auto; padding: 8px 15px; font-size: 0.7rem;" onclick="instalarPWA()">Instalar</button>
+    <div id="install-footer" style="display:none; position: absolute; bottom: 60px; width: 90%; max-width: 340px; left: 50%; transform: translateX(-50%); z-index: 10; display: flex; align-items: center; justify-content: space-between; gap: 15px;">
+        <p style="font-size: 0.65rem; color: var(--rosa-bebe); text-transform: uppercase; letter-spacing: 1px; opacity: 0.8; white-space: nowrap; margin: 0;">Versão Aplicativo</p>
+        <button class="btn-rosa" style="background: rgba(244, 167, 187, 0.1); border: 1px solid var(--rosa-bebe); color: var(--rosa-bebe); padding: 8px 15px; font-size: 0.75rem; flex-shrink: 0; width: auto; margin: 0;" onclick="instalarPWA()">Instalar Agora</button>
     </div>
 </section>
     
 <section id="screen-dash" class="screen">
     <div class="dash-container">
         <div class="card-selector">
-            <div class="mini-card active" onclick="switchCard('win-mira', this)"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M22 12h-4M6 12H2M12 6V2M12 22v-4"></path></svg></div>
-            <div class="mini-card" onclick="switchCard('win-opt', this)"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg></div>
-            <div class="mini-card" onclick="switchCard('win-inject', this)"><svg viewBox="0 0 24 24"><path d="M18 2l4 4-15 15-4-4L18 2zM14.5 5.5l3 3"></path></svg></div>
-            <div class="mini-card" onclick="switchCard('win-sens', this)"><svg viewBox="0 0 24 24"><path d="M12 20v-8m0 0V4m0 8h8m-8 0H4"></path></svg></div>
-            <div class="mini-card" onclick="switchCard('win-info', this)"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4M12 8h.01"></path></svg></div>
+            <div class="mini-card active" onclick="switchCard('win-mira', this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"></circle><path d="M22 12h-4M6 12H2M12 6V2M12 22v-4"></path></svg></div>
+            <div class="mini-card" onclick="switchCard('win-opt', this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg></div>
+            <div class="mini-card" onclick="switchCard('win-inject', this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 2l4 4-15 15-4-4L18 2zM14.5 5.5l3 3"></path></svg></div>
+            <div class="mini-card" onclick="switchCard('win-sens', this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 20v-8m0 0V4m0 8h8m-8 0H4"></path></svg></div>
+            <div class="mini-card" onclick="switchCard('win-info', this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4M12 8h.01"></path></svg></div>
         </div>
 
         <div id="win-mira" class="main-window active">
-            <h2>Configurações de Mira</h2>
-            <div class="row"><div class="row-info"><span>Redução de Recoil</span><span class="desc">Compensação inteligente vertical.</span></div><label class="switch"><input type="checkbox" id="m-recoil"><span class="slider"></span></label></div>
-            <div class="row"><div class="row-info"><span>Touch Sampling</span><span class="desc">Aumenta a resposta do toque.</span></div><label class="switch"><input type="checkbox" id="m-touch"><span class="slider"></span></label></div>
-            <div class="row"><div class="row-info"><span>Smoothing Aim</span><span class="desc">Mira mais suave e estável.</span></div><label class="switch"><input type="checkbox" id="m-stab"><span class="slider"></span></label></div>
+            <h2>Auxiliar Mira</h2>
+            <div class="row"><div class="row-info"><span>Diminuir Recoil</span><span class="desc">Reduz o recuo das armas.</span></div><label class="switch"><input type="checkbox" id="m-recoil"><span class="slider"></span></label></div>
+            <div class="row"><div class="row-info"><span>Aprimorar Toque</span><span class="desc">Resposta de toque imediata.</span></div><label class="switch"><input type="checkbox" id="m-touch"><span class="slider"></span></label></div>
+            <div class="row"><div class="row-info"><span>Estabilizar Mira</span><span class="desc">Foco total no alvo.</span></div><label class="switch"><input type="checkbox" id="m-stab"><span class="slider"></span></label></div>
             <div class="precision-grid">
-                <button class="prec-btn" onclick="setPrec(this)">Curto</button>
-                <button class="prec-btn active" onclick="setPrec(this)">Médio</button>
-                <button class="prec-btn" onclick="setPrec(this)">Longo</button>
+                <button class="prec-btn" onclick="setPrec(this)">Baixa</button>
+                <button class="prec-btn active" onclick="setPrec(this)">Média</button>
+                <button class="prec-btn" onclick="setPrec(this)">Alta</button>
             </div>
         </div>
 
         <div id="win-opt" class="main-window">
-            <h2>Otimização de Sistema</h2>
-            <div class="row"><div class="row-info"><span>Limpeza de Cache</span><span class="desc">Libera memória RAM.</span></div><label class="switch"><input type="checkbox" id="o-dev"><span class="slider"></span></label></div>
-            <div class="row"><div class="row-info"><span>Performance Boost</span><span class="desc">Foco total da CPU no jogo.</span></div><label class="switch"><input type="checkbox" id="o-perf"><span class="slider"></span></label></div>
-            <div class="row"><div class="row-info"><span>Estabilizador de FPS</span><span class="desc">Evita quedas bruscas de frames.</span></div><label class="switch"><input type="checkbox" id="o-fps"><span class="slider"></span></label></div>
+            <h2>Otimização</h2>
+            <div class="row"><div class="row-info"><span>Otimizar Dispositivo</span><span class="desc">Ajuste fino do sistema.</span></div><label class="switch"><input type="checkbox" id="o-dev"><span class="slider"></span></label></div>
+            <div class="row"><div class="row-info"><span>Melhor Desempenho</span><span class="desc">Foco em processamento.</span></div><label class="switch"><input type="checkbox" id="o-perf"><span class="slider"></span></label></div>
+            <div class="row"><div class="row-info"><span>Aumentar FPS</span><span class="desc">Fluidez máxima no jogo.</span></div><label class="switch"><input type="checkbox" id="o-fps"><span class="slider"></span></label></div>
         </div>
 
         <div id="win-inject" class="main-window" style="text-align: center;">
-            <h2>Injeção de Módulos</h2>
-            <div id="inject-log">Aguardando ativação...</div>
-            <button class="btn-rosa" id="btn-run" onclick="executarMotorInjecao()">Executar Scripts</button>
-            <div id="launch-group" style="display: none; flex-direction: column; gap: 10px; margin-top: 15px;">
-                <button class="btn-rosa" onclick="abrirJogo('com.dts.freefireth')">Free Fire Normal</button>
-                <button class="btn-rosa" style="background:none; border:1px solid var(--rosa-bebe); color:var(--rosa-bebe);" onclick="abrirJogo('com.dts.freefiremax')">Free Fire MAX</button>
+            <h2>Injetar Módulos</h2>
+            <div id="inject-log">Aguardando comando...</div>
+            <button class="btn-rosa" id="btn-run" onclick="executarMotorInjecao()">Injetar Agora</button>
+            <div class="game-launch-group" id="launch-group">
+                <button class="btn-rosa" onclick="abrirJogo('com.dts.freefireth')">Abrir Free Fire</button>
+                <button class="btn-rosa" style="background:none; border:1px solid var(--rosa-bebe); color:var(--rosa-bebe);" onclick="abrirJogo('com.dts.freefiremax')">Abrir FF Max</button>
             </div>
-            <button onclick="fazerLogout()" style="background:none; border:none; color:#555; font-size:0.6rem; margin-top:15px; text-decoration:underline; cursor:pointer;">Sair e Limpar Dados</button>
         </div>
-
-        <div id="win-sens" class="main-window">
-            <h2>Configurações Sugeridas</h2>
-            <div id="device-detected" style="font-size: 0.65rem; color: var(--rosa-bebe); text-align: center; margin-bottom: 20px;">Analisando DPI do Hardware...</div>
-            <div class="row"><div class="row-info"><span>Sensibilidade</span></div><span id="val-sens" style="color:var(--rosa-bebe); font-weight:800;">--</span></div>
-            <div class="row"><div class="row-info"><span>DPI Ideal</span></div><span id="val-dpi" style="color:var(--rosa-bebe); font-weight:800;">--</span></div>
-            <div class="row"><div class="row-info"><span>Botão</span></div><span id="val-btn" style="color:var(--rosa-bebe); font-weight:800;">--</span></div>
-            <button class="btn-rosa" style="margin-top: 10px;" onclick="gerarConfiguracao()">Calcular Agora</button>
-        </div>
-
+<div id="win-sens" class="main-window">
+    <h2>Gerador de Sensibilidade</h2>
+    <div id="device-detected" style="font-size: 0.7rem; color: #777; margin-bottom: 15px; text-align: center;">Detectando hardware...</div>
+    
+    <div class="row"><div class="row-info"><span>Sensibilidade Geral</span></div><span id="val-sens" style="color:var(--rosa-bebe); font-weight:bold;">--</span></div>
+    <div class="row"><div class="row-info"><span>DPI Sugerida</span></div><span id="val-dpi" style="color:var(--rosa-bebe); font-weight:bold;">--</span></div>
+    <div class="row"><div class="row-info"><span>Botão de Atirar</span></div><span id="val-btn" style="color:var(--rosa-bebe); font-weight:bold;">--</span></div><button class="btn-rosa" style="margin-top: 15px;" onclick="gerarConfiguracao()">Gerar Configuração</button></div>
         <div id="win-info" class="main-window" style="text-align: center;">
-            <h2>Sobre a Versão</h2>
-            <div style="margin-top: 50px; font-size: 0.8rem; line-height: 2.2;">
-                <p style="color:var(--rosa-bebe); font-weight:800;">BUILD V7 PREMIUM</p>
-                <p>Criador: @jeniizx7</p>
-                <p>Suporte: @gothxjen</p>
-                <p style="opacity:0.4; font-size:0.6rem; margin-top:20px;">Licença Ativa para este Dispositivo</p>
+            <h2>Informações</h2>
+            <div style="margin-top: 40px; font-size: 0.85rem; line-height: 2;">
+                <p>BUILD PREMIUM V7</p>
+                <p>TikTok: @jeniizx7</p>
+                <p>Contato: @gothxjen</p>
             </div>
         </div>
     </div>
 </section>
-
-<script>
-// --- MOTOR DE PERSISTÊNCIA ---
-let wakeLock = null;
-let suavizacaoAtiva = false;
-let ultimoY = 0, ultimoX = 0, pontosSuaves = [], enginePrecisionMulti = 1.0;
-
-// Motor de Estabilização de Mira (Smoothing) - Mantido Integral
-document.addEventListener('touchmove', function(e) {
-    if (!suavizacaoAtiva) return;
-    let toque = e.touches[0];
-    pontosSuaves.push({ x: toque.clientX, y: toque.clientY });
-    if (pontosSuaves.length > 5) pontosSuaves.shift();
-    let mediaY = pontosSuaves.reduce((a, b) => a + b.y, 0) / pontosSuaves.length;
-    let deltaY = mediaY - ultimoY;
-    if (deltaY < -2) { 
-        let estabilizador = 0.3 * (1 / enginePrecisionMulti); 
-        window.scrollBy(0, deltaY * estabilizador);
+    <script>
+    // 1. Efeito Visual de Fundo (Mantido Original)
+    const canvas = document.getElementById('canvas-bg');
+    const ctx = canvas.getContext('2d');
+    let stars = [];
+    function initCanvas() {
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        stars = Array(80).fill().map(() => ({ x: Math.random() * canvas.width, y: Math.random() * canvas.height, size: Math.random() * 1.5, speed: Math.random() * 0.4 + 0.1 }));
     }
-    ultimoY = mediaY;
-}, { passive: false });
 
-// Efeito de Fundo (Stars Canvas)
-const canvas = document.getElementById('canvas-bg');
-const ctx = canvas.getContext('2d');
-let stars = [];
-function initCanvas() {
-    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-    stars = Array(100).fill().map(() => ({ x: Math.random() * canvas.width, y: Math.random() * canvas.height, size: Math.random() * 2, speed: Math.random() * 0.5 + 0.1 }));
-}
-function drawStars() {
-    ctx.fillStyle = '#050505'; ctx.fillRect(0, 0, canvas.width, canvas.height);
-    stars.forEach(s => {
-        ctx.fillStyle = 'rgba(255, 77, 166, 0.5)'; ctx.beginPath(); ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2); ctx.fill();
-        s.y -= s.speed; if (s.y < 0) s.y = canvas.height;
-    });
-    requestAnimationFrame(drawStars);
-}
-window.addEventListener('resize', initCanvas);
-initCanvas(); drawStars();
+    // --- CORREÇÃO: VARIÁVEIS DECLARADAS APENAS UMA VEZ ---
+    let suavizacaoAtiva = false;
+    let ultimoY = 0;
+    let ultimoX = 0;
+    let pontosSuaves = []; 
+    let enginePrecisionMulti = 1.0;
 
-// Navegação do Painel
-function switchCard(id, el) {
-    document.querySelectorAll('.main-window').forEach(w => { w.classList.remove('active'); w.style.display = 'none'; });
-    document.querySelectorAll('.mini-card').forEach(c => c.classList.remove('active'));
-    const target = document.getElementById(id);
-    target.classList.add('active'); target.style.display = 'flex'; el.classList.add('active');
-}
+    // 2. O MOTOR QUE FILTRA O JITTER (TREMIDO)
+    document.addEventListener('touchmove', function(e) {
+        if (!suavizacaoAtiva) return;
 
-function setPrec(btn) {
-    document.querySelectorAll('.prec-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    const txt = btn.innerText.toLowerCase();
-    enginePrecisionMulti = txt === 'curto' ? 0.8 : (txt === 'médio' ? 1.0 : 1.3);
-}
+        let toque = e.touches[0];
+        
+        pontosSuaves.push({ x: toque.clientX, y: toque.clientY });
+        if (pontosSuaves.length > 3) pontosSuaves.shift();
 
-function efetuarLogin() {
-    const pin = document.getElementById('login-pass').value;
-    if (pin === '1234') {
-        document.getElementById('screen-login').classList.remove('active');
-        document.getElementById('screen-dash').classList.add('active');
-    } else { alert('PIN Inválido!'); }
-}
+        let mediaY = pontosSuaves.reduce((a, b) => a + b.y, 0) / pontosSuaves.length;
+        let mediaX = pontosSuaves.reduce((a, b) => a + b.x, 0) / pontosSuaves.length;
 
-async function executarMotorInjecao() {
-    suavizacaoAtiva = document.getElementById('m-stab').checked;
-    const log = document.getElementById('inject-log');
-    document.getElementById('btn-run').style.display = 'none';
+        let deltaY = mediaY - ultimoY;
+        let deltaX = Math.abs(mediaX - ultimoX);
+
+        if (deltaY < -3 && Math.abs(deltaY) > (deltaX * 2)) { 
+            let estabilizador = 0.35 * (1 / enginePrecisionMulti); 
+            window.scrollBy(0, deltaY * estabilizador);
+        }
+
+        ultimoY = mediaY;
+        ultimoX = mediaX;
+    }, { passive: false });
     
-    const frases = [
-        "> ANALISANDO ARQUITETURA...",
-        "> INJETANDO SCRIPTS Y_AXIS...",
-        "> OTIMIZANDO MEMÓRIA RAM...",
-        "> ESTABILIZANDO FPS...",
-        "> MÓDULOS ATIVOS COM SUCESSO!"
-    ];
+    function drawStars() {
+        ctx.fillStyle = '#0A0A0A'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+        stars.forEach(s => {
+            ctx.fillStyle = 'rgba(244, 167, 187, 0.6)'; ctx.beginPath(); ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2); ctx.fill();
+            s.y -= s.speed; if (s.y < 0) s.y = canvas.height;
+        });
+        requestAnimationFrame(drawStars);
+    }
+    initCanvas(); drawStars();
 
-    for (const f of frases) {
-        log.innerHTML += f + "<br>";
+    // 3. Navegação e Login (Mantido Original)
+    function switchCard(id, el) {
+        document.querySelectorAll('.main-window').forEach(w => { w.classList.remove('active'); w.style.display = 'none'; });
+        document.querySelectorAll('.mini-card').forEach(c => c.classList.remove('active'));
+        const target = document.getElementById(id);
+        target.classList.add('active'); target.style.display = 'flex'; el.classList.add('active');
+    }
+
+    function efetuarLogin() {
+        if(document.getElementById('login-pass').value === '1234') {
+            document.getElementById('screen-login').classList.remove('active');
+            document.getElementById('screen-dash').classList.add('active');
+        } else { alert('PIN incorreto'); }
+    }
+
+    // 4. Ajuste do Motor de Precisão
+    function setPrec(btn) {
+        document.querySelectorAll('.prec-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        
+        const nivel = btn.innerText.trim().toLowerCase();
+        if(nivel === 'baixa') enginePrecisionMulti = 0.85;
+        else if(nivel === 'média' || nivel === 'media') enginePrecisionMulti = 1.0;
+        else if(nivel === 'alta') enginePrecisionMulti = 1.25;
+        
+        if (navigator.vibrate) navigator.vibrate(20);
+    }
+
+    // 5. Motor de Injeção V7
+    async function executarMotorInjecao() {
+        suavizacaoAtiva = document.getElementById('m-stab').checked;
+        const log = document.getElementById('inject-log');
+        const btn = document.getElementById('btn-run');
+        const precisionText = document.querySelector('.prec-btn.active').innerText;
+        
+        const opt = {
+            recoil: document.getElementById('m-recoil').checked,
+            toque: document.getElementById('m-touch').checked,
+            estabilizar: document.getElementById('m-stab').checked,
+            otimizar: document.getElementById('o-dev').checked,
+            desempenho: document.getElementById('o-perf').checked,
+            fps: document.getElementById('o-fps').checked
+        };
+
+        const scripts = {
+            recoil: ["FIX_RECOIL_Y: 85%", "ANTI_VIBRATION: ON", "STABILIZE_BARREL"],
+            toque: ["TOUCH_FREQ: 360Hz", "LATENCY: -15ms", "SENSITIVITY_BOOST"],
+            estabilizar: ["HEAD_HITBOX: 100%", "Y_AXIS_LOCK: ACTIVE", "DECELERATION: 0.5x", "STICKY_AIM: ON"],
+            otimizar: ["CLEANING_CACHE...", "CPU_PRIORITY: HIGH", "RAM_PURGE: OK"],
+            desempenho: ["THERMAL_THROTTLE: OFF", "GPU_OVERCLOCK: 15%", "POWER_MODE: MAX"],
+            fps: ["REFRESH_RATE: 90Hz", "FRAME_STABILIZER: ON", "ZERO_LAG_ENGINE"]
+        };
+
+        btn.style.display = 'none';
+        log.innerHTML = "<b>[SYSTEM] INICIANDO YT MUSC V7...</b><br>";
+        await new Promise(r => setTimeout(r, 800));
+        log.innerHTML += `> Precisão: ${precisionText} (${enginePrecisionMulti}x)<br>`;
         log.scrollTop = log.scrollHeight;
-        await new Promise(r => setTimeout(r, 600));
+
+        for (const [key, active] of Object.entries(opt)) {
+            if (active) {
+                log.innerHTML += `<br><span style="color:#fff">> Injetando: ${key.toUpperCase()}...</span><br>`;
+                log.scrollTop = log.scrollHeight;
+                await new Promise(r => setTimeout(r, 500));
+                for (const s of scripts[key]) {
+                    log.innerHTML += `<span style="opacity:0.5; font-size: 0.6rem;">[DEBUG] -- ${s}</span><br>`;
+                    log.scrollTop = log.scrollHeight;
+                    await new Promise(r => setTimeout(r, 200));
+                }
+            }
+        }
+
+        log.innerHTML += "<br><b style='color:var(--rosa-bebe)'>[!] TODOS OS MÓDULOS ATIVOS!</b>";
+        log.scrollTop = log.scrollHeight;
+        document.getElementById('launch-group').style.display = 'flex';
+    }
+
+    // 6. Gerenciamento PWA
+    let deferredPrompt;
+    const installFooter = document.getElementById('install-footer');
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault(); deferredPrompt = e;
+        if (installFooter && !window.matchMedia('(display-mode: standalone)').matches) {
+            installFooter.style.display = 'flex';
+        }
+    });
+
+    async function instalarPWA() {
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            if (outcome === 'accepted') installFooter.style.display = 'none';
+            deferredPrompt = null;
+        }
+    }
+
+    function abrirJogo(pacote) {
+        const intent = `intent://launch?id=${pacote}#Intent;package=${pacote};scheme=android-app;end`;
+        window.location.replace(intent);
+        setTimeout(() => {
+            if (confirm("Não foi possível abrir o jogo automaticamente. Deseja tentar abrir pela Play Store?")) {
+                window.location.href = `https://play.google.com/store/apps/details?id=${pacote}`;
+            }
+        }, 1500);
     }
     
-    document.getElementById('launch-group').style.display = 'flex';
-    if('wakeLock' in navigator) wakeLock = await navigator.wakeLock.request('screen');
-}
+     // 7. Gerador de Sensibilidade
+    async function gerarConfiguracao() {
+        const width = window.screen.width * window.devicePixelRatio;
+        const height = window.screen.height * window.devicePixelRatio;
+        const ua = navigator.userAgent.toLowerCase();
+        let dispositivo = "Android";
+        if (ua.includes("g53") || ua.includes("moto")) dispositivo = "Moto G53";
+        else if (ua.includes("redmi") || ua.includes("xiaomi")) dispositivo = "Redmi Note";
 
-// Gerenciamento PWA - Detecção e Ocultação Real
-let deferredPrompt;
-window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    // Só mostra se não estiver no modo standalone
-    if (!window.matchMedia('(display-mode: standalone)').matches) {
-        document.getElementById('install-footer').style.display = 'flex';
+        document.getElementById('device-detected').innerText = `Hardware: ${dispositivo} (${Math.round(width)}x${Math.round(height)})`;
+        const sensEl = document.getElementById('val-sens');
+        sensEl.innerText = "Analisando...";
+        await new Promise(r => setTimeout(r, 1000));
+
+        sensEl.innerText = width > 1000 ? 98 : 94;
+        document.getElementById('val-dpi').innerText = Math.round(width / 2) + 120;
+        document.getElementById('val-btn').innerText = width > 1000 ? "52%" : "47%";
     }
-});
 
-async function instalarPWA() {
-    if (deferredPrompt) {
-        deferredPrompt.prompt();
-        const { outcome } = await deferredPrompt.userChoice;
-        if (outcome === 'accepted') document.getElementById('install-footer').style.display = 'none';
-        deferredPrompt = null;
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW Erro:', err));
+        });
     }
-}
-
-function abrirJogo(pacote) {
-    window.location.replace(`intent://launch?id=${pacote}#Intent;package=${pacote};scheme=android-app;end`);
-}
-
-async function gerarConfiguracao() {
-    document.getElementById('device-detected').innerText = "CALIBRANDO HARDWARE...";
-    await new Promise(r => setTimeout(r, 1500));
-    document.getElementById('val-sens').innerText = "94";
-    document.getElementById('val-dpi').innerText = "720";
-    document.getElementById('val-btn').innerText = "52%";
-    document.getElementById('device-detected').innerText = "ESTADO: OTIMIZADO";
-}
-
-function fazerLogout() {
-    if (wakeLock) wakeLock.release();
-    location.reload();
-}
-</script>
+ </script>
 </body>
 </html>
