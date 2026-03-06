@@ -7,89 +7,332 @@
     <link rel="manifest" href="manifest.json">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --rosa-bebe: #F58BA2;
-            --fundo-escuro: #0A0A0A;
-            --glass: rgba(255, 255, 255, 0.04);
-            --glass-border: rgba(255, 255, 255, 0.08);
-            --glow: rgba(244, 167, 187, 0.2);
+    :root {
+        --rosa-bebe: #F58BA2;
+        --fundo-escuro: #0A0A0A;
+        --glass: rgba(255, 255, 255, 0.04);
+        --glass-border: rgba(255, 255, 255, 0.08);
+        --glow: rgba(245, 139, 162, 0.3); /* Brilho mais presente como na imagem */
+    }
+
+    * { 
+        margin: 0; 
+        padding: 0; 
+        box-sizing: border-box; 
+        font-family: 'Inter', sans-serif; 
+        -webkit-tap-highlight-color: transparent; 
+    }
+
+    body { 
+        background-color: var(--fundo-escuro); 
+        color: white; 
+        overflow: hidden; 
+        height: 100vh; 
+        width: 100vw; 
+    }
+    
+    #canvas-bg { 
+        position: fixed; 
+        top: 0; 
+        left: 0; 
+        width: 100%; 
+        height: 100%; 
+        z-index: -1; 
+        pointer-events: none; 
+    }
+
+    .screen { 
+        display: none; 
+        height: 100vh; 
+        width: 100vw; 
+        flex-direction: column; 
+        align-items: center; 
+        justify-content: center; 
+        position: relative; 
+        z-index: 1; 
+    }
+
+    .screen.active { display: flex; }
+
+    /* LOGIN REFINADO */
+    #screen-login { justify-content: center; padding-bottom: 100px; }
+    .login-content { 
+        width: 100%; 
+        max-width: 300px; 
+        text-align: center; 
+        background: var(--glass); 
+        backdrop-filter: blur(20px); 
+        border: 1px solid var(--glass-border); 
+        border-radius: 32px; /* Mais arredondado */
+        padding: 35px; 
+        transform: translateY(-35%); 
+        box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+    }
+    
+    h1 { 
+        color: var(--rosa-bebe); 
+        font-size: 1.1rem; 
+        font-weight: 400; 
+        letter-spacing: 3px; 
+        margin-bottom: 25px; 
+        text-transform: uppercase; 
+        text-shadow: 0 0 10px var(--glow);
+    }
+
+    input { 
+        width: 100%; 
+        padding: 16px; 
+        border-radius: 16px; 
+        border: 1px solid var(--glass-border); 
+        background: rgba(0,0,0,0.6); 
+        color: white; 
+        text-align: center; 
+        margin-bottom: 15px; 
+        outline: none; 
+        transition: 0.3s;
+    }
+
+    input:focus { border-color: var(--rosa-bebe); box-shadow: 0 0 10px var(--glow); }
+    
+    /* DASHBOARD E SELETORES */
+    .dash-container { 
+        width: 100%; 
+        max-width: 380px; 
+        height: 100%; 
+        display: flex; 
+        flex-direction: column; 
+        align-items: center; 
+        justify-content: center; 
+        padding: 20px; 
+    }
+
+    .card-selector { 
+        display: flex; 
+        gap: 12px; 
+        margin-bottom: 20px; 
+        z-index: 10; 
+    }
+
+    .mini-card { 
+        width: 58px; 
+        height: 58px; 
+        background: var(--glass); 
+        border: 1px solid var(--glass-border); 
+        border-radius: 18px; 
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        cursor: pointer; 
+        transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+    }
+
+    .mini-card.active { 
+        border-color: var(--rosa-bebe); 
+        background: rgba(245, 139, 162, 0.12); 
+        transform: translateY(-5px); 
+        box-shadow: 0 8px 20px var(--glow); 
+    }
+
+    .mini-card svg { 
+        stroke: var(--rosa-bebe); 
+        width: 24px; 
+        stroke-width: 1.8; 
+        fill: none; 
+        filter: drop-shadow(0 0 5px var(--glow));
+    }
+
+    /* JANELA PRINCIPAL (EFEITO DA IMAGEM) */
+    .main-window { 
+        width: 100%; 
+        background: rgba(15, 15, 15, 0.85); /* Fundo mais denso como na foto */
+        backdrop-filter: blur(30px); 
+        border: 1px solid var(--glass-border); 
+        border-radius: 35px; /* Bordas suaves da imagem */
+        padding: 25px; 
+        height: 440px; 
+        display: none; 
+        flex-direction: column; 
+        box-shadow: 0 0 40px rgba(245, 139, 162, 0.15); /* Glow externo suave */
+    }
+
+    .main-window.active { 
+        display: flex; 
+        animation: windowIn 0.4s ease-out; 
+    }
+
+    h2 { 
+        font-size: 1rem; 
+        color: var(--rosa-bebe); 
+        font-weight: 600; 
+        margin-bottom: 22px; 
+        text-align: center; 
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+    }
+
+    .row { 
+        display: flex; 
+        justify-content: space-between; 
+        align-items: center; 
+        margin: 15px 0; 
+        padding-bottom: 12px; 
+        border-bottom: 1px solid rgba(255,255,255,0.05); 
+    }
+
+    .row-info span { 
+        font-size: 0.9rem; 
+        display: block; 
+        color: #ffffff; 
+        font-weight: 400;
+    }
+
+    .desc { 
+        font-size: 0.65rem; 
+        color: #888; 
+        margin-top: 4px; 
+    }
+
+    /* BOTÕES E GRIDS */
+    .btn-rosa { 
+        background: var(--rosa-bebe); 
+        color: #000; 
+        border: none; 
+        padding: 16px; 
+        border-radius: 16px; 
+        width: 100%; 
+        font-weight: 700; 
+        cursor: pointer; 
+        margin-top: auto; 
+        transition: 0.3s;
+        box-shadow: 0 4px 15px var(--glow);
+    }
+
+    .btn-rosa:active { transform: scale(0.98); }
+    
+    .precision-grid { 
+        display: flex; 
+        gap: 10px; 
+        margin-top: 15px; 
+    }
+
+    .prec-btn { 
+        flex: 1; 
+        padding: 12px; 
+        border-radius: 12px; 
+        border: 1px solid var(--glass-border); 
+        background: rgba(255,255,255,0.05); 
+        color: white; 
+        font-size: 0.8rem; 
+        transition: 0.3s;
+    }
+
+    .prec-btn.active { 
+        background: var(--rosa-bebe); 
+        color: #000; 
+        font-weight: bold; 
+        border-color: var(--rosa-bebe); 
+        box-shadow: 0 0 15px var(--glow);
+    }
+
+    /* SWITCH CUSTOMIZADO (IGUAL DA FOTO) */
+    .switch { width: 42px; height: 22px; position: relative; display: inline-block; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider { 
+        position: absolute; 
+        cursor: pointer; 
+        top: 0; left: 0; right: 0; bottom: 0; 
+        background: #222; 
+        border-radius: 20px; 
+        transition: 0.4s; 
+        border: 1px solid var(--glass-border); 
+    }
+
+    .slider:before { 
+        content: ""; 
+        position: absolute; 
+        height: 16px; width: 16px; 
+        left: 2px; bottom: 2px; 
+        background: #666; 
+        border-radius: 50%; 
+        transition: 0.4s; 
+    }
+
+    input:checked + .slider { 
+        background: rgba(245, 139, 162, 0.25); 
+        border-color: var(--rosa-bebe); 
+    }
+
+    input:checked + .slider:before { 
+        transform: translateX(20px); 
+        background: var(--rosa-bebe); 
+        box-shadow: 0 0 8px var(--rosa-bebe);
+    }
+
+    /* LOG E TERMINAL */
+    #inject-log { 
+        height: 120px; 
+        background: rgba(0,0,0,0.4); 
+        border-radius: 16px; 
+        padding: 15px; 
+        font-size: 0.7rem; 
+        color: var(--rosa-bebe); 
+        overflow-y: auto; 
+        margin-bottom: 15px; 
+        border: 1px solid var(--glass-border); 
+        text-align: left;
+        font-family: 'JetBrains Mono', monospace;
+    }
+
+    .game-launch-group { 
+        display: none; 
+        flex-direction: column; 
+        gap: 12px; 
+        width: 100%; 
+        margin-top: auto; 
+    }
+
+    @keyframes windowIn { 
+        from { opacity: 0; transform: translateY(20px) scale(0.95); } 
+        to { opacity: 1; transform: translateY(0) scale(1); } 
+    }
+
+    /* MODO PAISAGEM FULLSCREEN REFORMULADO */
+    @media (orientation: landscape) {
+        .dash-container { 
+            flex-direction: row !important; 
+            max-width: 98% !important; 
+            gap: 20px; 
+            padding: 10px; 
         }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background-color: var(--fundo-escuro); color: white; overflow: hidden; height: 100vh; width: 100vw; }
-        
-        #canvas-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
-
-        .screen { display: none; height: 100vh; width: 100vw; flex-direction: column; align-items: center; justify-content: center; position: relative; z-index: 1; }
-        .screen.active { display: flex; }
-
-        /* AJUSTE DO LOGIN: Puxado para cima do centro */
-        #screen-login { justify-content: center; padding-bottom: 100px; }
-        .login-content { 
-            width: 100%; max-width: 300px; text-align: center; 
-            background: var(--glass); backdrop-filter: blur(15px); 
-            border: 1px solid var(--glass-border); border-radius: 24px; 
-            padding: 30px; transform: translateY(-35%); /* <-- Isso sobe o quadro */
+        .card-selector { 
+            flex-direction: column !important; 
+            margin-bottom: 0 !important; 
+            gap: 10px; 
         }
-        
-        h1 { color: var(--rosa-bebe); font-size: 1.1rem; font-weight: 300; letter-spacing: 2px; margin-bottom: 20px; text-transform: uppercase; }
-        input { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid var(--glass-border); background: rgba(0,0,0,0.5); color: white; text-align: center; margin-bottom: 15px; outline: none; }
-        
-        .dash-container { width: 100%; max-width: 360px; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
-        .card-selector { display: flex; gap: 12px; margin-bottom: 15px; z-index: 10; }
-        .mini-card { width: 52px; height: 52px; background: var(--glass); border: 1px solid var(--glass-border); border-radius: 14px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.4s; }
-        .mini-card.active { border-color: var(--rosa-bebe); background: rgba(244, 167, 187, 0.15); transform: translateY(-3px); box-shadow: 0 5px 15px var(--glow); }
-        .mini-card svg { stroke: var(--rosa-bebe); width: 22px; stroke-width: 1.5; fill: none; }
-
-        .main-window { width: 100%; background: var(--glass); backdrop-filter: blur(25px); border: 1px solid var(--glass-border); border-radius: 28px; padding: 22px; height: 410px; display: none; flex-direction: column; }
-        .main-window.active { display: flex; animation: windowIn 0.3s ease-out; }
-
-        h2 { font-size: 0.95rem; color: var(--rosa-bebe); font-weight: 400; margin-bottom: 18px; text-align: center; }
-        .row { display: flex; justify-content: space-between; align-items: center; margin: 14px 0; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.03); }
-        .row-info span { font-size: 0.85rem; display: block; color: #eee; }
-        .desc { font-size: 0.55rem; color: #777; margin-top: 2px; }
-
-        .btn-rosa { background: var(--rosa-bebe); color: #000; border: none; padding: 14px; border-radius: 12px; width: 100%; font-weight: 600; cursor: pointer; margin-top: auto; }
-        
-        .precision-grid { display: flex; gap: 8px; margin-top: 10px; }
-        .prec-btn { flex: 1; padding: 10px; border-radius: 10px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.03); color: white; font-size: 0.75rem; }
-        .prec-btn.active { background: var(--rosa-bebe); color: #000; font-weight: bold; border-color: var(--rosa-bebe); }
-
-        .switch { width: 36px; height: 18px; position: relative; display: inline-block; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: #1a1a1a; border-radius: 18px; transition: 0.4s; border: 1px solid var(--glass-border); }
-        .slider:before { content: ""; position: absolute; height: 12px; width: 12px; left: 2px; bottom: 2px; background: #555; border-radius: 50%; transition: 0.4s; }
-        input:checked + .slider { background: rgba(244, 167, 187, 0.2); border-color: var(--rosa-bebe); }
-        input:checked + .slider:before { transform: translateX(18px); background: var(--rosa-bebe); }
-
-        #inject-log { 
-            height: 120px; background: rgba(0,0,0,0.3); border-radius: 12px; padding: 12px; 
-            font-size: 0.65rem; color: var(--rosa-bebe); overflow-y: auto; 
-            margin-bottom: 15px; border: 1px solid var(--glass-border); text-align: left;
-            font-family: monospace;
+        .mini-card { 
+            width: 48px !important; 
+            height: 48px !important; 
         }
-        .game-launch-group { display: none; flex-direction: column; gap: 10px; width: 100%; margin-top: auto; }
-
-        @keyframes windowIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* MODO PAISAGEM FULLSCREEN (Preenche a tela) */
-        @media (orientation: landscape) {
-            .dash-container { flex-direction: row !important; max-width: 99% !important; gap: 15px; padding: 5px; }
-            .card-selector { flex-direction: column !important; margin-bottom: 0 !important; gap: 8px; }
-            .mini-card { width: 42px !important; height: 42px !important; }
-            .main-window { 
-                height: 92vh !important; flex: 1; width: 100% !important; 
-                padding: 10px 20px !important; margin-right: 5px; overflow-y: auto; 
-            }
-            .row { margin: 8px 0 !important; justify-content: space-between !important; display: flex !important; width: 100% !important; }
-            .row-info span { font-size: 0.85rem !important; }
-            .desc { font-size: 0.6rem !important; max-width: 80%; }
-            #install-footer { display: none !important; }
+        .main-window { 
+            height: 90vh !important; 
+            flex: 1; 
+            width: 100% !important; 
+            padding: 15px 25px !important; 
+            margin-right: 10px; 
+            overflow-y: auto; 
+            border-radius: 28px;
         }
-
-        @media (display-mode: standalone), (display-mode: fullscreen) {
-            #install-footer { display: none !important; }
+        .row { 
+            margin: 10px 0 !important; 
+            padding-bottom: 8px !important;
         }
+        .desc { font-size: 0.65rem !important; }
+        #install-footer { display: none !important; }
+    }
+
+    @media (display-mode: standalone), (display-mode: fullscreen) {
+        #install-footer { display: none !important; }
+    }
     </style>
 </head>
 <body>
