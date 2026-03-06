@@ -1,4 +1,4 @@
-const CACHE_NAME = 'yt-musc-v7';
+const CACHE_NAME = 'yt-musc-v8';
 const urlsToCache = [
   './',
   './index.html',
