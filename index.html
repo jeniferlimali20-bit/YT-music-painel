@@ -67,34 +67,60 @@
 
         @keyframes windowIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        @media (orientation: landscape) {
-    /* Ajusta o container principal para alinhar os itens horizontalmente */
-    .dash-container {
-        flex-direction: row !important;
-        max-width: 95% !important;
-        gap: 20px;
-        padding: 10px;
+        /* --- INÍCIO DO BLOCO DE PAISAGEM OTIMIZADO --- */
+@media (orientation: landscape) {
+    /* Ajusta o container principal */
+    .dash-container { 
+        flex-direction: row !important; 
+        max-width: 98% !important; 
+        gap: 15px; 
+        padding: 5px; 
     }
 
-    /* Empilha os cards pequenos do lado esquerdo */
-    .card-selector {
-        flex-direction: column !important;
-        margin-bottom: 0 !important;
-        gap: 10px;
+    /* Empilha e comprime os ícones da lateral esquerda */
+    .card-selector { 
+        flex-direction: column !important; 
+        margin-bottom: 0 !important; 
+        gap: 6px; 
+        padding-top: 5px;
+    }
+    
+    /* Ícones ligeiramente menores na lateral */
+    .mini-card {
+        width: 44px !important;
+        height: 44px !important;
+    }
+    .mini-card svg { width: 18px !important; }
+
+    /* --- AQUI ESTÁ O AJUSTE PARA O QUADRO CABER --- */
+    .main-window { 
+        height: 92vh !important; /* Quase toda a altura da tela */
+        flex: 1; 
+        padding: 12px 15px !important; /* Padding interno menor */
+        margin-right: 10px;
+        overflow-y: auto; /* Permite rolar se o celular for muito "baixo" */
     }
 
-    /* Ajusta a janela principal para não ocupar a tela toda na altura */
-    .main-window {
-        height: 85vh !important;
-        flex: 1;
+    /* Comprime os elementos dentro do quadro */
+    .main-window h2 { font-size: 0.8rem !important; margin-bottom: 8px !important; }
+    
+    .row { 
+        margin: 6px 0 !important; /* Espaçamento vertical menor entre as opções */
+        padding-bottom: 5px !important; 
     }
+    
+    .row-info span { font-size: 0.75rem !important; } /* Texto principal menor */
+    .desc { font-size: 0.5rem !important; margin-top: 1px !important; } /* Descrição menor */
 
-        /* Esconde o instalador no modo paisagem */
-    #install-footer {
-        display: none !important;
-    }
-} /* <--- Essa chave fecha o modo paisagem */
+    /* Os três botões do fundo (Baixa, Média, Alta) */
+    .precision-grid { gap: 5px !important; margin-top: 8px !important; }
+    .prec-btn { padding: 6px !important; font-size: 0.65rem !important; }
 
+    /* Esconde o rodapé de instalação */
+    #install-footer { display: none !important; }
+} 
+/* --- FIM DO BLOCO OTIMIZADO --- */
+        
 /* Este bloco abaixo esconde o botão quando o app está aberto/instalado */
 @media (display-mode: standalone), (display-mode: fullscreen) {
     #install-footer {
