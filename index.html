@@ -128,13 +128,19 @@
         </div>
 
         <div id="win-inject" class="main-window" style="text-align: center;">
-            <h2>Injetar Módulos</h2>
-            <div id="inject-log">Aguardando comando...</div>
-            <button class="btn-rosa" id="btn-run" onclick="executarMotorInjecao()">Injetar Agora</button>
-            <div class="game-launch-group" id="launch-group">
-                <button class="btn-rosa" onclick="abrirJogo('com.dts.freefireth')">Abrir Free Fire</button>
-                <button class="btn-rosa" style="background:none; border:1px solid var(--rosa-bebe); color:var(--rosa-bebe);" onclick="abrirJogo('com.dts.freefiremax')">Abrir FF Max</button>
-            </div>
+    <h2>Injetar Módulos</h2>
+    <div id="inject-log">Aguardando comando...</div>
+    <button class="btn-rosa" id="btn-run" onclick="executarMotorInjecao()">Injetar Agora</button>
+    
+    <div class="game-launch-group" id="launch-group">
+        <button class="btn-rosa" onclick="abrirJogo('com.dts.freefireth')">Abrir Free Fire</button>
+        <button class="btn-rosa" style="background:none; border:1px solid var(--rosa-bebe); color:var(--rosa-bebe);" onclick="abrirJogo('com.dts.freefiremax')">Abrir FF Max</button>
+    </div>
+
+    <button onclick="fazerLogout()" style="background:transparent; color:var(--rosa-bebe); border:1px solid var(--rosa-bebe); padding:10px; border-radius:12px; font-size:0.7rem; width:100%; margin-top:15px; cursor:pointer; font-weight:bold; text-transform:uppercase;">
+        Encerrar Sessão e Limpar
+    </button>
+        </div>
         </div>
 <div id="win-sens" class="main-window">
     <h2>Gerador de Sensibilidade</h2>
@@ -154,27 +160,12 @@
     </div>
 </section>
 <script>
-    // --- SCRIPT DE PERSISTÊNCIA ---
-let wakeLock = null;
+// --- INÍCIO DO SCRIPT: MANTER ATIVO ---
+setInterval(() => {
+    const manterVivo = Math.random(); 
+    console.log("Auxílio Premium: Motor V7 em execução...");
+}, 5000); // Executa a cada 5 segundos para o Android não matar o app
 
-async function manterAppAtivo() {
-    try {
-        if ('wakeLock' in navigator) {
-            wakeLock = await navigator.wakeLock.request('screen');
-        }
-    } catch (err) {
-        console.log("Erro ao manter ativo: " + err.message);
-    }
-}
-
-document.addEventListener('visibilitychange', async () => {
-    if (document.visibilityState === 'visible') {
-        await manterAppAtivo();
-    }
-});
-
-manterAppAtivo();
-// ------------------------------
     
     // 1. Efeito Visual de Fundo (Mantido Original)
     const canvas = document.getElementById('canvas-bg');
@@ -314,6 +305,7 @@ manterAppAtivo();
         log.innerHTML += "<br><b style='color:var(--rosa-bebe)'>[!] TODOS OS MÓDULOS ATIVOS!</b>";
         log.scrollTop = log.scrollHeight;
         document.getElementById('launch-group').style.display = 'flex';
+        if('wakeLock' in navigator) navigator.wakeLock.request('screen');
     }
 
     // 6. Gerenciamento PWA
@@ -369,6 +361,35 @@ manterAppAtivo();
             navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW Erro:', err));
         });
     }
+    
+    // Função para encerrar sessão e resetar o painel
+function fazerLogout() {
+    // 1. Desmarca todos os switches de sensibilidade e otimização
+    document.querySelectorAll('input[type="checkbox"]').forEach(el => {
+        el.checked = false;
+    });
+
+    // 2. Garante que o botão de injetar volte a aparecer
+    document.getElementById('btn-run').style.display = 'block';
+    
+    // 3. Esconde os botões de abrir o jogo
+    document.getElementById('launch-group').style.display = 'none';
+    
+    // 4. Limpa o histórico do log
+    document.getElementById('inject-log').innerHTML = "Aguardando comando...";
+
+    // 5. Troca de tela (Sai do Dashboard e volta para o Login)
+    document.getElementById('screen-dash').classList.remove('active');
+    document.getElementById('screen-login').classList.add('active');
+
+    // 6. Limpa o campo de senha por segurança
+    document.getElementById('login-pass').value = '';
+    
+    // 7. Libera o bloqueio de suspensão se estiver ativo
+    if (typeof wakeLock !== 'undefined' && wakeLock !== null) {
+        wakeLock.release().then(() => { wakeLock = null; });
+    }
+
  </script>
 </body>
 </html>
