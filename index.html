@@ -45,12 +45,11 @@
 
     h2 { font-size: 0.95rem; color: var(--rosa-bebe); font-weight: 400; margin-bottom: 18px; text-align: center; }
 
-    /* --- AJUSTES PREMIUM --- */
     .row { display: flex; justify-content: space-between; align-items: center; margin: 18px 0; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.02); }
     .row-info span { font-size: 0.82rem; font-weight: 500; color: #eeeeee; }
     .desc { font-size: 0.62rem !important; color: rgba(255, 255, 255, 0.4) !important; margin-top: 4px; font-weight: 300; display: block; }
 
-    .btn-rosa { background: var(--rosa-bebe); color: #000; border: none; padding: 14px; border-radius: 12px; width: 100%; font-weight: 600; cursor: pointer; margin-top: auto; }
+    .btn-rosa { background: var(--rosa-bebe); color: #000; border: none; padding: 12px; border-radius: 14px; width: 100%; font-weight: 600; font-size: 0.85rem; transition: 0.3s; }
     
     .precision-grid { display: flex; gap: 8px; margin-top: 10px; }
     .prec-btn { flex: 1; padding: 10px; border-radius: 10px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.03); color: white; font-size: 0.75rem; }
@@ -65,9 +64,10 @@
 
     #inject-log { height: 120px; background: rgba(0,0,0,0.3); border-radius: 12px; padding: 12px; font-size: 0.65rem; color: var(--rosa-bebe); overflow-y: auto; margin-bottom: 15px; border: 1px solid var(--glass-border); text-align: left; font-family: monospace; }
     
+    #launch-group { display: none; flex-direction: column; gap: 12px; width: 100%; margin-top: 15px; }
+
     @keyframes windowIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* ESCONDER BOTÃO DE INSTALAR NO APP */
     @media (display-mode: standalone), (display-mode: fullscreen) {
         #install-footer { display: none !important; }
     }
@@ -80,8 +80,7 @@
         .row { margin: 8px 0 !important; }
         .desc { font-size: 0.6rem !important; }
     }
-             </style>
-
+</style>
 </head>
 <body>
 <canvas id="canvas-bg"></canvas>
