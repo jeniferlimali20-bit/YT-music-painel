@@ -279,9 +279,24 @@
             deferredPrompt = null;
         }
     }
+function abrirJogo(pacote) {
+    // Tenta o método de link direto do Google Play Services
+    const linkDireto = `https://play.google.com/store/apps/details?id=${pacote}`;
+    
+    // Tenta o método Intent (mais agressivo para abrir o app instalado)
+    const intent = `intent://launch?id=${pacote}#Intent;package=${pacote};scheme=android-app;end`;
 
-    function abrirJogo(p) { window.location.replace(`intent://#Intent;package=${p};scheme=android-app;S.browser_fallback_url=;end`); }
+    // Primeiro tentamos o Intent
+    window.location.replace(intent);
 
+    // Se em 500ms o app não abrir, ele redireciona para um fallback ou avisa
+    setTimeout(() => {
+        if (confirm("Não foi possível abrir o jogo automaticamente. Deseja tentar abrir pela Play Store para dar o 'Play' por lá?")) {
+            window.location.href = linkDireto;
+        }
+    }, 1500);
+}
+    
     // 7. Gerador de Sensibilidade (Mantido Original com detecção real)
     async function gerarConfiguracao() {
         const width = window.screen.width * window.devicePixelRatio;
