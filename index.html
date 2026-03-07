@@ -419,25 +419,7 @@
     </style>
 </head>
 <body>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
 
-<script>
-  // Use os dados da sua captura de tela
-  const firebaseConfig = {
-    apiKey: "AIzaSyCkclt-VbdgsGE1RCI059XG-VvT6Z5r...", // Complete com sua chave da foto
-    authDomain: "auxilio-premium.firebaseapp.com",
-    databaseURL: "https://auxilio-premium-default-rtdb.firebaseio.com",
-    projectId: "auxilio-premium",
-    storageBucket: "auxilio-premium.firebasestorage.app",
-    messagingSenderId: "5093662014",
-    appId: "1:5093662014:web:058292cda939351fdae06f"
-  };
-
-  // Inicializa a conexão
-  firebase.initializeApp(firebaseConfig);
-  const database = firebase.database();
-</script>
 <canvas id="canvas-bg"></canvas>
 
 <section id="screen-login" class="screen active" style="justify-content: center; padding-bottom: 100px;">
@@ -446,11 +428,6 @@
         <input type="password" id="login-pass" placeholder="xxx-xxx-xxx">
         <button class="btn-rosa" onclick="efetuarLogin()">Entrar</button>
         <div id="admin-panel" style="display:none; background: rgba(0,0,0,0.9); padding: 20px; border-radius: 20px; border: 1px solid #ff007f; margin-top: 20px; text-align: center;">
-    <h3 style="color:#ff007f; font-size: 0.7rem;">GERADOR DE KEYS</h3>
-    <input type="text" id="new-key-value" readonly style="background:transparent; border:1px solid #333; color:#fff; text-align:center; width: 90%; margin-bottom: 10px;">
-    <button onclick="gerarESalvarKey()" style="background:#ff007f; color:#fff; border:none; padding: 10px; border-radius: 5px; width: 100%;">GERAR E COPIAR</button>
-        </div>
-    </div>
 
     <div id="install-footer" style="display:none; position: absolute; bottom: 60px; width: 90%; max-width: 340px; left: 50%; transform: translateX(-50%); z-index: 10; display: flex; align-items: center; justify-content: space-between; gap: 15px;">
         <p style="font-size: 0.65rem; color: var(--rosa-bebe); text-transform: uppercase; letter-spacing: 1px; opacity: 0.8; white-space: nowrap; margin: 0;">Versão Aplicativo</p>
