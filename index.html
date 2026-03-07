@@ -419,33 +419,16 @@
     </style>
 </head>
 <body>
+
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
-
-<script>
-  // Use os dados da sua captura de tela
-  const firebaseConfig = {
-    apiKey: "AIzaSyCkclt-VbdgsGE1RCI059XG-VvT6Z5r...", // Complete com sua chave da foto
-    authDomain: "auxilio-premium.firebaseapp.com",
-    databaseURL: "https://auxilio-premium-default-rtdb.firebaseio.com",
-    projectId: "auxilio-premium",
-    storageBucket: "auxilio-premium.firebasestorage.app",
-    messagingSenderId: "5093662014",
-    appId: "1:5093662014:web:058292cda939351fdae06f"
-  };
-
-  // Inicializa a conexão
-  firebase.initializeApp(firebaseConfig);
-  const database = firebase.database();
-</script>
-<canvas id="canvas-bg"></canvas>
-
+    
 <section id="screen-login" class="screen active" style="justify-content: center; padding-bottom: 100px;">
     <div class="login-content" style="transform: translateY(-20%);">
         <h1>Auxílio Premium</h1>
         <input type="password" id="login-pass" placeholder="xxx-xxx-xxx">
         <button class="btn-rosa" onclick="efetuarLogin()">Entrar</button>
-        <div id="admin-panel" style="display:block; background: rgba(0,0,0,0.9); padding: 20px; border-radius: 20px; border: 1px solid #ff007f; margin-top: 20px; text-align: center;">
+        <div id="admin-panel" style="display:none; background: rgba(0,0,0,0.9); padding: 20px; border-radius: 20px; border: 1px solid #ff007f; margin-top: 20px; text-align: center;">
     <h3 style="color:#ff007f;">GERADOR DE KEYS</h3>
     <input type="text" id="new-key-value" readonly style="width: 90%; margin-bottom: 10px; text-align: center;">
     <button onclick="gerarESalvarKey()" style="background:#ff007f; color:#fff; width: 100%; padding: 10px;">GERAR E COPIAR</button>
@@ -549,6 +532,61 @@
     </div>
 </section>
     <script>
+        
+  // 1. Configuração com sua Key Real
+  const firebaseConfig = {
+    apiKey: "AIzaSyCkclt-VbdgsGE1RCI059XG-6H_sZRMY2w",
+    authDomain: "auxilio-premium.firebaseapp.com",
+    databaseURL: "https://auxilio-premium-default-rtdb.firebaseio.com",
+    projectId: "auxilio-premium",
+    storageBucket: "auxilio-premium.firebasestorage.app",
+    messagingSenderId: "5093662014",
+    appId: "1:5093662014:web:058292cda939351fdae06f",
+    measurementId: "G-2C44DWNG8W"
+  };
+
+  // 2. Inicialização do Banco de Dados
+  if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+  }
+  const database = firebase.database();
+
+  // 3. Sistema de Cliques Secretos (5 cliques no título para abrir)
+  let contadorAdmin = 0;
+  // Procure o título principal do seu app
+  document.addEventListener('click', function (e) {
+      if (e.target.tagName === 'H1' || e.target.innerText === 'AUXÍLIO PREMIUM') {
+          contadorAdmin++;
+          if (contadorAdmin >= 5) {
+              document.getElementById('admin-panel').style.display = 'block';
+              alert("PAINEL DE ADMIN LIBERADO!");
+              contadorAdmin = 0;
+          }
+      }
+  });
+
+  // 4. Função para Gerar a Key e salvar no Firebase
+  function gerarESalvarKey() {
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+      const s = () => Array.from({length: 3}, () => chars[Math.floor(Math.random() * chars.length)]).join('');
+      const novaKey = `${s()}-${s()}-${s()}`;
+      
+      // Salva na pasta 'keys' do seu Firebase
+      database.ref('keys/' + novaKey).set({
+          hwid: "", 
+          status: "ativo",
+          criada_em: new Date().toLocaleString()
+      }).then(() => {
+          // Exibe no campo e copia para a área de transferência
+          document.getElementById('new-key-value').value = novaKey;
+          navigator.clipboard.writeText(novaKey);
+          alert("Key " + novaKey + " criada e copiada!");
+      }).catch(error => {
+          alert("Erro: Verifique se as 'Rules' no Firebase estão como true.");
+          console.error(error);
+      });
+  }
+        
     // 1. Efeito Visual de Fundo (Mantido Original)
     const canvas = document.getElementById('canvas-bg');
     const ctx = canvas.getContext('2d');
