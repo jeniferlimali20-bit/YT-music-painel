@@ -45,3 +45,39 @@ self.addEventListener('fetch', event => {
       .catch(() => caches.match(event.request)) // Se falhar a rede, usa o cache
   );
 });
+// 1. Gera o formato XXX-XXX-XXX
+function gerarCodigoKey() {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    const s = () => Array.from({length: 3}, () => chars[Math.floor(Math.random() * chars.length)]).join('');
+    return `${s()}-${s()}-${s()}`;
+}
+
+// 2. Envia para o Firebase e Copia
+function gerarESalvarKey() {
+    const novaKey = gerarCodigoKey();
+    
+    // Salva na pasta 'keys' dentro do seu banco
+    database.ref('keys/' + novaKey).set({
+        hwid: "",          // Começa vazio para o cliente preencher no 1º uso
+        status: "ativo",
+        criado_em: new Date().toLocaleString()
+    }).then(() => {
+        document.getElementById('new-key-value').value = novaKey;
+        navigator.clipboard.writeText(novaKey); // Copia pro seu celular
+        alert("Key " + novaKey + " salva e copiada!");
+    }).catch(err => alert("Erro: " + err.message));
+}
+
+// 3. Comando secreto: 5 cliques no Título H1 para abrir o painel
+let cliques = 0;
+const titulo = document.querySelector('h1'); // Ou o ID do seu título
+if(titulo) {
+    titulo.onclick = () => {
+        cliques++;
+        if(cliques >= 5) {
+            document.getElementById('admin-panel').style.display = 'block';
+            cliques = 0;
+        }
+    };
+}
+
