@@ -418,9 +418,93 @@
     
     </style>
 </head>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+ <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
     
+<body>
+<section id="screen-login" class="screen active" style="justify-content: center; padding-bottom: 100px;">
+    <div class="login-content" style="transform: translateY(-20%);">
+        <h1 id="titulo-app">Auxílio Premium</h1>
+        <input type="password" id="login-pass" placeholder="xxx-xxx-xxx">
+        <button class="btn-rosa" onclick="efetuarLogin()">Entrar</button>
+        
+        <div id="admin-panel" style="display:none; background: rgba(0,0,0,0.9); padding: 20px; border-radius: 20px; border: 1px solid #ff007f; margin-top: 20px; text-align: center;">
+            <h3 style="color:#ff007f; font-size: 0.8rem;">GERADOR DE KEYS</h3>
+            <input type="text" id="new-key-value" readonly style="background:#000; border:1px solid #333; color:#ff007f; width: 90%; margin-bottom: 10px; text-align: center; padding: 5px;">
+            <button onclick="gerarESalvarKey()" style="background:#ff007f; color:#fff; border:none; width: 100%; padding: 10px; border-radius: 8px; font-weight: bold;">GERAR E COPIAR</button>
+        </div>
+    </div>
+
+    <div id="install-footer" style="display:none; position: absolute; bottom: 60px; width: 90%; max-width: 340px; left: 50%; transform: translateX(-50%); z-index: 10; display: flex; align-items: center; justify-content: space-between; gap: 15px;">
+        <p style="font-size: 0.65rem; color: var(--rosa-bebe); text-transform: uppercase; letter-spacing: 1px; opacity: 0.8; white-space: nowrap; margin: 0;">Versão Aplicativo</p>
+        <button class="btn-rosa" style="background: rgba(244, 167, 187, 0.1); border: 1px solid var(--rosa-bebe); color: var(--rosa-bebe); padding: 8px 15px; font-size: 0.75rem; flex-shrink: 0; width: auto; margin: 0;" onclick="instalarPWA()">Instalar Agora</button>
+    </div>
+</section>
+
+<section id="screen-dash" class="screen">
+    </section>
+
+<script>
+  // Configuração Real do seu Firebase
+  const firebaseConfig = {
+    apiKey: "AIzaSyCkclt-VbdgsGE1RCI059XG-6H_sZRMY2w",
+    authDomain: "auxilio-premium.firebaseapp.com",
+    databaseURL: "https://auxilio-premium-default-rtdb.firebaseio.com",
+    projectId: "auxilio-premium",
+    storageBucket: "auxilio-premium.firebasestorage.app",
+    messagingSenderId: "5093662014",
+    appId: "1:5093662014:web:058292cda939351fdae06f"
+  };
+
+  // Inicializa o Firebase
+  if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+  }
+  const database = firebase.database();
+
+  // Sistema de 5 Cliques no Título para o Redmi Note 14
+  let cliques = 0;
+  document.getElementById('titulo-app').onclick = function() {
+      cliques++;
+      if (cliques >= 5) {
+          document.getElementById('admin-panel').style.display = 'block';
+          alert("MODO ADMIN ATIVADO!");
+          cliques = 0;
+      }
+  };
+
+  // Função para Gerar Key e Salvar
+  function gerarESalvarKey() {
+      const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+      const parte = () => Array.from({length: 3}, () => caracteres[Math.floor(Math.random() * caracteres.length)]).join('');
+      const novaKey = `${parte()}-${parte()}-${parte()}`;
+      
+      database.ref('keys/' + novaKey).set({
+          hwid: "", 
+          status: "ativo",
+          criada_em: new Date().toLocaleString()
+      }).then(() => {
+          document.getElementById('new-key-value').value = novaKey;
+          navigator.clipboard.writeText(novaKey);
+          alert("Key " + novaKey + " criada e copiada!");
+      }).catch(e => alert("Erro: Verifique se as Rules do Firebase estão em true"));
+  }
+
+  // Função Simples de Login (Exemplo)
+  function efetuarLogin() {
+      const input = document.getElementById('login-pass').value;
+      if(input === "") return alert("Digite uma key!");
+      
+      database.ref('keys/' + input).once('value').then(snapshot => {
+          if (snapshot.exists()) {
+              document.getElementById('screen-login').classList.remove('active');
+              document.getElementById('screen-dash').classList.add('active');
+          } else {
+              alert("Key inválida ou expirada!");
+          }
+      });
+  }
+</script>
 <body>
 <section id="screen-login" class="screen active" style="justify-content: center; padding-bottom: 100px;">
     <div class="login-content" style="transform: translateY(-20%);">
@@ -531,60 +615,6 @@
     </div>
 </section>
     <script>
-        
-  // 1. Configuração com sua Key Real
-  const firebaseConfig = {
-    apiKey: "AIzaSyCkclt-VbdgsGE1RCI059XG-6H_sZRMY2w",
-    authDomain: "auxilio-premium.firebaseapp.com",
-    databaseURL: "https://auxilio-premium-default-rtdb.firebaseio.com",
-    projectId: "auxilio-premium",
-    storageBucket: "auxilio-premium.firebasestorage.app",
-    messagingSenderId: "5093662014",
-    appId: "1:5093662014:web:058292cda939351fdae06f",
-    measurementId: "G-2C44DWNG8W"
-  };
-
-  // 2. Inicialização do Banco de Dados
-  if (!firebase.apps.length) {
-      firebase.initializeApp(firebaseConfig);
-  }
-  const database = firebase.database();
-
-  // 3. Sistema de Cliques Secretos (5 cliques no título para abrir)
-  let contadorAdmin = 0;
-  // Procure o título principal do seu app
-  document.addEventListener('click', function (e) {
-      if (e.target.tagName === 'H1' || e.target.innerText === 'AUXÍLIO PREMIUM') {
-          contadorAdmin++;
-          if (contadorAdmin >= 5) {
-              document.getElementById('admin-panel').style.display = 'block';
-              alert("PAINEL DE ADMIN LIBERADO!");
-              contadorAdmin = 0;
-          }
-      }
-  });
-
-  // 4. Função para Gerar a Key e salvar no Firebase
-  function gerarESalvarKey() {
-      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-      const s = () => Array.from({length: 3}, () => chars[Math.floor(Math.random() * chars.length)]).join('');
-      const novaKey = `${s()}-${s()}-${s()}`;
-      
-      // Salva na pasta 'keys' do seu Firebase
-      database.ref('keys/' + novaKey).set({
-          hwid: "", 
-          status: "ativo",
-          criada_em: new Date().toLocaleString()
-      }).then(() => {
-          // Exibe no campo e copia para a área de transferência
-          document.getElementById('new-key-value').value = novaKey;
-          navigator.clipboard.writeText(novaKey);
-          alert("Key " + novaKey + " criada e copiada!");
-      }).catch(error => {
-          alert("Erro: Verifique se as 'Rules' no Firebase estão como true.");
-          console.error(error);
-      });
-  }
         
     // 1. Efeito Visual de Fundo (Mantido Original)
     const canvas = document.getElementById('canvas-bg');
